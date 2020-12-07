@@ -35,8 +35,7 @@ public class SkillService {
                 // 원래 값부터 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 증가
                 List<Skill> rangeRows = skillRepository.findByLevelBetween(changedLevel, originLevel-1);
                 for(Skill row : rangeRows){
-                    row.update(row.getSkillName(), row.getSkillImagePath(), row.getImageOriginName(),
-                            row.getSkillLevel(), row.getLevel() + 1, row.getMemberId());
+                    row.levelUp();
                 }
             }
             // 원래 순서 값이 변경할 순서 값보다 작은 경우
@@ -44,8 +43,7 @@ public class SkillService {
                 // 원래 값보다 크고 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 감소
                 List<Skill> rangeRows = skillRepository.findByLevelBetween(originLevel+1, changedLevel);
                 for(Skill row : rangeRows){
-                    row.update(row.getSkillName(), row.getSkillImagePath(), row.getImageOriginName(),
-                            row.getSkillLevel(), row.getLevel() - 1, row.getMemberId());
+                    row.levelDown();
                 }
             }
         }

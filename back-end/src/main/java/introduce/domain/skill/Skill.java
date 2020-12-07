@@ -52,4 +52,12 @@ public class Skill extends BaseTimeEntity  {
         this.level= level;
         this.memberId = memberId;
     }
+
+    public void levelUp() {
+        this.level += 1;
+    }
+
+    public void levelDown() {
+        this.level -=1;
+    }
 }
