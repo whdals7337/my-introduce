@@ -35,4 +35,10 @@ public class MemberSaveRequestDto {
                 .email(email)
                 .build();
     }
+    
+    // file 정보 셋팅 메서드
+    public void saveFileInfoSetting(String headerImagePath, String imageOriginName) {
+        this.headerImagePath = headerImagePath;
+        this.imageOriginName = imageOriginName;
+    }
 }

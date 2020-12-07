@@ -1,6 +1,5 @@
 package introduce.web.dto.member;
 
-import introduce.domain.member.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +22,11 @@ public class MemberUpdateRequestDto {
         this.introduction =introduction;
         this.phoneNumber = phoneNumber;
         this.email = email;
+    }
+    
+    // file 정보 세팅 메서드
+    public void updateFileInfoSetting(String headerImagePath, String imageOriginName) {
+        this.headerImagePath = headerImagePath;
+        this.imageOriginName = imageOriginName;
     }
 }
