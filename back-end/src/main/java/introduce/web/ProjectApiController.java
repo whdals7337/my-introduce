@@ -4,7 +4,6 @@ import introduce.service.ProjectService;
 import introduce.web.dto.project.ProjectResponseDto;
 import introduce.web.dto.project.ProjectSaveRequestDto;
 import introduce.web.dto.project.ProjectUpdateRequestDto;
-import introduce.web.dto.skill.SkillResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
