@@ -53,8 +53,8 @@ public class ProjectApiControllerTest {
                 .projectTitle(projectTitle)
                 .projectContent(projectContent)
                 .projectPostScript(projectPostScript)
-                .projectImagePath(projectImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(projectImagePath)
+                .fileOriginName(imageOriginName)
                 .level(level)
                 .memberId(memberId)
                 .build();
@@ -70,8 +70,8 @@ public class ProjectApiControllerTest {
         assertThat(all.get(0).getProjectTitle()).isEqualTo(projectTitle);
         assertThat(all.get(0).getProjectContent()).isEqualTo(projectContent);
         assertThat(all.get(0).getProjectPostScript()).isEqualTo(projectPostScript);
-        assertThat(all.get(0).getProjectImagePath()).isEqualTo(projectImagePath);
-        assertThat(all.get(0).getImageOriginName()).isEqualTo(imageOriginName);
+        assertThat(all.get(0).getFilePath()).isEqualTo(projectImagePath);
+        assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
         assertThat(all.get(0).getMemberId()).isEqualTo(memberId);
     }
@@ -88,8 +88,8 @@ public class ProjectApiControllerTest {
                     .projectTitle("프로젝트 이름0" + i)
                     .projectContent("프로젝트 내용0" + i)
                     .projectPostScript("프로젝트 추신0" + i)
-                    .projectImagePath("프로젝트 이미지 경로0" + i)
-                    .imageOriginName("프로젝트 이미지 원본이름0" + i)
+                    .filePath("프로젝트 이미지 경로0" + i)
+                    .fileOriginName("프로젝트 이미지 원본이름0" + i)
                     .level(i)
                     .memberId((long) 1)
                     .build());
@@ -112,8 +112,8 @@ public class ProjectApiControllerTest {
                 .projectTitle(expectedProjectTitle)
                 .projectContent(expectedProjectContent)
                 .projectPostScript(expectedProjectPostScript)
-                .projectImagePath(expectedProjectImagePath)
-                .imageOriginName(expectedImageOriginName)
+                .filePath(expectedProjectImagePath)
+                .fileOriginName(expectedImageOriginName)
                 .level(expectedLevel)
                 .memberId(expectedMemberId)
                 .build();
@@ -132,8 +132,8 @@ public class ProjectApiControllerTest {
         assertThat(target.getProjectTitle()).isEqualTo(expectedProjectTitle);
         assertThat(target.getProjectContent()).isEqualTo(expectedProjectContent);
         assertThat(target.getProjectPostScript()).isEqualTo(expectedProjectPostScript);
-        assertThat(target.getProjectImagePath()).isEqualTo(expectedProjectImagePath);
-        assertThat(target.getImageOriginName()).isEqualTo(expectedImageOriginName);
+        assertThat(target.getFilePath()).isEqualTo(expectedProjectImagePath);
+        assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMemberId()).isEqualTo(expectedMemberId);
 

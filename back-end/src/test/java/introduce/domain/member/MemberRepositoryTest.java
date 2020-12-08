@@ -36,8 +36,8 @@ public class MemberRepositoryTest {
 
         memberRepository.save(Member.builder()
                 .comment(comment)
-                .headerImagePath(headerImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(headerImagePath)
+                .fileOriginName(imageOriginName)
                 .introduction(introduction)
                 .phoneNumber(phoneNumber)
                 .email(email)
@@ -50,8 +50,8 @@ public class MemberRepositoryTest {
         System.out.println(">>>>>>>>>> mdDate:" + member.getMdDate());
 
         assertThat(member.getComment()).isEqualTo(comment);
-        assertThat(member.getHeaderImagePath()).isEqualTo(headerImagePath);
-        assertThat(member.getImageOriginName()).isEqualTo(imageOriginName);
+        assertThat(member.getFilePath()).isEqualTo(headerImagePath);
+        assertThat(member.getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(member.getIntroduction()).isEqualTo(introduction);
         assertThat(member.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(member.getEmail()).isEqualTo(email);

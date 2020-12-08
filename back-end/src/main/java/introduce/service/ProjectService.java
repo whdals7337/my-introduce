@@ -50,7 +50,7 @@ public class ProjectService {
 
         // 변경 요청된 값 update
         project.update(requestDto.getProjectTitle(), requestDto.getProjectContent(), requestDto.getProjectPostScript(),
-                requestDto.getProjectImagePath(), requestDto.getImageOriginName(), requestDto.getLevel(), requestDto.getMemberId());
+                requestDto.getFilePath(), requestDto.getFileOriginName(), requestDto.getLevel(), requestDto.getMemberId());
 
         return id;
     }

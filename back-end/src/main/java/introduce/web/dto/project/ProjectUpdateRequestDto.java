@@ -11,18 +11,18 @@ public class ProjectUpdateRequestDto {
     private String projectTitle;
     private String projectContent;
     private String projectPostScript;
-    private String projectImagePath;
-    private String imageOriginName;
+    private String filePath;
+    private String fileOriginName;
     private Integer level;
     private Long memberId;
 
     @Builder
-    public ProjectUpdateRequestDto(String projectTitle, String projectContent, String projectPostScript, String projectImagePath, String imageOriginName, int level, Long memberId) {
+    public ProjectUpdateRequestDto(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, int level, Long memberId) {
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
         this.projectPostScript = projectPostScript;
-        this.projectImagePath = projectImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.level = level;
         this.memberId =memberId;
     }

@@ -35,8 +35,8 @@ public class SkillRepositoryTest {
 
         skillRepository.save(Skill.builder()
                 .skillName(skillName)
-                .skillImagePath(skillImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(skillImagePath)
+                .fileOriginName(imageOriginName)
                 .skillLevel(skillLevel)
                 .level(level)
                 .build());
@@ -48,8 +48,8 @@ public class SkillRepositoryTest {
         System.out.println(">>>>>>>>>> mdDate:" + skill.getMdDate());
 
         assertThat(skill.getSkillName()).isEqualTo(skillName);
-        assertThat(skill.getSkillImagePath()).isEqualTo(skillImagePath);
-        assertThat(skill.getImageOriginName()).isEqualTo(imageOriginName);
+        assertThat(skill.getFilePath()).isEqualTo(skillImagePath);
+        assertThat(skill.getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(skill.getSkillLevel()).isEqualTo(skillLevel);
         assertThat(skill.getLevel()).isEqualTo(level);
         assertThat(skill.getRgDate()).isAfter(now);

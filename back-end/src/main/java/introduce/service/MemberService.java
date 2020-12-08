@@ -71,11 +71,11 @@ public class MemberService {
             logger.info("첨부된 파일 없음");
 
             // [1] 기존 정보 셋팅
-            requestDto.updateFileInfoSetting(member.getHeaderImagePath(), member.getImageOriginName());
+            requestDto.updateFileInfoSetting(member.getFilePath(), member.getFileOriginName());
             logger.info("[1] 기존 정보 셋팅");
 
             // [2] member info DB update
-            member.update(requestDto.getComment(), requestDto.getHeaderImagePath(), requestDto.getImageOriginName(),
+            member.update(requestDto.getComment(), requestDto.getFilePath(), requestDto.getFileOriginName(),
                     requestDto.getIntroduction(), requestDto.getPhoneNumber(), requestDto.getEmail());
             logger.info("[2] member info DB update");
 
@@ -90,7 +90,7 @@ public class MemberService {
         String saveName = FileUtil.getRandomFileName(originalName);
         String saveDir = fileUploadPath + "/" + subFileUploadPath;
         String savePath =  saveDir +"/"+ saveName;
-        String preExistingFilePath = member.getHeaderImagePath();
+        String preExistingFilePath = member.getFilePath();
         requestDto.updateFileInfoSetting(savePath, originalName);
         logger.info("[1] file parameter setting");
 
@@ -102,7 +102,7 @@ public class MemberService {
         logger.info("[2] file 디렉토리 생성");
 
         // [3] member info DB update
-        member.update(requestDto.getComment(), requestDto.getHeaderImagePath(), requestDto.getImageOriginName(),
+        member.update(requestDto.getComment(), requestDto.getFilePath(), requestDto.getFileOriginName(),
                 requestDto.getIntroduction(), requestDto.getPhoneNumber(), requestDto.getEmail());
         logger.info("[3] member info DB update");
 
@@ -122,7 +122,7 @@ public class MemberService {
     @Transactional
     public void delete(Long id) {
         Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 없습니다."));
-        String preExistingFilePath = member.getHeaderImagePath();
+        String preExistingFilePath = member.getFilePath();
 
         // [1] member info DB delete
         memberRepository.delete(member);

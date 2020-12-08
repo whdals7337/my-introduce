@@ -20,10 +20,10 @@ public class Member extends BaseTimeEntity {
     private String comment;
 
     @Column(length = 500, nullable = false)
-    private String headerImagePath;
+    private String filePath;
 
     @Column(length = 100, nullable = false)
-    private String imageOriginName;
+    private String fileOriginName;
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String introduction;
@@ -35,19 +35,19 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     @Builder
-    public Member(String comment, String headerImagePath, String imageOriginName, String introduction, String phoneNumber, String email) {
+    public Member(String comment, String filePath, String fileOriginName, String introduction, String phoneNumber, String email) {
         this.comment = comment;
-        this.headerImagePath = headerImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.introduction =introduction;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
 
-    public void update(String comment, String headerImagePath, String imageOriginName, String introduction, String phoneNumber, String email){
+    public void update(String comment, String filePath, String fileOriginName, String introduction, String phoneNumber, String email){
         this.comment = comment;
-        this.headerImagePath = headerImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.introduction =introduction;
         this.phoneNumber = phoneNumber;
         this.email = email;

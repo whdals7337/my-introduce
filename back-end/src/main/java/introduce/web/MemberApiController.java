@@ -37,7 +37,7 @@ public class MemberApiController {
     public Long delete(@PathVariable Long id) {
         memberService.delete(id);
         return id;
-}
+    }
 
     @GetMapping("/api/member")
     public List<MemberResponseDto> findAll() {

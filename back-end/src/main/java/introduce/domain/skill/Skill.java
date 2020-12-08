@@ -20,10 +20,10 @@ public class Skill extends BaseTimeEntity  {
     private String skillName;
 
     @Column(length = 500, nullable = false)
-    private String skillImagePath;
+    private String filePath;
 
     @Column(length = 100, nullable = false)
-    private String imageOriginName;
+    private String fileOriginName;
 
     @Column(nullable = false)
     private Integer skillLevel;
@@ -35,19 +35,19 @@ public class Skill extends BaseTimeEntity  {
     private Long memberId;
 
     @Builder
-    public Skill(String skillName, String skillImagePath, String imageOriginName, int skillLevel, int level, Long memberId) {
+    public Skill(String skillName, String filePath, String fileOriginName, int skillLevel, int level, Long memberId) {
         this.skillName = skillName;
-        this.skillImagePath = skillImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.skillLevel = skillLevel;
         this.level= level;
         this.memberId = memberId;
     }
 
-    public void update(String skillName, String skillImagePath, String imageOriginName, int skillLevel, int level, Long memberId) {
+    public void update(String skillName, String filePath, String fileOriginName, int skillLevel, int level, Long memberId) {
         this.skillName = skillName;
-        this.skillImagePath = skillImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.skillLevel = skillLevel;
         this.level= level;
         this.memberId = memberId;

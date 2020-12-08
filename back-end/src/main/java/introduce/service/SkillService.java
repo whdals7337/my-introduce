@@ -49,7 +49,7 @@ public class SkillService {
         }
 
         // 변경 요청된 값 update
-        skill.update(requestDto.getSkillName(), requestDto.getSkillImagePath(), requestDto.getImageOriginName(),
+        skill.update(requestDto.getSkillName(), requestDto.getFilePath(), requestDto.getFileOriginName(),
                 requestDto.getSkillLevel(), requestDto.getLevel(), requestDto.getMemberId());
 
         return id;

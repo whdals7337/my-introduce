@@ -38,8 +38,8 @@ public class ProjectRepositoryTest {
                 .projectTitle(projectTitle)
                 .projectContent(projectContent)
                 .projectPostScript(projectPostScript)
-                .projectImagePath(projectImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(projectImagePath)
+                .fileOriginName(imageOriginName)
                 .level(level)
                 .build());
 
@@ -52,8 +52,8 @@ public class ProjectRepositoryTest {
         assertThat(project.getProjectTitle()).isEqualTo(projectTitle);
         assertThat(project.getProjectContent()).isEqualTo(projectContent);
         assertThat(project.getProjectPostScript()).isEqualTo(projectPostScript);
-        assertThat(project.getProjectImagePath()).isEqualTo(projectImagePath);
-        assertThat(project.getImageOriginName()).isEqualTo(imageOriginName);
+        assertThat(project.getFilePath()).isEqualTo(projectImagePath);
+        assertThat(project.getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(project.getLevel()).isEqualTo(level);
         assertThat(project.getRgDate()).isAfter(now);
         assertThat(project.getMdDate()).isAfter(now);

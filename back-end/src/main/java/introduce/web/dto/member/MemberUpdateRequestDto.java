@@ -8,25 +8,25 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberUpdateRequestDto {
     private String comment;
-    private String headerImagePath;
-    private String imageOriginName;
+    private String filePath;
+    private String fileOriginName;
     private String introduction;
     private String phoneNumber;
     private String email;
 
     @Builder
-    public MemberUpdateRequestDto(String comment, String headerImagePath, String imageOriginName, String introduction, String phoneNumber, String email) {
+    public MemberUpdateRequestDto(String comment, String filePath, String fileOriginName, String introduction, String phoneNumber, String email) {
         this.comment = comment;
-        this.headerImagePath = headerImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.introduction =introduction;
         this.phoneNumber = phoneNumber;
         this.email = email;
     }
     
     // file 정보 세팅 메서드
-    public void updateFileInfoSetting(String headerImagePath, String imageOriginName) {
-        this.headerImagePath = headerImagePath;
-        this.imageOriginName = imageOriginName;
+    public void updateFileInfoSetting(String filePath, String fileOriginName) {
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
     }
 }

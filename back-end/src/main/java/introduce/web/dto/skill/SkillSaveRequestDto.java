@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SkillSaveRequestDto {
     private String skillName;
-    private String skillImagePath;
-    private String imageOriginName;
+    private String filePath;
+    private String fileOriginName;
     private Integer skillLevel;
     private Integer level;
     private Long memberId;
 
     @Builder
-    public SkillSaveRequestDto(String skillName, String skillImagePath, String imageOriginName, int skillLevel, int level, Long memberId) {
+    public SkillSaveRequestDto(String skillName, String filePath, String fileOriginName, int skillLevel, int level, Long memberId) {
         this.skillName = skillName;
-        this.skillImagePath = skillImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.skillLevel = skillLevel;
         this.level= level;
         this.memberId =memberId;
@@ -28,8 +28,8 @@ public class SkillSaveRequestDto {
     public Skill toEntity() {
         return Skill.builder()
                 .skillName(skillName)
-                .skillImagePath(skillImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(filePath)
+                .fileOriginName(fileOriginName)
                 .skillLevel(skillLevel)
                 .level(level)
                 .memberId(memberId)

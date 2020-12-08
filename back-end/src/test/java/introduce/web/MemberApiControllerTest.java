@@ -50,8 +50,8 @@ public class MemberApiControllerTest {
 
         MemberSaveRequestDto requestDto = MemberSaveRequestDto.builder()
                 .comment(comment)
-                .headerImagePath(headerImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(headerImagePath)
+                .fileOriginName(imageOriginName)
                 .introduction(introduction)
                 .phoneNumber(phoneNumber)
                 .email(email)
@@ -66,8 +66,8 @@ public class MemberApiControllerTest {
 
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(comment);
-        assertThat(all.get(0).getHeaderImagePath()).isEqualTo(headerImagePath);
-        assertThat(all.get(0).getImageOriginName()).isEqualTo(imageOriginName);
+        assertThat(all.get(0).getFilePath()).isEqualTo(headerImagePath);
+        assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getIntroduction()).isEqualTo(introduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(all.get(0).getEmail()).isEqualTo(email);
@@ -77,8 +77,8 @@ public class MemberApiControllerTest {
     public void member_update_test() throws Exception {
         Member saveMember = memberRepository.save(Member.builder()
                 .comment("코멘트")
-                .headerImagePath("헤어 이미지 경로")
-                .imageOriginName("헤더 이미지 원본 이름")
+                .filePath("헤어 이미지 경로")
+                .fileOriginName("헤더 이미지 원본 이름")
                 .introduction("자기소개")
                 .phoneNumber("연락처")
                 .email("이메일")
@@ -94,8 +94,8 @@ public class MemberApiControllerTest {
 
         MemberUpdateRequestDto requestDto = MemberUpdateRequestDto.builder()
                 .comment(expectedComment)
-                .headerImagePath(expectedHeaderImagePath)
-                .imageOriginName(expectedImageOriginName)
+                .filePath(expectedHeaderImagePath)
+                .fileOriginName(expectedImageOriginName)
                 .introduction(expectedIntroduction)
                 .phoneNumber(expectedPhoneNumber)
                 .email(expectedEmail)
@@ -112,8 +112,8 @@ public class MemberApiControllerTest {
 
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(expectedComment);
-        assertThat(all.get(0).getHeaderImagePath()).isEqualTo(expectedHeaderImagePath);
-        assertThat(all.get(0).getImageOriginName()).isEqualTo(expectedImageOriginName);
+        assertThat(all.get(0).getFilePath()).isEqualTo(expectedHeaderImagePath);
+        assertThat(all.get(0).getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(all.get(0).getIntroduction()).isEqualTo(expectedIntroduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(expectedPhoneNumber);
         assertThat(all.get(0).getEmail()).isEqualTo(expectedEmail);

@@ -7,8 +7,8 @@ import lombok.Getter;
 public class MemberResponseDto {
     private Long memberId;
     private String comment;
-    private String headerImagePath;
-    private String imageOriginName;
+    private String filePath;
+    private String fileOriginName;
     private String introduction;
     private String phoneNumber;
     private String email;
@@ -16,8 +16,8 @@ public class MemberResponseDto {
     public MemberResponseDto(Member entity) {
         this.memberId = entity.getMemberId();
         this.comment = entity.getComment();
-        this.headerImagePath = entity.getHeaderImagePath();
-        this.imageOriginName = entity.getImageOriginName();
+        this.filePath = entity.getFilePath();
+        this.fileOriginName = entity.getFileOriginName();
         this.introduction =entity.getIntroduction();
         this.phoneNumber = entity.getPhoneNumber();
         this.email = entity.getEmail();

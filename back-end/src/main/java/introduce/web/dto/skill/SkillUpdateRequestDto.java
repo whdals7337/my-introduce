@@ -9,17 +9,17 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class SkillUpdateRequestDto {
     private String skillName;
-    private String skillImagePath;
-    private String imageOriginName;
+    private String filePath;
+    private String fileOriginName;
     private Integer skillLevel;
     private Integer level;
     private Long memberId;
 
     @Builder
-    public SkillUpdateRequestDto(String skillName, String skillImagePath, String imageOriginName, int skillLevel, int level, Long memberId) {
+    public SkillUpdateRequestDto(String skillName, String filePath, String fileOriginName, int skillLevel, int level, Long memberId) {
         this.skillName = skillName;
-        this.skillImagePath = skillImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.skillLevel = skillLevel;
         this.level= level;
         this.memberId =memberId;

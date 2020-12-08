@@ -26,10 +26,10 @@ public class Project extends BaseTimeEntity {
     private String projectPostScript;
 
     @Column(length = 500, nullable = false)
-    private String projectImagePath;
+    private String filePath;
 
     @Column(length = 100, nullable = false)
-    private String imageOriginName;
+    private String fileOriginName;
 
     @Column(nullable = false)
     private Integer level;
@@ -38,22 +38,22 @@ public class Project extends BaseTimeEntity {
     private Long memberId;
 
     @Builder
-    public Project(String projectTitle, String projectContent, String projectPostScript, String projectImagePath,String imageOriginName, int level, Long memberId) {
+    public Project(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, int level, Long memberId) {
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
         this.projectPostScript = projectPostScript;
-        this.projectImagePath = projectImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.level = level;
         this.memberId = memberId;
     }
 
-    public void update(String projectTitle, String projectContent, String projectPostScript, String projectImagePath,String imageOriginName, int level, Long memberId) {
+    public void update(String projectTitle, String projectContent, String projectPostScript, String filePath,String fileOriginName, int level, Long memberId) {
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
         this.projectPostScript = projectPostScript;
-        this.projectImagePath = projectImagePath;
-        this.imageOriginName = imageOriginName;
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
         this.level = level;
         this.memberId = memberId;
     }

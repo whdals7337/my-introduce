@@ -51,8 +51,8 @@ public class SkillApiControllerTest {
 
         SkillSaveRequestDto requestDto = SkillSaveRequestDto.builder()
                 .skillName(skillName)
-                .skillImagePath(skillImagePath)
-                .imageOriginName(imageOriginName)
+                .filePath(skillImagePath)
+                .fileOriginName(imageOriginName)
                 .skillLevel(skillLevel)
                 .level(level)
                 .memberId(memberId)
@@ -67,8 +67,8 @@ public class SkillApiControllerTest {
 
         List<Skill> all = skillRepository.findAll();
         assertThat(all.get(0).getSkillName()).isEqualTo(skillName);
-        assertThat(all.get(0).getSkillImagePath()).isEqualTo(skillImagePath);
-        assertThat(all.get(0).getImageOriginName()).isEqualTo(imageOriginName);
+        assertThat(all.get(0).getFilePath()).isEqualTo(skillImagePath);
+        assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getSkillLevel()).isEqualTo(skillLevel);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
         assertThat(all.get(0).getMemberId()).isEqualTo(memberId);
@@ -84,8 +84,8 @@ public class SkillApiControllerTest {
         for(int i = 1; i < 5; i++){
             Skill skill = skillRepository.save(Skill.builder()
                     .skillName("스킬 이름0" + i)
-                    .skillImagePath("스킬 이미지 경로0" + i)
-                    .imageOriginName("스킬 이미지 이름0" + i)
+                    .filePath("스킬 이미지 경로0" + i)
+                    .fileOriginName("스킬 이미지 이름0" + i)
                     .skillLevel(3)
                     .level(i)
                     .memberId((long) 1)
@@ -106,8 +106,8 @@ public class SkillApiControllerTest {
 
         SkillUpdateRequestDto requestDto = SkillUpdateRequestDto.builder()
                 .skillName(expectedSkillName)
-                .skillImagePath(expectedSkillImagePath)
-                .imageOriginName(expectedImageOriginName)
+                .filePath(expectedSkillImagePath)
+                .fileOriginName(expectedImageOriginName)
                 .skillLevel(expectedSkillLevel)
                 .level(expectedLevel)
                 .memberId(expectedMemberId)
@@ -125,8 +125,8 @@ public class SkillApiControllerTest {
         // 수정된 값 검증
         Skill target = skillRepository.findById(updateId).get();
         assertThat(target.getSkillName()).isEqualTo(expectedSkillName);
-        assertThat(target.getSkillImagePath()).isEqualTo(expectedSkillImagePath);
-        assertThat(target.getImageOriginName()).isEqualTo(expectedImageOriginName);
+        assertThat(target.getFilePath()).isEqualTo(expectedSkillImagePath);
+        assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(target.getSkillLevel()).isEqualTo(expectedSkillLevel);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMemberId()).isEqualTo(expectedMemberId);
