@@ -6,6 +6,7 @@ import introduce.web.dto.project.ProjectSaveRequestDto;
 import introduce.web.dto.project.ProjectUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,13 +17,13 @@ public class ProjectApiController {
     private final ProjectService projectService;
 
     @PostMapping("api/project")
-    public Long save(@RequestBody ProjectSaveRequestDto requestDto) {
-        return projectService.save(requestDto);
+    public Long save(@RequestBody ProjectSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+        return projectService.save(requestDto, file);
     }
 
     @PutMapping("/api/project/{id}")
-    public Long update(@PathVariable Long id, @RequestBody ProjectUpdateRequestDto requestDto) {
-        return projectService.update(id, requestDto);
+    public Long update(@PathVariable Long id, @RequestBody ProjectUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+        return projectService.update(id, requestDto, file);
     }
 
     @DeleteMapping("/api/project/{id}")

@@ -34,7 +34,15 @@ public class MemberService {
     private final MemberRepository memberRepository;
 
     @Transactional
+    public MemberResponseDto getMember(Long id) {
+        Member member = memberRepository.findById(id).get();
+        MemberResponseDto dto = new MemberResponseDto(member);
+        return dto;
+    }
+
+    @Transactional
     public Long save(MemberSaveRequestDto requestDto, MultipartFile file) throws Exception {
+        logger.info("member save start");
 
         // [1] file parameter setting
         String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
@@ -44,9 +52,7 @@ public class MemberService {
         logger.info("[1] file parameter setting");
 
         // [2] file 디렉토리 생성
-        if(!new File(saveDir).exists()) {
-            new File(saveDir).mkdir();
-        }
+        FileUtil.createDir(saveDir);
         logger.info("[2] file 디렉토리 생성");
 
         // [3] member info DB 등록
@@ -58,6 +64,7 @@ public class MemberService {
         file.transferTo(new File(savePath));
         logger.info("[4] file transfer");
 
+        logger.info("member save end");
         return memberId;
     }
 
@@ -79,6 +86,7 @@ public class MemberService {
                     requestDto.getIntroduction(), requestDto.getPhoneNumber(), requestDto.getEmail());
             logger.info("[2] member info DB update");
 
+            logger.info("member update end");
             return id;
         }
 
@@ -95,10 +103,7 @@ public class MemberService {
         logger.info("[1] file parameter setting");
 
         // [2] file 디렉토리 생성
-        File dir = new File(saveDir);
-        if(!dir.exists()) {
-            dir.mkdir();
-        }
+        FileUtil.createDir(saveDir);
         logger.info("[2] file 디렉토리 생성");
 
         // [3] member info DB update
@@ -111,8 +116,7 @@ public class MemberService {
         logger.info("[4] file transfer");
 
         // [5] pre-existing file delete
-        File preExistingFile = new File(preExistingFilePath);
-        if(preExistingFile.exists()) preExistingFile.delete();
+        FileUtil.deleteFile(preExistingFilePath);
         logger.info("[5] pre-existing file delete");
 
         logger.info("member update end");
@@ -121,6 +125,8 @@ public class MemberService {
 
     @Transactional
     public void delete(Long id) {
+        logger.info("member delete start");
+
         Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 없습니다."));
         String preExistingFilePath = member.getFilePath();
 
@@ -129,9 +135,10 @@ public class MemberService {
         logger.info("[1] member info DB delete");
 
         // [2] pre-existing file delete
-        File preExistingFile = new File(preExistingFilePath);
-        if(preExistingFile.exists()) preExistingFile.delete();
+        FileUtil.deleteFile(preExistingFilePath);
         logger.info("[2] pre-existing file delete");
+
+        logger.info("member delete end");
     }
 
     @Transactional

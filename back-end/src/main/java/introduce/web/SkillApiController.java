@@ -6,6 +6,7 @@ import introduce.web.dto.skill.SkillSaveRequestDto;
 import introduce.web.dto.skill.SkillUpdateRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -16,13 +17,13 @@ public class SkillApiController {
     private final SkillService skillService;
 
     @PostMapping("api/skill")
-    public Long save(@RequestBody SkillSaveRequestDto requestDto) {
-        return skillService.save(requestDto);
+    public Long save(@RequestBody SkillSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+        return skillService.save(requestDto, file);
     }
 
     @PutMapping("/api/skill/{id}")
-    public Long update(@PathVariable Long id, @RequestBody SkillUpdateRequestDto requestDto) {
-        return skillService.update(id, requestDto);
+    public Long update(@PathVariable Long id, @RequestBody SkillUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+        return skillService.update(id, requestDto, file);
     }
 
     @DeleteMapping("/api/skill/{id}")

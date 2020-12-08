@@ -38,4 +38,10 @@ public class ProjectSaveRequestDto {
                 .memberId(memberId)
                 .build();
     }
+
+    // file 정보 셋팅 메서드
+    public void saveFileInfoSetting(String filePath, String fileOriginName) {
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
+    }
 }

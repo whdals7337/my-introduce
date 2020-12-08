@@ -26,4 +26,10 @@ public class ProjectUpdateRequestDto {
         this.level = level;
         this.memberId =memberId;
     }
+
+    // file 정보 셋팅 메서드
+    public void updateFileInfoSetting(String filePath, String fileOriginName) {
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
+    }
 }

@@ -35,4 +35,9 @@ public class SkillSaveRequestDto {
                 .memberId(memberId)
                 .build();
     }
+
+    public void saveFileInfoSetting(String filePath, String fileOriginName) {
+        this.filePath = filePath;
+        this.fileOriginName = fileOriginName;
+    }
 }
