@@ -66,7 +66,7 @@ public class FileApiController {
                     .body(resource);
         }
         else {
-            return null;
+            throw new IOException("존재하지않는 파일입니다.");
         }
     }
 }
