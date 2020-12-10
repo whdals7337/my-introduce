@@ -2,26 +2,32 @@ package introduce.web;
 
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
-import introduce.web.dto.member.MemberSaveRequestDto;
-import introduce.web.dto.member.MemberUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MemberApiControllerTest {
 
@@ -29,7 +35,7 @@ public class MemberApiControllerTest {
     private int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    MockMvc mockMvc;
 
     @Autowired
     private MemberRepository memberRepository;
@@ -41,32 +47,31 @@ public class MemberApiControllerTest {
 
     @Test
     public void member_save_test() throws Exception {
+        MockMultipartFile testFile
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
         String comment = "코멘트 영역 입니다.";
-        String headerImagePath = "헤더 이미지 경로";
-        String imageOriginName ="헤더 이미지 원본 이름";
-        String introduction = "자기소개 영역 입니다.";
+        String imageOriginName = "hello.txt";
+        String introduction = "자기소개 영역입니다.";
         String phoneNumber = "010-1111-1111";
         String email = "uok0201@gmail.com";
 
-        MemberSaveRequestDto requestDto = MemberSaveRequestDto.builder()
-                .comment(comment)
-                .filePath(headerImagePath)
-                .fileOriginName(imageOriginName)
-                .introduction(introduction)
-                .phoneNumber(phoneNumber)
-                .email(email)
-                .build();
-
         String url = "http://localhost:" + port + "/api/member";
 
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0l);
+        this.mockMvc.perform(multipart(url)
+                .file(testFile)
+                .param("comment",comment)
+                .param("introduction",introduction)
+                .param("phoneNumber",phoneNumber)
+                .param("email",email))
+                .andExpect(status().isOk());
 
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(comment);
-        assertThat(all.get(0).getFilePath()).isEqualTo(headerImagePath);
         assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getIntroduction()).isEqualTo(introduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(phoneNumber);
@@ -86,33 +91,41 @@ public class MemberApiControllerTest {
 
         Long updateId = saveMember.getMemberId();
         String expectedComment = "comment";
-        String expectedHeaderImagePath = "headerImagePath";
-        String expectedImageOriginName = "imageOriginName";
+        String expectedImageOriginName = "hello.txt";
         String expectedIntroduction = "introduction";
         String expectedPhoneNumber = "phoneNumber";
         String expectedEmail = "email";
 
-        MemberUpdateRequestDto requestDto = MemberUpdateRequestDto.builder()
-                .comment(expectedComment)
-                .filePath(expectedHeaderImagePath)
-                .fileOriginName(expectedImageOriginName)
-                .introduction(expectedIntroduction)
-                .phoneNumber(expectedPhoneNumber)
-                .email(expectedEmail)
-                .build();
+        MockMultipartFile testFile
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
 
         String url = "http://localhost:" + port + "/api/member/" + updateId;
 
-        HttpEntity<MemberUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+        MockMultipartHttpServletRequestBuilder builder =
+                multipart(url);
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.setMethod("PUT");
+                return request;
+            }
+        });
 
-        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+        mockMvc.perform(builder
+                .file(testFile)
+                .param("comment", expectedComment)
+                .param("introduction", expectedIntroduction)
+                .param("phoneNumber", expectedPhoneNumber)
+                .param("email", expectedEmail))
+                .andExpect(status().isOk());
 
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(expectedComment);
-        assertThat(all.get(0).getFilePath()).isEqualTo(expectedHeaderImagePath);
         assertThat(all.get(0).getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(all.get(0).getIntroduction()).isEqualTo(expectedIntroduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(expectedPhoneNumber);

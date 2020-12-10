@@ -3,8 +3,10 @@ package introduce.web.dto.member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class MemberUpdateRequestDto {
     private String comment;

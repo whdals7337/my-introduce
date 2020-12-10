@@ -2,26 +2,29 @@ package introduce.web;
 
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
-import introduce.web.dto.project.ProjectSaveRequestDto;
-import introduce.web.dto.project.ProjectUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
 @RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProjectApiControllerTest {
 
@@ -29,7 +32,7 @@ public class ProjectApiControllerTest {
     private int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    MockMvc mockMvc;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -41,37 +44,36 @@ public class ProjectApiControllerTest {
 
     @Test
     public void project_save_test() throws Exception {
+        MockMultipartFile testFile
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
         String projectTitle = "프로젝트 이름";
+        String imageOriginName = "hello.txt";
         String projectContent = "프로젝트 내용";
         String projectPostScript = "프로젝트 추신";
-        String projectImagePath = "프로젝트 이미지 경로";
-        String imageOriginName = "프로젝트 이미지 원본이름";
         Integer level = 1;
         Long memberId = (long) 1;
 
-        ProjectSaveRequestDto requestDto = ProjectSaveRequestDto.builder()
-                .projectTitle(projectTitle)
-                .projectContent(projectContent)
-                .projectPostScript(projectPostScript)
-                .filePath(projectImagePath)
-                .fileOriginName(imageOriginName)
-                .level(level)
-                .memberId(memberId)
-                .build();
-
         String url = "http://localhost:" + port + "/api/project";
 
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0l);
+        this.mockMvc.perform(multipart(url)
+                .file(testFile)
+                .param("projectTitle", projectTitle)
+                .param("projectContent", projectContent)
+                .param("projectPostScript", projectPostScript)
+                .param("level", String.valueOf(level))
+                .param("memberId", String.valueOf(memberId)))
+                .andExpect(status().isOk());
 
         List<Project> all = projectRepository.findAll();
         assertThat(all.get(0).getProjectTitle()).isEqualTo(projectTitle);
+        assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getProjectContent()).isEqualTo(projectContent);
         assertThat(all.get(0).getProjectPostScript()).isEqualTo(projectPostScript);
-        assertThat(all.get(0).getFilePath()).isEqualTo(projectImagePath);
-        assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
         assertThat(all.get(0).getMemberId()).isEqualTo(memberId);
     }
@@ -100,39 +102,46 @@ public class ProjectApiControllerTest {
             }
         }
 
+        MockMultipartFile testFile
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
         String expectedProjectTitle = "projectTitle";
         String expectedProjectContent = "projectContent";
         String expectedProjectPostScript = "projectPostScript";
-        String expectedProjectImagePath = "projectImagePath";
-        String expectedImageOriginName = "imageOriginName";
+        String expectedImageOriginName = "hello.txt";
         int expectedLevel = 1;
         Long expectedMemberId = (long) 2;
 
-        ProjectUpdateRequestDto requestDto = ProjectUpdateRequestDto.builder()
-                .projectTitle(expectedProjectTitle)
-                .projectContent(expectedProjectContent)
-                .projectPostScript(expectedProjectPostScript)
-                .filePath(expectedProjectImagePath)
-                .fileOriginName(expectedImageOriginName)
-                .level(expectedLevel)
-                .memberId(expectedMemberId)
-                .build();
-
         String url = "http://localhost:" + port + "/api/project/" + updateId;
 
-        HttpEntity<ProjectUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+        MockMultipartHttpServletRequestBuilder builder =
+                multipart(url);
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.setMethod("PUT");
+                return request;
+            }
+        });
 
-        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+        this.mockMvc.perform(builder
+                .file(testFile)
+                .param("projectTitle", expectedProjectTitle)
+                .param("projectContent", expectedProjectContent)
+                .param("projectPostScript", expectedProjectPostScript)
+                .param("level", String.valueOf(expectedLevel))
+                .param("memberId", String.valueOf(expectedMemberId)))
+                .andExpect(status().isOk());
 
         // 수정된 값 검증
         Project target = projectRepository.findById(updateId).get();
         assertThat(target.getProjectTitle()).isEqualTo(expectedProjectTitle);
         assertThat(target.getProjectContent()).isEqualTo(expectedProjectContent);
         assertThat(target.getProjectPostScript()).isEqualTo(expectedProjectPostScript);
-        assertThat(target.getFilePath()).isEqualTo(expectedProjectImagePath);
         assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMemberId()).isEqualTo(expectedMemberId);

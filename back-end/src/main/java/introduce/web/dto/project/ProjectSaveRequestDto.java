@@ -4,8 +4,10 @@ import introduce.domain.project.Project;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
+@Setter
 @NoArgsConstructor
 public class ProjectSaveRequestDto {
     private String projectTitle;

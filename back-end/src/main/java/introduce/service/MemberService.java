@@ -109,7 +109,12 @@ public class MemberService {
         // [3] member info DB update
         member.update(requestDto.getComment(), requestDto.getFilePath(), requestDto.getFileOriginName(),
                 requestDto.getIntroduction(), requestDto.getPhoneNumber(), requestDto.getEmail());
-        logger.info("[3] member info DB update");
+
+        logger.info(requestDto.getComment());
+        logger.info(requestDto.getFileOriginName());
+        logger.info(requestDto.getIntroduction());
+        logger.info(requestDto.getPhoneNumber());
+        logger.info(requestDto.getEmail());
 
         // [4] file transfer
         file.transferTo(new File(savePath));

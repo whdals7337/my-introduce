@@ -17,12 +17,12 @@ public class ProjectApiController {
     private final ProjectService projectService;
 
     @PostMapping("api/project")
-    public Long save(@RequestBody ProjectSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long save(ProjectSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
         return projectService.save(requestDto, file);
     }
 
     @PutMapping("/api/project/{id}")
-    public Long update(@PathVariable Long id, @RequestBody ProjectUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long update(@PathVariable Long id, ProjectUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
         return projectService.update(id, requestDto, file);
     }
 

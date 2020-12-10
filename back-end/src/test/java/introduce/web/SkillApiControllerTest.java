@@ -2,35 +2,37 @@ package introduce.web;
 
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
-import introduce.web.dto.skill.SkillSaveRequestDto;
-import introduce.web.dto.skill.SkillUpdateRequestDto;
 import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
+@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-
 public class SkillApiControllerTest {
 
     @LocalServerPort
     private int port;
 
     @Autowired
-    private TestRestTemplate restTemplate;
+    MockMvc mockMvc;
 
     @Autowired
     private SkillRepository skillRepository;
@@ -42,32 +44,31 @@ public class SkillApiControllerTest {
 
     @Test
     public void skill_save_test() throws Exception {
+        MockMultipartFile testFile
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
         String skillName = "스킬이름";
-        String skillImagePath = "스킬 이미지 경로";
-        String imageOriginName = "스킬 이미지 원본이름";
+        String imageOriginName = "hello.txt";
         Integer skillLevel = 3;
         Integer level = 1;
         Long memberId = (long) 1;
 
-        SkillSaveRequestDto requestDto = SkillSaveRequestDto.builder()
-                .skillName(skillName)
-                .filePath(skillImagePath)
-                .fileOriginName(imageOriginName)
-                .skillLevel(skillLevel)
-                .level(level)
-                .memberId(memberId)
-                .build();
-
         String url = "http://localhost:" + port + "/api/skill";
 
-        ResponseEntity<Long> responseEntity = restTemplate.postForEntity(url, requestDto, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0l);
+        this.mockMvc.perform(multipart(url)
+                .file(testFile)
+                .param("skillName", skillName)
+                .param("skillLevel", String.valueOf(skillLevel))
+                .param("level", String.valueOf(level))
+                .param("memberId", String.valueOf(memberId)))
+                .andExpect(status().isOk());
 
         List<Skill> all = skillRepository.findAll();
         assertThat(all.get(0).getSkillName()).isEqualTo(skillName);
-        assertThat(all.get(0).getFilePath()).isEqualTo(skillImagePath);
         assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getSkillLevel()).isEqualTo(skillLevel);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
@@ -97,35 +98,42 @@ public class SkillApiControllerTest {
             }
         }
 
+        MockMultipartFile testFile
+                = new MockMultipartFile(
+                "file",
+                "hello.txt",
+                MediaType.TEXT_PLAIN_VALUE,
+                "Hello, World!".getBytes()
+        );
         String expectedSkillName = "skillName";
-        String expectedSkillImagePath = "skillImagePath";
-        String expectedImageOriginName = "imageOriginName";
+        String expectedImageOriginName = "hello.txt";
         int expectedSkillLevel = 1;
         int expectedLevel = 1;
         Long expectedMemberId = (long) 2;
 
-        SkillUpdateRequestDto requestDto = SkillUpdateRequestDto.builder()
-                .skillName(expectedSkillName)
-                .filePath(expectedSkillImagePath)
-                .fileOriginName(expectedImageOriginName)
-                .skillLevel(expectedSkillLevel)
-                .level(expectedLevel)
-                .memberId(expectedMemberId)
-                .build();
-
         String url = "http://localhost:" + port + "/api/skill/" + updateId;
 
-        HttpEntity<SkillUpdateRequestDto> requestEntity = new HttpEntity<>(requestDto);
+        MockMultipartHttpServletRequestBuilder builder =
+                multipart(url);
+        builder.with(new RequestPostProcessor() {
+            @Override
+            public MockHttpServletRequest postProcessRequest(MockHttpServletRequest request) {
+                request.setMethod("PUT");
+                return request;
+            }
+        });
 
-        ResponseEntity<Long> responseEntity = restTemplate.exchange(url, HttpMethod.PUT, requestEntity, Long.class);
-
-        assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(responseEntity.getBody()).isGreaterThan(0L);
+        this.mockMvc.perform(builder
+                .file(testFile)
+                .param("skillName", expectedSkillName)
+                .param("skillLevel", String.valueOf(expectedSkillLevel))
+                .param("level", String.valueOf(expectedLevel))
+                .param("memberId", String.valueOf(expectedMemberId)))
+                .andExpect(status().isOk());
 
         // 수정된 값 검증
         Skill target = skillRepository.findById(updateId).get();
         assertThat(target.getSkillName()).isEqualTo(expectedSkillName);
-        assertThat(target.getFilePath()).isEqualTo(expectedSkillImagePath);
         assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(target.getSkillLevel()).isEqualTo(expectedSkillLevel);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);

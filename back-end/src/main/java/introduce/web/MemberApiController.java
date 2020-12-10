@@ -24,12 +24,12 @@ public class MemberApiController {
     private final MemberService memberService;
 
     @PostMapping("/api/member")
-    public Long save(@RequestBody MemberSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long save(MemberSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
         return memberService.save(requestDto, file);
     }
 
     @PutMapping("/api/member/{id}")
-    public Long update(@PathVariable Long id, @RequestBody MemberUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long update(MemberUpdateRequestDto requestDto, @PathVariable Long id, @RequestParam("file") MultipartFile file) throws Exception {
         return memberService.update(id, requestDto, file);
     }
 

@@ -17,12 +17,12 @@ public class SkillApiController {
     private final SkillService skillService;
 
     @PostMapping("api/skill")
-    public Long save(@RequestBody SkillSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long save(SkillSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
         return skillService.save(requestDto, file);
     }
 
     @PutMapping("/api/skill/{id}")
-    public Long update(@PathVariable Long id, @RequestBody SkillUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long update(@PathVariable Long id, SkillUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
         return skillService.update(id, requestDto, file);
     }
 
