@@ -11,6 +11,9 @@ cache:
     - '$HOME/.m2/repository'
     - '$HOME/.gradle'
 
+before_install:
+  - cd back-end/
+
 script: "./gradlew clean build"
 
 notifications:
