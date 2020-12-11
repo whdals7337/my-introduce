@@ -13,6 +13,7 @@ cache:
 
 before_install:
   - sudo mkdir -p /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+  - sudo chomd 777 /home/ec2-user/webSrc/MY_INTRODUCE_FILE
   - cd back-end/
   - chmod +x gradlew
 
