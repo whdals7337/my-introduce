@@ -51,6 +51,52 @@ matrix:
           region: ap-northeast-2
           wait-until-deployed: true
 
+    - language: node_js
+      node_js:
+        - "node"
+
+        branches:
+          only:
+            - master
+
+        cache:
+          directories:
+            - node_modules
+
+        install:
+          - npm install
+          - cd front-end/
+
+        script: "npm run build"
+
+        before_deploy:
+          - rm -rf node_modules
+          - zip -r before-frontend-deploy ./*
+          - mkdir -p deploy-frontend
+          - mv before-frontend-deploy.zip before-frontend/frontend.zip
+
+        deploy:
+          - provider: s3
+            access_key_id: $AWS_ACCESS_KEY
+            secret_access_key: $AWS_SECRET_KEY
+            bucket: myintroduce-springboot-build
+            region: ap-northeast-2
+            skip_cleanup: true
+            acl: private
+            local_dir: deploy-frontend
+            wait-until-deployed: true
+
+          - provider: codedeploy
+            access_key_id: $AWS_ACCESS_KEY
+            secret_access_key: $AWS_SECRET_KEY
+            bucket: myintroduce-springboot-build
+            key: front-end.zip
+            bundle_type: zip
+            application: myintroduce-springboot-webservice
+            deployment_group: myintroduce-springboot-webservice-group
+            region: ap-northeast-2
+            wait-until-deployed: true
+
 notifications:
   email:
     recipients:
