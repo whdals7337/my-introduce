@@ -1,46 +1,51 @@
 matrix:
   include:
-    - language: node_js
-      node_js:
-        - "stable"
+    - language: java
+      java: openjdk8
 
-        cache:
-          directories:
-            - node_modules
+      cache:
+        directories:
+          - '$HOME/.m2/repository'
+          - '$HOME/.gradle'
 
-        install:
-          - npm install
-          - cd front-end/
+      before_install:
+        - sudo mkdir -p /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - sudo chmod 777 /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - cd back-end/
+        - chmod +x gradlew
 
-        script: "npm run build"
+      script: "./gradlew clean build"
 
-        before_deploy:
-          - rm -rf node_modules
-          - zip -r before-frontend-deploy ./*
-          - mkdir -p deploy-frontend
-          - mv before-frontend-deploy.zip before-frontend/frontend.zip
+      before_deploy:
+       - mkdir -p before-backend-deploy
+       - cp scripts/*.sh before-backend-deploy/
+       - cp appspec.yml before-backend-deploy/
+       - cp build/libs/*.jar before-backend-deploy/
+       - cd before-backend-deploy && zip -r before-backend-deploy *
+       - cd ../ && mkdir -p deploy-backend
+       - mv before-backend-deploy/before-backend-deploy.zip deploy-backend/back-end.zip
 
-        deploy:
-          - provider: s3
-            access_key_id: $AWS_ACCESS_KEY
-            secret_access_key: $AWS_SECRET_KEY
-            bucket: myintroduce-springboot-build
-            region: ap-northeast-2
-            skip_cleanup: true
-            acl: private
-            local_dir: deploy-frontend
-            wait-until-deployed: true
+      deploy:
+        - provider: s3
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          region: ap-northeast-2
+          skip_cleanup: true
+          acl: private
+          local_dir: deploy-backend
+          wait-until-deployed: true
 
-          - provider: codedeploy
-            access_key_id: $AWS_ACCESS_KEY
-            secret_access_key: $AWS_SECRET_KEY
-            bucket: myintroduce-springboot-build
-            key: front-end.zip
-            bundle_type: zip
-            application: myintroduce-springboot-webservice
-            deployment_group: myintroduce-springboot-webservice-group
-            region: ap-northeast-2
-            wait-until-deployed: true
+        - provider: codedeploy
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          key: back-end.zip
+          bundle_type: zip
+          application: myintroduce-springboot-webservice
+          deployment_group: myintroduce-springboot-webservice-group
+          region: ap-northeast-2
+          wait-until-deployed: true
 
 branches:
   only:
