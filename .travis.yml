@@ -1,54 +1,101 @@
-language: java
-jdk:
-  - openjdk8
+matrix:
+  include:
+    - language: node_js
+        node_js:
+          - "node"
 
-branches:
-  only:
-    - master
+        branches:
+          only:
+            - master
 
-cache:
-  directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.gradle'
+        cache:
+          directories:
+            - node_modules
 
-before_install:
-  - sudo mkdir -p /home/ec2-user/webSrc/MY_INTRODUCE_FILE
-  - sudo chmod 777 /home/ec2-user/webSrc/MY_INTRODUCE_FILE
-  - cd back-end/
-  - chmod +x gradlew
+        install:
+          - npm install
+          - cd front-end/
 
-script: "./gradlew clean build"
+        script: "npm run build"
 
-before_deploy:
-  - mkdir -p before-deploy
-  - cp scripts/*.sh before-deploy/
-  - cp appspec.yml before-deploy/
-  - cp build/libs/*.jar before-deploy/
-  - cd before-deploy && zip -r before-deploy *
-  - cd ../ && mkdir -p deploy
-  - mv before-deploy/before-deploy.zip deploy/back-end.zip
+        before_deploy:
+          - rm -rf node_modules
+          - zip -r before-frontend-deploy ./*
+          - mkdir -p deploy-frontend
+          - mv before-frontend-deploy.zip before-frontend/frontend.zip
 
-deploy:
-  - provider: s3
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: myintroduce-springboot-build
-    region: ap-northeast-2
-    skip_cleanup: true
-    acl: private
-    local_dir: deploy
-    wait-until-deployed: true
+        deploy:
+          - provider: s3
+            access_key_id: $AWS_ACCESS_KEY
+            secret_access_key: $AWS_SECRET_KEY
+            bucket: myintroduce-springboot-build
+            region: ap-northeast-2
+            skip_cleanup: true
+            acl: private
+            local_dir: deploy-frontend
+            wait-until-deployed: true
 
-  - provider: codedeploy
-    access_key_id: $AWS_ACCESS_KEY
-    secret_access_key: $AWS_SECRET_KEY
-    bucket: myintroduce-springboot-build
-    key: back-end.zip
-    bundle_type: zip
-    application: myintroduce-springboot-webservice
-    deployment_group: myintroduce-springboot-webservice-group
-    region: ap-northeast-2
-    wait-until-deployed: true
+          - provider: codedeploy
+            access_key_id: $AWS_ACCESS_KEY
+            secret_access_key: $AWS_SECRET_KEY
+            bucket: myintroduce-springboot-build
+            key: front-end.zip
+            bundle_type: zip
+            application: myintroduce-springboot-webservice
+            deployment_group: myintroduce-springboot-webservice-group
+            region: ap-northeast-2
+            wait-until-deployed: true
+
+    - language: java
+      java: openjdk8
+
+      branches:
+        only:
+          - master
+
+      cache:
+        directories:
+          - '$HOME/.m2/repository'
+          - '$HOME/.gradle'
+
+      before_install:
+        - sudo mkdir -p /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - sudo chmod 777 /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - cd back-end/
+        - chmod +x gradlew
+
+      script: "./gradlew clean build"
+
+      before_deploy:
+       - mkdir -p before-backend-deploy
+       - cp scripts/*.sh before-backend-deploy/
+       - cp appspec.yml before-backend-deploy/
+       - cp build/libs/*.jar before-backend-deploy/
+       - cd before-backend-deploy && zip -r before-backend-deploy *
+       - cd ../ && mkdir -p deploy-backend
+       - mv before-backend-deploy/before-backend-deploy.zip deploy-backend/back-end.zip
+
+      deploy:
+        - provider: s3
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          region: ap-northeast-2
+          skip_cleanup: true
+          acl: private
+          local_dir: deploy-backend
+          wait-until-deployed: true
+
+        - provider: codedeploy
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          key: back-end.zip
+          bundle_type: zip
+          application: myintroduce-springboot-webservice
+          deployment_group: myintroduce-springboot-webservice-group
+          region: ap-northeast-2
+          wait-until-deployed: true
 
 notifications:
   email:
