@@ -49,7 +49,6 @@ matrix:
           wait-until-deployed: true
 
     - language: node_js
-
       node_js:
         - "stable"
 
