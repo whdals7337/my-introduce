@@ -60,7 +60,7 @@ matrix:
         - npm run build
 
       before_deploy:
-        - mkdir -p before-fronted-deploy
+        - mkdir -p before-frontend-deploy
         - cp scripts/*.sh before-frontend-deploy/
         - cp appspec.yml before-frontend-deploy/
         - cp -r build before-frontend-deploy
