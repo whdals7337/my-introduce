@@ -24,7 +24,7 @@ matrix:
         - cp build/libs/*.jar before-backend-deploy/
         - cd before-backend-deploy && zip -r before-backend-deploy *
         - cd ../ && mkdir -p deploy
-        - mv before-backend-deploy/before-backend-deploy.zip deploy/back-end.zip
+        - mv before-backend-deploy/before-backend-deploy.zip deploy-backend/back-end.zip
 
       deploy:
         - provider: s3
@@ -34,7 +34,7 @@ matrix:
           region: ap-northeast-2
           skip_cleanup: true
           acl: private
-          local_dir: deploy
+          local_dir: deploy-backend
           wait-until-deployed: true
 
         - provider: codedeploy
@@ -59,3 +59,32 @@ matrix:
       script:
         - npm test
         - npm rum build
+
+      before_deploy:
+        - mkdir -p before-frontend-deploy
+        - cp build/* before-frontend-deploy
+        - cd before-frontend-deploy && zip -r before-frontend-deploy *
+        - cd ../ && mkdir -p deploy
+        - mv before-frontend-deploy/before-frontend-deploy.zip deploy-frontend/front-end.zip
+
+      deploy:
+        - provider: s3
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          region: ap-northeast-2
+          skip_cleanup: true
+          acl: private
+          local_dir: deploy-frontend
+          wait-until-deployed: true
+
+        - provider: codedeploy
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          key: front-end.zip
+          bundle_type: zip
+          application: myintroduce-springboot-webservice
+          deployment_group: myintroduce-springboot-webservice-group
+          region: ap-northeast-2
+          wait-until-deployed: true
