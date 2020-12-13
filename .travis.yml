@@ -23,7 +23,7 @@ matrix:
         - cp appspec.yml before-backend-deploy/
         - cp build/libs/*.jar before-backend-deploy/
         - cd before-backend-deploy && zip -r before-backend-deploy *
-        - cd ../ && mkdir -p deploy
+        - cd ../ && mkdir -p deploy-backend
         - mv before-backend-deploy/before-backend-deploy.zip deploy-backend/back-end.zip
 
       deploy:
@@ -64,7 +64,7 @@ matrix:
         - mkdir -p before-frontend-deploy
         - cp build/* before-frontend-deploy
         - cd before-frontend-deploy && zip -r before-frontend-deploy *
-        - cd ../ && mkdir -p deploy
+        - cd ../ && mkdir -p deploy-frontend
         - mv before-frontend-deploy/before-frontend-deploy.zip deploy-frontend/front-end.zip
 
       deploy:
