@@ -84,7 +84,7 @@ matrix:
           bucket: myintroduce-springboot-build
           key: front-end.zip
           bundle_type: zip
-          application: myintroduce-springboot-webservice
-          deployment_group: myintroduce-springboot-webservice-group
+          application: myintroduce-react-service
+          deployment_group: myintroduce-react-service-group
           region: ap-northeast-2
           wait-until-deployed: true
