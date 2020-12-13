@@ -12,10 +12,9 @@ matrix:
         - npm run build
 
       before_deploy:
-        - mkdir -p before-frontend-deploy
+        - cp -r build before-frontend-deploy
         - cp scripts/*.sh before-frontend-deploy/
         - cp appspec.yml before-frontend-deploy/
-        - mv build/* before-frontend-deploy
         - cd before-frontend-deploy && zip -r before-frontend-deploy *
         - cd ../ && mkdir -p deploy-frontend
         - mv before-frontend-deploy/before-frontend-deploy.zip deploy-frontend/front-end.zip
