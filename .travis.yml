@@ -62,6 +62,7 @@ matrix:
 
       before_deploy:
         - mkdir -p before-frontend-deploy
+        - cp scripts/*.sh before-frontend-deploy/
         - cp -r build before-frontend-deploy
         - cd before-frontend-deploy && zip -r before-frontend-deploy *
         - cd ../ && mkdir -p deploy-frontend
