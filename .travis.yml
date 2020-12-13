@@ -1,11 +1,27 @@
-language: node_js
+matrix:
+  include:
+    - language: java
+      cache:
+        directories:
+          - '$HOME/.m2/repository'
+          - '$HOME/.gradle'
 
-node_js:
-  - "stable"
+      before_install:
+        - sudo mkdir -p /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - sudo chmod 777 /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - cd back-end/
+        - chmod +x gradlew
 
-before_install:
-  - cd front-end/
+      script: "./gradlew clean build"
 
-script:
-  - npm test
-  - npm rum build
+    - language: node_js
+
+      node_js:
+        - "stable"
+
+      before_install:
+        - cd front-end/
+
+      script:
+        - npm test
+        - npm rum build
