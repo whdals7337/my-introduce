@@ -1,6 +1,9 @@
 matrix:
   include:
     - language: java
+      jdk:
+        - openjdk8
+
       cache:
         directories:
           - '$HOME/.m2/repository'
@@ -13,6 +16,26 @@ matrix:
         - chmod +x gradlew
 
       script: "./gradlew clean build"
+
+      before_deploy:
+        - mkdir -p before-backend-deploy
+        - cp scripts/*.sh before-backend-deploy/
+        - cp appspec.yml before-backend-deploy/
+        - cp build/libs/*.jar before-backend-deploy/
+        - cd before-backend-deploy && zip -r before-backend-deploy *
+        - cd ../ && mkdir -p deploy
+        - mv before-backend-deploy/before-backend-deploy.zip deploy/back-end.zip
+
+      deploy:
+        - provider: s3
+          access_key_id: $AWS_ACCESS_KEY
+          secret_access_key: $AWS_SECRET_KEY
+          bucket: myintroduce-springboot-build
+          region: ap-northeast-2
+          skip_cleanup: true
+          acl: private
+          local_dir: deploy
+          wait-until-deployed: true
 
     - language: node_js
 
