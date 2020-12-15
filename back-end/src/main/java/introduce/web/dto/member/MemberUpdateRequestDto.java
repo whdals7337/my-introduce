@@ -12,15 +12,17 @@ public class MemberUpdateRequestDto {
     private String comment;
     private String filePath;
     private String fileOriginName;
+    private String subIntroduction;
     private String introduction;
     private String phoneNumber;
     private String email;
 
     @Builder
-    public MemberUpdateRequestDto(String comment, String filePath, String fileOriginName, String introduction, String phoneNumber, String email) {
+    public MemberUpdateRequestDto(String comment, String filePath, String fileOriginName, String subIntroduction, String introduction, String phoneNumber, String email) {
         this.comment = comment;
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
+        this.subIntroduction = subIntroduction;
         this.introduction =introduction;
         this.phoneNumber = phoneNumber;
         this.email = email;

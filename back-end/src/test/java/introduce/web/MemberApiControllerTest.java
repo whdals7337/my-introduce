@@ -56,6 +56,7 @@ public class MemberApiControllerTest {
         );
         String comment = "코멘트 영역 입니다.";
         String imageOriginName = "hello.txt";
+        String subIntroduction = "서브 자기소개 영역입니다.";
         String introduction = "자기소개 영역입니다.";
         String phoneNumber = "010-1111-1111";
         String email = "uok0201@gmail.com";
@@ -65,6 +66,7 @@ public class MemberApiControllerTest {
         this.mockMvc.perform(multipart(url)
                 .file(testFile)
                 .param("comment",comment)
+                .param("subIntroduction", subIntroduction)
                 .param("introduction",introduction)
                 .param("phoneNumber",phoneNumber)
                 .param("email",email))
@@ -73,6 +75,7 @@ public class MemberApiControllerTest {
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(comment);
         assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
+        assertThat(all.get(0).getSubIntroduction()).isEqualTo(subIntroduction);
         assertThat(all.get(0).getIntroduction()).isEqualTo(introduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(all.get(0).getEmail()).isEqualTo(email);
@@ -84,6 +87,7 @@ public class MemberApiControllerTest {
                 .comment("코멘트")
                 .filePath("헤어 이미지 경로")
                 .fileOriginName("헤더 이미지 원본 이름")
+                .subIntroduction("서브 자기소개")
                 .introduction("자기소개")
                 .phoneNumber("연락처")
                 .email("이메일")
@@ -92,6 +96,7 @@ public class MemberApiControllerTest {
         Long updateId = saveMember.getMemberId();
         String expectedComment = "comment";
         String expectedImageOriginName = "hello.txt";
+        String expectedSubIntroduction = "subIntroduction";
         String expectedIntroduction = "introduction";
         String expectedPhoneNumber = "phoneNumber";
         String expectedEmail = "email";
@@ -119,6 +124,7 @@ public class MemberApiControllerTest {
         mockMvc.perform(builder
                 .file(testFile)
                 .param("comment", expectedComment)
+                .param("subIntroduction", expectedSubIntroduction)
                 .param("introduction", expectedIntroduction)
                 .param("phoneNumber", expectedPhoneNumber)
                 .param("email", expectedEmail))
@@ -127,6 +133,7 @@ public class MemberApiControllerTest {
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(expectedComment);
         assertThat(all.get(0).getFileOriginName()).isEqualTo(expectedImageOriginName);
+        assertThat(all.get(0).getSubIntroduction()).isEqualTo(expectedSubIntroduction);
         assertThat(all.get(0).getIntroduction()).isEqualTo(expectedIntroduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(expectedPhoneNumber);
         assertThat(all.get(0).getEmail()).isEqualTo(expectedEmail);

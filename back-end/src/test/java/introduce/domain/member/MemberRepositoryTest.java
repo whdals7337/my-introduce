@@ -30,6 +30,7 @@ public class MemberRepositoryTest {
         String comment = "페이지 탑 영역 내용 부분입니다.";
         String headerImagePath = "헤더 이미지 경로";
         String imageOriginName ="헤더 이미지 원본 이름";
+        String subIntroduction = "자기소개 서브 내용 부분입니다.";
         String introduction = "자기소개 내용 부분입니다.";
         String phoneNumber = "010-1111-1111";
         String email = "uok0201@gmail.com";
@@ -38,6 +39,7 @@ public class MemberRepositoryTest {
                 .comment(comment)
                 .filePath(headerImagePath)
                 .fileOriginName(imageOriginName)
+                .subIntroduction(subIntroduction)
                 .introduction(introduction)
                 .phoneNumber(phoneNumber)
                 .email(email)
@@ -52,6 +54,7 @@ public class MemberRepositoryTest {
         assertThat(member.getComment()).isEqualTo(comment);
         assertThat(member.getFilePath()).isEqualTo(headerImagePath);
         assertThat(member.getFileOriginName()).isEqualTo(imageOriginName);
+        assertThat(member.getSubIntroduction()).isEqualTo(subIntroduction);
         assertThat(member.getIntroduction()).isEqualTo(introduction);
         assertThat(member.getPhoneNumber()).isEqualTo(phoneNumber);
         assertThat(member.getEmail()).isEqualTo(email);
