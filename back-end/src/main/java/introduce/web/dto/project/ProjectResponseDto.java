@@ -11,6 +11,7 @@ public class ProjectResponseDto {
     private String projectPostScript;
     private String filePath;
     private String fileOriginName;
+    private String projectLink;
     private Integer level;
     private Long memberId;
 
@@ -21,6 +22,7 @@ public class ProjectResponseDto {
         this.projectPostScript = entity.getProjectPostScript();
         this.filePath = entity.getFilePath();
         this.fileOriginName = entity.getFileOriginName();
+        this.projectLink = entity.getProjectLink();
         this.level = entity.getLevel();
         this.memberId = entity.getMemberId();
     }

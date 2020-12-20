@@ -15,16 +15,18 @@ public class ProjectUpdateRequestDto {
     private String projectPostScript;
     private String filePath;
     private String fileOriginName;
+    private String projectLink;
     private Integer level;
     private Long memberId;
 
     @Builder
-    public ProjectUpdateRequestDto(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, int level, Long memberId) {
+    public ProjectUpdateRequestDto(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, String projectLink, int level, Long memberId) {
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
         this.projectPostScript = projectPostScript;
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
+        this.projectLink = projectLink;
         this.level = level;
         this.memberId =memberId;
     }

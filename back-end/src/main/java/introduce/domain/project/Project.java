@@ -31,6 +31,9 @@ public class Project extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String fileOriginName;
 
+    @Column(length = 100)
+    private String projectLink;
+
     @Column(nullable = false)
     private Integer level;
 
@@ -38,22 +41,24 @@ public class Project extends BaseTimeEntity {
     private Long memberId;
 
     @Builder
-    public Project(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, int level, Long memberId) {
+    public Project(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, String projectLink, int level, Long memberId) {
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
         this.projectPostScript = projectPostScript;
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
+        this.projectLink = projectLink;
         this.level = level;
         this.memberId = memberId;
     }
 
-    public void update(String projectTitle, String projectContent, String projectPostScript, String filePath,String fileOriginName, int level, Long memberId) {
+    public void update(String projectTitle, String projectContent, String projectPostScript, String filePath,String fileOriginName, String projectLink, int level, Long memberId) {
         this.projectTitle = projectTitle;
         this.projectContent = projectContent;
         this.projectPostScript = projectPostScript;
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
+        this.projectLink = projectLink;
         this.level = level;
         this.memberId = memberId;
     }

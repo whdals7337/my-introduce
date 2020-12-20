@@ -55,6 +55,7 @@ public class ProjectApiControllerTest {
         String imageOriginName = "hello.txt";
         String projectContent = "프로젝트 내용";
         String projectPostScript = "프로젝트 추신";
+        String projectLink = "http://gaergerg";
         Integer level = 1;
         Long memberId = (long) 1;
 
@@ -65,6 +66,7 @@ public class ProjectApiControllerTest {
                 .param("projectTitle", projectTitle)
                 .param("projectContent", projectContent)
                 .param("projectPostScript", projectPostScript)
+                .param("projectLink", projectLink)
                 .param("level", String.valueOf(level))
                 .param("memberId", String.valueOf(memberId)))
                 .andExpect(status().isOk());
@@ -74,6 +76,7 @@ public class ProjectApiControllerTest {
         assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getProjectContent()).isEqualTo(projectContent);
         assertThat(all.get(0).getProjectPostScript()).isEqualTo(projectPostScript);
+        assertThat(all.get(0).getProjectLink()).isEqualTo(projectLink);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
         assertThat(all.get(0).getMemberId()).isEqualTo(memberId);
     }
@@ -92,6 +95,7 @@ public class ProjectApiControllerTest {
                     .projectPostScript("프로젝트 추신0" + i)
                     .filePath("프로젝트 이미지 경로0" + i)
                     .fileOriginName("프로젝트 이미지 원본이름0" + i)
+                    .projectLink("http://gergerg" + i)
                     .level(i)
                     .memberId((long) 1)
                     .build());
@@ -113,6 +117,7 @@ public class ProjectApiControllerTest {
         String expectedProjectContent = "projectContent";
         String expectedProjectPostScript = "projectPostScript";
         String expectedImageOriginName = "hello.txt";
+        String expectedProjectLink = "http://gergergerg";
         int expectedLevel = 1;
         Long expectedMemberId = (long) 2;
 
@@ -133,6 +138,7 @@ public class ProjectApiControllerTest {
                 .param("projectTitle", expectedProjectTitle)
                 .param("projectContent", expectedProjectContent)
                 .param("projectPostScript", expectedProjectPostScript)
+                .param("projectLink", expectedProjectLink)
                 .param("level", String.valueOf(expectedLevel))
                 .param("memberId", String.valueOf(expectedMemberId)))
                 .andExpect(status().isOk());
@@ -143,6 +149,7 @@ public class ProjectApiControllerTest {
         assertThat(target.getProjectContent()).isEqualTo(expectedProjectContent);
         assertThat(target.getProjectPostScript()).isEqualTo(expectedProjectPostScript);
         assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
+        assertThat(target.getProjectLink()).isEqualTo(expectedProjectLink);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMemberId()).isEqualTo(expectedMemberId);
 

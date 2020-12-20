@@ -32,6 +32,7 @@ public class ProjectRepositoryTest {
         String projectPostScript = "#Spring #angularJs #현장실습";
         String projectImagePath = "D:\\my-introduce\\images\\project\\projectImage01.img";
         String imageOriginName = "프로젝트 이미지 이름";
+        String projectLink = "http://aergaerg";
         int level = 1;
 
         projectRepository.save(Project.builder()
@@ -40,6 +41,7 @@ public class ProjectRepositoryTest {
                 .projectPostScript(projectPostScript)
                 .filePath(projectImagePath)
                 .fileOriginName(imageOriginName)
+                .projectLink(projectLink)
                 .level(level)
                 .build());
 
@@ -54,6 +56,7 @@ public class ProjectRepositoryTest {
         assertThat(project.getProjectPostScript()).isEqualTo(projectPostScript);
         assertThat(project.getFilePath()).isEqualTo(projectImagePath);
         assertThat(project.getFileOriginName()).isEqualTo(imageOriginName);
+        assertThat(project.getProjectLink()).isEqualTo(projectLink);
         assertThat(project.getLevel()).isEqualTo(level);
         assertThat(project.getRgDate()).isAfter(now);
         assertThat(project.getMdDate()).isAfter(now);

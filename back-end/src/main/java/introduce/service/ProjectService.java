@@ -106,7 +106,7 @@ public class ProjectService {
 
             // [3] project info DB update
             project.update(requestDto.getProjectTitle(), requestDto.getProjectContent(), requestDto.getProjectPostScript(),
-                    requestDto.getFilePath(), requestDto.getFileOriginName(), requestDto.getLevel(), requestDto.getMemberId());
+                    requestDto.getFilePath(), requestDto.getFileOriginName(), requestDto.getProjectLink(), requestDto.getLevel(), requestDto.getMemberId());
             logger.info("[3] project info DB update");
 
             logger.info("project update end");
@@ -131,7 +131,7 @@ public class ProjectService {
 
         // [4] project info DB update
         project.update(requestDto.getProjectTitle(), requestDto.getProjectContent(), requestDto.getProjectPostScript(),
-                requestDto.getFilePath(), requestDto.getFileOriginName(), requestDto.getLevel(), requestDto.getMemberId());
+                requestDto.getFilePath(), requestDto.getFileOriginName(), requestDto.getProjectLink(), requestDto.getLevel(), requestDto.getMemberId());
         logger.info("[4] project info DB update");
 
         // [5] file transfer
