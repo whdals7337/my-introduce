@@ -10,3 +10,7 @@ rm -rf $REPOSITORY/front-end/build
 echo "> zip 파일 복사 "
 
 cp -r $REPOSITORY/front-end-zip/build $REPOSITORY/front-end
+
+echo "> nginx restart"
+sudo systemctl restart nginx
+
