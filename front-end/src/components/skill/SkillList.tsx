@@ -12,9 +12,11 @@ function SkillList({ skills }: SkillListProps) {
     <>
       <Title title="Skill" />
       <ul>
-        {skills.map((skill) => (
-          <SkillItem skill={skill} key={skill.skillId} />
-        ))}
+        {skills &&
+          skills.length > 0 &&
+          skills.map((skill) => (
+            <SkillItem skill={skill} key={skill.skillId} />
+          ))}
       </ul>
     </>
   );

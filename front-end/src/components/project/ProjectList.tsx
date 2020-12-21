@@ -12,9 +12,11 @@ function ProjectList({ projects }: ProjectListProps) {
     <>
       <Title title="Project" />
       <ul>
-        {projects.map((project) => (
-          <ProjectItem project={project} key={project.projectId} />
-        ))}
+        {projects &&
+          projects.length > 0 &&
+          projects.map((project) => (
+            <ProjectItem project={project} key={project.projectId} />
+          ))}
       </ul>
     </>
   );
