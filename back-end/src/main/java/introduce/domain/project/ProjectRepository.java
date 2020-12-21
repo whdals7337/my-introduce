@@ -10,5 +10,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findByLevelBetween(int preLevel, int lastLevel);
 
     // 특정 회원의 프로젝트 조회
-    List<Project> findByMemberId(Long memberId);
+    List<Project> findAllByMemberId(Long memberId);
 }

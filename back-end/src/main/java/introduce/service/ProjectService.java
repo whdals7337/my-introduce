@@ -168,7 +168,7 @@ public class ProjectService {
     public List<ProjectResponseDto> findAll(Long memberId) {
         // 회원 ID값이 있을시 해당회원의 project 조회
         if(memberId != null && memberId > 0){
-            return projectRepository.findByMemberId(memberId).stream().map(ProjectResponseDto::new).collect(Collectors.toList());
+            return projectRepository.findAllByMemberId(memberId).stream().map(ProjectResponseDto::new).collect(Collectors.toList());
         }
         return projectRepository.findAll().stream().map(ProjectResponseDto::new).collect(Collectors.toList());
     }

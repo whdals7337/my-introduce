@@ -169,7 +169,7 @@ public class SkillService {
     public List<SkillResponseDto> findAll(Long memberId) {
         // 회원 ID값이 있을시 해당회원의 skill 조회
         if(memberId != null && memberId > 0){
-            return skillRepository.findByMemberId(memberId).stream().map(SkillResponseDto::new).collect(Collectors.toList());
+            return skillRepository.findAllByMemberId(memberId).stream().map(SkillResponseDto::new).collect(Collectors.toList());
         }
         return skillRepository.findAll().stream().map(SkillResponseDto::new).collect(Collectors.toList());
     }
