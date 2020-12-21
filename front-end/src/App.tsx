@@ -1,14 +1,20 @@
 import React from "react";
-import Header from "./components/Header";
-import Introduce from "./components/Introduce";
-import Title from "./components/Ttitle";
+import Menu from "./components/menu/Menu";
+import FooterLoader from "./container/FooterLoader";
+import HeaderLoader from "./container/HeaderLoader";
+import IntroduceLoader from "./container/IntroduceLoader";
+import ProjectLoader from "./container/ProjectLoader";
+import SkillLoader from "./container/SkillLoader";
 
 function App() {
   return (
     <>
-      <Header />
-      <Title />
-      <Introduce />
+      <Menu />
+      <HeaderLoader />
+      <IntroduceLoader />
+      <SkillLoader />
+      <ProjectLoader />
+      <FooterLoader />
     </>
   );
 }
