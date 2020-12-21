@@ -71,7 +71,7 @@ public class MemberService {
     @Transactional
     public Long update(Long id, MemberUpdateRequestDto requestDto, MultipartFile file) throws Exception {
         logger.info("member update start");
-        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 없습니다."));
+        Member member = validateMember(id);
 
         // 첨부된 파일이 없는 경우
         if(file == null || file.isEmpty()) {
@@ -127,7 +127,7 @@ public class MemberService {
     public void delete(Long id) {
         logger.info("member delete start");
 
-        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 없습니다."));
+        Member member = validateMember(id);
         String preExistingFilePath = member.getFilePath();
 
         // [1] member info DB delete
@@ -150,5 +150,11 @@ public class MemberService {
     public MemberResponseDto findById(Long id) {
         Member entity = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 없습니다."));
         return new MemberResponseDto(entity);
+    }
+
+    // 유효 검증
+    private Member validateMember(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 멤버가 없습니다."));
+        return member;
     }
 }

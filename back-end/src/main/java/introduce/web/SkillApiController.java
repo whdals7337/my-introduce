@@ -33,8 +33,8 @@ public class SkillApiController {
     }
 
     @GetMapping("api/skill")
-    public List<SkillResponseDto> findAll() {
-        return skillService.findAll();
+    public List<SkillResponseDto> findAll(@RequestParam("memberId") Long memberId) {
+        return skillService.findAll(memberId);
     }
 
     @GetMapping("api/skill/{id}")

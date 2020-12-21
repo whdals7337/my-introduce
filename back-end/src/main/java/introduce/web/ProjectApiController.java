@@ -33,8 +33,8 @@ public class ProjectApiController {
     }
 
     @GetMapping("api/project")
-    public List<ProjectResponseDto> findAll() {
-        return projectService.findAll();
+    public List<ProjectResponseDto> findAll(@RequestParam("memberId") Long memberId) {
+        return projectService.findAll(memberId);
     }
 
     @GetMapping("api/project/{id}")

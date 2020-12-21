@@ -70,7 +70,7 @@ public class ProjectService {
     @Transactional
     public Long update(Long id, ProjectUpdateRequestDto requestDto, MultipartFile file) throws Exception {
         logger.info("project update start");
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 프로젝트 정보가 없습니다."));
+        Project project = validateProject(id);
 
         // 순서값이 변경 된 경우
         if(project.getLevel() != requestDto.getLevel()){
@@ -150,7 +150,7 @@ public class ProjectService {
     public void delete(Long id) {
         logger.info("project delete start");
 
-        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 프로젝트 정보가 없습니다."));
+        Project project = validateProject(id);
         String preExistingFilePath = project.getFilePath();
 
         // [1] project info DB delete
@@ -165,13 +165,23 @@ public class ProjectService {
     }
     
     @Transactional
-    public List<ProjectResponseDto> findAll() {
+    public List<ProjectResponseDto> findAll(Long memberId) {
+        // 회원 ID값이 있을시 해당회원의 project 조회
+        if(memberId != null && memberId > 0){
+            return projectRepository.findByMemberId(memberId).stream().map(ProjectResponseDto::new).collect(Collectors.toList());
+        }
         return projectRepository.findAll().stream().map(ProjectResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional
     public ProjectResponseDto findById(Long id) {
-        Project entity = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 프로젝트 정보가 없습니다."));
+        Project entity = validateProject(id);
         return new ProjectResponseDto(entity);
+    }
+
+    // 유효 검증
+    private Project validateProject(Long id) {
+        Project project = projectRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 프로젝트 정보가 없습니다."));
+        return project;
     }
 }

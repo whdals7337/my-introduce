@@ -1,5 +1,6 @@
 package introduce.service;
 
+import introduce.domain.project.Project;
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
 import introduce.utill.FileUtil;
@@ -70,7 +71,7 @@ public class SkillService {
     @Transactional
     public Long update(Long id, SkillUpdateRequestDto requestDto, MultipartFile file) throws Exception {
         logger.info("skill update start");
-        Skill skill = skillRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 스킬의 정보가 없습니다."));
+        Skill skill = validateSkill(id);
 
         // 순서값이 변경 된 경우
         if(skill.getLevel() != requestDto.getLevel()){
@@ -150,7 +151,7 @@ public class SkillService {
     @Transactional
     public void delete(Long id) {
         logger.info("skill delete start");
-        Skill skill = skillRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 스킬의 정보가 없습니다."));
+        Skill skill = validateSkill(id);
         String preExistingFilePath = skill.getFilePath();
 
         // [1] skill info DB delete
@@ -165,13 +166,23 @@ public class SkillService {
     }
 
     @Transactional
-    public List<SkillResponseDto> findAll() {
+    public List<SkillResponseDto> findAll(Long memberId) {
+        // 회원 ID값이 있을시 해당회원의 skill 조회
+        if(memberId != null && memberId > 0){
+            return skillRepository.findByMemberId(memberId).stream().map(SkillResponseDto::new).collect(Collectors.toList());
+        }
         return skillRepository.findAll().stream().map(SkillResponseDto::new).collect(Collectors.toList());
     }
 
     @Transactional
     public SkillResponseDto findById(Long id) {
-        Skill entity = skillRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 스킬의 정보가 없습니다."));
+        Skill entity = validateSkill(id);
         return new SkillResponseDto(entity);
+    }
+
+    // 유효 검증
+    private Skill validateSkill(Long id) {
+        Skill skill = skillRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("해당 스킬의 정보가 없습니다."));
+        return skill;
     }
 }
