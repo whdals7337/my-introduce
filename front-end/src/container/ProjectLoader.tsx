@@ -16,7 +16,8 @@ function ProjectLoader() {
 
   useEffect(() => {
     dispatch(getProjectsByMemberIdThunk(memberId ? memberId : 1));
-  }, [dispatch, memberId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>

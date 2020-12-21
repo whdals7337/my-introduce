@@ -12,7 +12,8 @@ function HeaderLoader() {
 
   useEffect(() => {
     dispatch(getMemberThunk(data?.memberId ? data.memberId : 1));
-  }, [data?.memberId, dispatch]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <>
