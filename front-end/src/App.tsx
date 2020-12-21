@@ -4,7 +4,6 @@ import FooterLoader from "./container/FooterLoader";
 import HeaderLoader from "./container/HeaderLoader";
 import IntroduceLoader from "./container/IntroduceLoader";
 import ProjectLoader from "./container/ProjectLoader";
-import SkillLoader from "./container/SkillLoader";
 
 function App() {
   return (
@@ -12,7 +11,6 @@ function App() {
       <Menu />
       <HeaderLoader />
       <IntroduceLoader />
-      <SkillLoader />
       <ProjectLoader />
       <FooterLoader />
     </>
