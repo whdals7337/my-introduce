@@ -1,12 +1,12 @@
 import axios from 'axios';
 
 export async function getMembers() {
-    const response = await axios.get<Member[]>(`http://localhost:8080/api/member`);
+    const response = await axios.get<Member[]>(`/api/member`);
     return response.data;
 }
 
 export async function getMemberById(id: number) {
-    const response = await axios.get<Member>(`http://localhost:8080/api/member/${id}`);
+    const response = await axios.get<Member>(`/api/member/${id}`);
     return response.data;
 }
 
