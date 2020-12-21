@@ -16,7 +16,7 @@ function ProjectLoader() {
 
   useEffect(() => {
     dispatch(getProjectsByMemberIdThunk(memberId ? memberId : 1));
-  }, []);
+  }, [dispatch, memberId]);
 
   return (
     <>

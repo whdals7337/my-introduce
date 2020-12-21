@@ -16,7 +16,7 @@ function SkillLoader() {
 
   useEffect(() => {
     dispatch(getSkillsByMemberIdThunk(memberId ? memberId : 1));
-  }, []);
+  }, [dispatch, memberId]);
 
   return (
     <>

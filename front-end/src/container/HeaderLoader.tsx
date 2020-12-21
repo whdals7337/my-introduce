@@ -12,7 +12,7 @@ function HeaderLoader() {
 
   useEffect(() => {
     dispatch(getMemberThunk(data?.memberId ? data.memberId : 1));
-  }, []);
+  }, [data?.memberId, dispatch]);
 
   return (
     <>
