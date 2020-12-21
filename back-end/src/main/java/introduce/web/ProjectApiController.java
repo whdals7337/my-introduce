@@ -22,7 +22,7 @@ public class ProjectApiController {
     }
 
     @PutMapping("/api/project/{id}")
-    public Long update(@PathVariable Long id, ProjectUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long update(@PathVariable Long id, ProjectUpdateRequestDto requestDto, @RequestParam(name="file", required=false) MultipartFile file) throws Exception {
         return projectService.update(id, requestDto, file);
     }
 
@@ -33,7 +33,7 @@ public class ProjectApiController {
     }
 
     @GetMapping("api/project")
-    public List<ProjectResponseDto> findAll(@RequestParam("memberId") Long memberId) {
+    public List<ProjectResponseDto> findAll(@RequestParam(name = "memberId", required=false) Long memberId) {
         return projectService.findAll(memberId);
     }
 

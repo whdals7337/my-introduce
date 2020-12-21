@@ -29,7 +29,7 @@ public class MemberApiController {
     }
 
     @PutMapping("/api/member/{id}")
-    public Long update(MemberUpdateRequestDto requestDto, @PathVariable Long id, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long update(MemberUpdateRequestDto requestDto, @PathVariable Long id, @RequestParam(name="file", required=false) MultipartFile file) throws Exception {
         return memberService.update(id, requestDto, file);
     }
 

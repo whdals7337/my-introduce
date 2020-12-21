@@ -22,7 +22,7 @@ public class SkillApiController {
     }
 
     @PutMapping("/api/skill/{id}")
-    public Long update(@PathVariable Long id, SkillUpdateRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Long update(@PathVariable Long id, SkillUpdateRequestDto requestDto, @RequestParam(name="file", required=false) MultipartFile file) throws Exception {
         return skillService.update(id, requestDto, file);
     }
 
@@ -33,7 +33,7 @@ public class SkillApiController {
     }
 
     @GetMapping("api/skill")
-    public List<SkillResponseDto> findAll(@RequestParam("memberId") Long memberId) {
+    public List<SkillResponseDto> findAll(@RequestParam(name = "memberId", required=false) Long memberId) {
         return skillService.findAll(memberId);
     }
 
