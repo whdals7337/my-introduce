@@ -25,7 +25,7 @@ public class MemberRepositoryTest {
     }
 
     @Test
-    public void member_domain_test() {
+    public void member_save_test() {
         LocalDateTime now = LocalDateTime.of(2020,12,5,0,0,0);
         String comment = "페이지 탑 영역 내용 부분입니다.";
         String headerImagePath = "헤더 이미지 경로";

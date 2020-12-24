@@ -1,15 +1,19 @@
 package introduce.domain.member;
 
 import introduce.domain.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import introduce.domain.project.Project;
+import introduce.domain.skill.Skill;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
+@ToString(exclude = {"projectList", "skillList"})
 public class Member extends BaseTimeEntity {
 
     @Id
@@ -37,24 +41,19 @@ public class Member extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String email;
 
-    @Builder
-    public Member(String comment, String filePath, String fileOriginName,String subIntroduction, String introduction, String phoneNumber, String email) {
-        this.comment = comment;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.subIntroduction = subIntroduction;
-        this.introduction =introduction;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Project> projectList;
 
-    public void update(String comment, String filePath, String fileOriginName, String subIntroduction, String introduction, String phoneNumber, String email){
-        this.comment = comment;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.subIntroduction = subIntroduction;
-        this.introduction =introduction;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    private List<Skill> skillList;
+
+    public void update(Member member){
+        this.comment = member.getComment();
+        this.filePath = member.getFilePath();
+        this.fileOriginName = member.getFileOriginName();
+        this.subIntroduction = member.getSubIntroduction();
+        this.introduction =member.getIntroduction();
+        this.phoneNumber = member.getPhoneNumber();
+        this.email = member.getEmail();
     }
 }

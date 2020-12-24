@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -17,14 +17,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.RequestPostProcessor;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-
-
-
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -130,12 +128,12 @@ public class MemberApiControllerTest {
                 .param("email", expectedEmail))
                 .andExpect(status().isOk());
 
-        List<Member> all = memberRepository.findAll();
-        assertThat(all.get(0).getComment()).isEqualTo(expectedComment);
-        assertThat(all.get(0).getFileOriginName()).isEqualTo(expectedImageOriginName);
-        assertThat(all.get(0).getSubIntroduction()).isEqualTo(expectedSubIntroduction);
-        assertThat(all.get(0).getIntroduction()).isEqualTo(expectedIntroduction);
-        assertThat(all.get(0).getPhoneNumber()).isEqualTo(expectedPhoneNumber);
-        assertThat(all.get(0).getEmail()).isEqualTo(expectedEmail);
+        Optional<Member> target = memberRepository.findById(updateId);
+        assertThat(target.get().getComment()).isEqualTo(expectedComment);
+        assertThat(target.get().getFileOriginName()).isEqualTo(expectedImageOriginName);
+        assertThat(target.get().getSubIntroduction()).isEqualTo(expectedSubIntroduction);
+        assertThat(target.get().getIntroduction()).isEqualTo(expectedIntroduction);
+        assertThat(target.get().getPhoneNumber()).isEqualTo(expectedPhoneNumber);
+        assertThat(target.get().getEmail()).isEqualTo(expectedEmail);
     }
 }

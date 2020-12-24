@@ -1,9 +1,12 @@
 package introduce.web.dto.member;
 
 import introduce.domain.member.Member;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class MemberResponseDto {
     private Long memberId;
     private String comment;

@@ -1,15 +1,13 @@
 package introduce.web.dto.member;
 
 import introduce.domain.member.Member;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class MemberSaveRequestDto {
+@AllArgsConstructor
+@Builder
+public class MemberRequestDto {
     private String comment;
     private String filePath;
     private String fileOriginName;
@@ -17,17 +15,6 @@ public class MemberSaveRequestDto {
     private String introduction;
     private String phoneNumber;
     private String email;
-
-    @Builder
-    public MemberSaveRequestDto(String comment, String filePath, String fileOriginName,String subIntroduction, String introduction, String phoneNumber, String email) {
-        this.comment = comment;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.subIntroduction = subIntroduction;
-        this.introduction =introduction;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
-    }
 
     public Member toEntity() {
         return  Member.builder()
@@ -42,7 +29,7 @@ public class MemberSaveRequestDto {
     }
     
     // file 정보 셋팅 메서드
-    public void saveFileInfoSetting(String filePath, String fileOriginName) {
+    public void settingFileInfo(String filePath, String fileOriginName) {
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
     }
