@@ -194,7 +194,7 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
         log.info("project findAll start");
 
         // 특정 멤버 id 값이 들어온 경우
-        if(memberId > 0) {
+        if(memberId != null && memberId > 0) {
             Optional<Member> optional = memberRepository.findById(memberId);
             log.info("project findAll end");
             return optional.map(member ->

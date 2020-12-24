@@ -193,7 +193,9 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
     @Transactional
     public Header<List<SkillResponseDto>> findAll(Long memberId) {
         log.info("skill findAll start");
-        if(memberId > 0) {
+
+        // 특정 멤버 id 값이 들어온 경우
+        if(memberId != null && memberId > 0) {
             Optional<Member> optional = memberRepository.findById(memberId);
             log.info("member findAll end");
             return optional.map((member ->
