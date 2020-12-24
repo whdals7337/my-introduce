@@ -1,9 +1,12 @@
 package introduce.web.dto.project;
 
 import introduce.domain.project.Project;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class ProjectResponseDto {
     private Long projectId;
     private String projectTitle;
@@ -24,6 +27,6 @@ public class ProjectResponseDto {
         this.fileOriginName = entity.getFileOriginName();
         this.projectLink = entity.getProjectLink();
         this.level = entity.getLevel();
-        this.memberId = entity.getMemberId();
+        this.memberId= entity.getMember().getMemberId();
     }
 }

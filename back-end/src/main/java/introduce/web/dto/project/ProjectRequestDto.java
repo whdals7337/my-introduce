@@ -1,15 +1,14 @@
 package introduce.web.dto.project;
 
+import introduce.domain.member.Member;
 import introduce.domain.project.Project;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-public class ProjectSaveRequestDto {
+@AllArgsConstructor
+@Builder
+public class ProjectRequestDto {
     private String projectTitle;
     private String projectContent;
     private String projectPostScript;
@@ -19,19 +18,7 @@ public class ProjectSaveRequestDto {
     private Integer level;
     private Long memberId;
 
-    @Builder
-    public ProjectSaveRequestDto(String projectTitle, String projectContent, String projectPostScript, String filePath,String fileOriginName, String projectLink, int level, Long memberId) {
-        this.projectTitle = projectTitle;
-        this.projectContent = projectContent;
-        this.projectPostScript = projectPostScript;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.projectLink = projectLink;
-        this.level = level;
-        this.memberId =memberId;
-    }
-
-    public Project toEntity() {
+    public Project toEntity(Member member) {
         return Project.builder()
                 .projectTitle(projectTitle)
                 .projectContent(projectContent)
@@ -40,12 +27,12 @@ public class ProjectSaveRequestDto {
                 .fileOriginName(fileOriginName)
                 .projectLink(projectLink)
                 .level(level)
-                .memberId(memberId)
+                .member(member)
                 .build();
     }
 
     // file 정보 셋팅 메서드
-    public void saveFileInfoSetting(String filePath, String fileOriginName) {
+    public void settingFileInfo(String filePath, String fileOriginName) {
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
     }

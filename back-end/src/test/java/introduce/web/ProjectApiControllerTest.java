@@ -1,8 +1,11 @@
 package introduce.web;
 
+import introduce.domain.member.Member;
+import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +40,34 @@ public class ProjectApiControllerTest {
     @Autowired
     private ProjectRepository projectRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Before
+    public void memberSetting() {
+        String comment = "페이지 탑 영역 내용 부분입니다.";
+        String headerImagePath = "헤더 이미지 경로";
+        String memimageOriginName ="헤더 이미지 원본 이름";
+        String subIntroduction = "자기소개 서브 내용 부분입니다.";
+        String introduction = "자기소개 내용 부분입니다.";
+        String phoneNumber = "010-1111-1111";
+        String email = "uok0201@gmail.com";
+
+        memberRepository.save(Member.builder()
+                .comment(comment)
+                .filePath(headerImagePath)
+                .fileOriginName(memimageOriginName)
+                .subIntroduction(subIntroduction)
+                .introduction(introduction)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .build());
+    }
+
     @After
     public void tearDown() throws Exception {
         projectRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -57,7 +85,7 @@ public class ProjectApiControllerTest {
         String projectPostScript = "프로젝트 추신";
         String projectLink = "http://gaergerg";
         Integer level = 1;
-        Long memberId = (long) 1;
+        Long memberId = memberRepository.findAll().get(0).getMemberId();
 
         String url = "http://localhost:" + port + "/api/project";
 
@@ -78,7 +106,7 @@ public class ProjectApiControllerTest {
         assertThat(all.get(0).getProjectPostScript()).isEqualTo(projectPostScript);
         assertThat(all.get(0).getProjectLink()).isEqualTo(projectLink);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
-        assertThat(all.get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(all.get(0).getMember().getMemberId()).isEqualTo(memberId);
     }
 
     @Test
@@ -86,6 +114,8 @@ public class ProjectApiControllerTest {
         Long updateId = null;
         // level 의 3과 1을 교환한 순서
         int[] level_list = {2, 3, 1 ,4};
+        Long memberId = memberRepository.findAll().get(0).getMemberId();
+        Member member = memberRepository.findById(memberId).get();
 
         // 프로젝트 값 4개 setting
         for(int i = 1; i < 5; i++){
@@ -97,7 +127,7 @@ public class ProjectApiControllerTest {
                     .fileOriginName("프로젝트 이미지 원본이름0" + i)
                     .projectLink("http://gergerg" + i)
                     .level(i)
-                    .memberId((long) 1)
+                    .member(member)
                     .build());
 
             // 프로젝트 level 이 3 인 경우의 id값
@@ -119,7 +149,7 @@ public class ProjectApiControllerTest {
         String expectedImageOriginName = "hello.txt";
         String expectedProjectLink = "http://gergergerg";
         int expectedLevel = 1;
-        Long expectedMemberId = (long) 2;
+        Long expectedMemberId = memberId;
 
         String url = "http://localhost:" + port + "/api/project/" + updateId;
 
@@ -151,7 +181,7 @@ public class ProjectApiControllerTest {
         assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(target.getProjectLink()).isEqualTo(expectedProjectLink);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
-        assertThat(target.getMemberId()).isEqualTo(expectedMemberId);
+        assertThat(target.getMember().getMemberId()).isEqualTo(expectedMemberId);
 
         // 테이블의 level 값 전체 검증
         List<Project> all = projectRepository.findAll();

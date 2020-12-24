@@ -1,5 +1,6 @@
 package introduce.domain.project;
 
+import introduce.domain.member.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -10,5 +11,5 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
     List<Project> findByLevelBetween(int preLevel, int lastLevel);
 
     // 특정 회원의 프로젝트 조회
-    List<Project> findAllByMemberId(Long memberId);
+    List<Project> findAllByMember(Member member);
 }

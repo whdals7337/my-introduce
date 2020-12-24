@@ -1,15 +1,17 @@
 package introduce.domain.project;
 
 import introduce.domain.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import introduce.domain.member.Member;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
+@ToString(exclude = {"member"})
 public class Project extends BaseTimeEntity {
 
     @Id
@@ -37,30 +39,18 @@ public class Project extends BaseTimeEntity {
     @Column(nullable = false)
     private Integer level;
 
-    @Column
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
-    @Builder
-    public Project(String projectTitle, String projectContent, String projectPostScript, String filePath, String fileOriginName, String projectLink, int level, Long memberId) {
-        this.projectTitle = projectTitle;
-        this.projectContent = projectContent;
-        this.projectPostScript = projectPostScript;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.projectLink = projectLink;
-        this.level = level;
-        this.memberId = memberId;
-    }
-
-    public void update(String projectTitle, String projectContent, String projectPostScript, String filePath,String fileOriginName, String projectLink, int level, Long memberId) {
-        this.projectTitle = projectTitle;
-        this.projectContent = projectContent;
-        this.projectPostScript = projectPostScript;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.projectLink = projectLink;
-        this.level = level;
-        this.memberId = memberId;
+    public void update(Project project) {
+        this.projectTitle = project.getProjectTitle();
+        this.projectContent = project.getProjectContent();
+        this.projectPostScript = project.getProjectPostScript();
+        this.filePath = project.getFilePath();
+        this.fileOriginName = project.getFileOriginName();
+        this.projectLink = project.getProjectLink();
+        this.level = project.getLevel();
+        this.member = project.getMember();
     }
 
     public void levelUp() {
