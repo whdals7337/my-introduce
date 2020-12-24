@@ -1,15 +1,17 @@
 package introduce.domain.skill;
 
 import introduce.domain.BaseTimeEntity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import introduce.domain.member.Member;
+import lombok.*;
 
 import javax.persistence.*;
 
 @Getter
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@Builder
+@ToString(exclude = {"member"})
 public class Skill extends BaseTimeEntity  {
 
     @Id
@@ -31,26 +33,17 @@ public class Skill extends BaseTimeEntity  {
     @Column(nullable = false)
     private Integer level;
 
-    @Column
-    private Long memberId;
+    @ManyToOne
+    private Member member;
 
-    @Builder
-    public Skill(String skillName, String filePath, String fileOriginName, int skillLevel, int level, Long memberId) {
-        this.skillName = skillName;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.skillLevel = skillLevel;
-        this.level= level;
-        this.memberId = memberId;
-    }
 
-    public void update(String skillName, String filePath, String fileOriginName, int skillLevel, int level, Long memberId) {
-        this.skillName = skillName;
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
-        this.skillLevel = skillLevel;
-        this.level= level;
-        this.memberId = memberId;
+    public void update(Skill skill) {
+        this.skillName = skill.getSkillName();
+        this.filePath = skill.getFilePath();
+        this.fileOriginName = skill.getFileOriginName();
+        this.skillLevel = skill.getSkillLevel();
+        this.level= skill.getLevel();
+        this.member= skill.getMember();
     }
 
     public void levelUp() {

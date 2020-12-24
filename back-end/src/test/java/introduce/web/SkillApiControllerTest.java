@@ -1,8 +1,11 @@
 package introduce.web;
 
+import introduce.domain.member.Member;
+import introduce.domain.member.MemberRepository;
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,9 +40,34 @@ public class SkillApiControllerTest {
     @Autowired
     private SkillRepository skillRepository;
 
+    @Autowired
+    private MemberRepository memberRepository;
+
+    @Before
+    public void memberSetting() {
+        String comment = "페이지 탑 영역 내용 부분입니다.";
+        String headerImagePath = "헤더 이미지 경로";
+        String imageOriginName ="헤더 이미지 원본 이름";
+        String subIntroduction = "자기소개 서브 내용 부분입니다.";
+        String introduction = "자기소개 내용 부분입니다.";
+        String phoneNumber = "010-1111-1111";
+        String email = "uok0201@gmail.com";
+
+        memberRepository.save(Member.builder()
+                .comment(comment)
+                .filePath(headerImagePath)
+                .fileOriginName(imageOriginName)
+                .subIntroduction(subIntroduction)
+                .introduction(introduction)
+                .phoneNumber(phoneNumber)
+                .email(email)
+                .build());
+    }
+
     @After
     public void tearDown() throws Exception {
         skillRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test
@@ -55,7 +83,7 @@ public class SkillApiControllerTest {
         String imageOriginName = "hello.txt";
         Integer skillLevel = 3;
         Integer level = 1;
-        Long memberId = (long) 1;
+        Long memberId = memberRepository.findAll().get(0).getMemberId();
 
         String url = "http://localhost:" + port + "/api/skill";
 
@@ -72,7 +100,7 @@ public class SkillApiControllerTest {
         assertThat(all.get(0).getFileOriginName()).isEqualTo(imageOriginName);
         assertThat(all.get(0).getSkillLevel()).isEqualTo(skillLevel);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
-        assertThat(all.get(0).getMemberId()).isEqualTo(memberId);
+        assertThat(all.get(0).getMember().getMemberId()).isEqualTo(memberId);
     }
 
     @Test
@@ -80,6 +108,8 @@ public class SkillApiControllerTest {
         Long updateId = null;
         // level 의 3과 1을 교환한 순서
         int[] level_list = {2, 3, 1 ,4};
+        Long memberId = memberRepository.findAll().get(0).getMemberId();
+        Member member = memberRepository.findById(memberId).get();
 
         // 스킬 값 4개 setting
         for(int i = 1; i < 5; i++){
@@ -89,7 +119,7 @@ public class SkillApiControllerTest {
                     .fileOriginName("스킬 이미지 이름0" + i)
                     .skillLevel(3)
                     .level(i)
-                    .memberId((long) 1)
+                    .member(member)
                     .build());
 
             // 스킬 level 이 3 인 경우의 id값
@@ -109,7 +139,7 @@ public class SkillApiControllerTest {
         String expectedImageOriginName = "hello.txt";
         int expectedSkillLevel = 1;
         int expectedLevel = 1;
-        Long expectedMemberId = (long) 2;
+        Long expectedMemberId = memberId;
 
         String url = "http://localhost:" + port + "/api/skill/" + updateId;
 
@@ -137,7 +167,7 @@ public class SkillApiControllerTest {
         assertThat(target.getFileOriginName()).isEqualTo(expectedImageOriginName);
         assertThat(target.getSkillLevel()).isEqualTo(expectedSkillLevel);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
-        assertThat(target.getMemberId()).isEqualTo(expectedMemberId);
+        assertThat(target.getMember().getMemberId()).isEqualTo(expectedMemberId);
 
         // 테이블의 level 값 전체 검증
         List<Skill> all = skillRepository.findAll();

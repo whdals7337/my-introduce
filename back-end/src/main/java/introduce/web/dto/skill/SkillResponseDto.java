@@ -1,9 +1,12 @@
 package introduce.web.dto.skill;
 
 import introduce.domain.skill.Skill;
-import lombok.Getter;
+import lombok.*;
 
-@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class SkillResponseDto {
     private Long skillId;
     private String skillName;
@@ -20,6 +23,6 @@ public class SkillResponseDto {
         this.fileOriginName = entity.getFileOriginName();
         this.skillLevel = entity.getSkillLevel();
         this.level= entity.getLevel();
-        this.memberId =entity.getMemberId();
+        this.memberId =entity.getMember().getMemberId();
     }
 }

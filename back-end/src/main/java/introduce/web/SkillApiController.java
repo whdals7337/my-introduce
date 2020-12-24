@@ -1,9 +1,10 @@
 package introduce.web;
 
+import introduce.ifs.CrudWithFileInterface;
+import introduce.network.Header;
 import introduce.service.SkillService;
 import introduce.web.dto.skill.SkillResponseDto;
-import introduce.web.dto.skill.SkillSaveRequestDto;
-import introduce.web.dto.skill.SkillUpdateRequestDto;
+import introduce.web.dto.skill.SkillRequestDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,33 +13,32 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class SkillApiController {
+public class SkillApiController implements CrudWithFileInterface<SkillRequestDto, SkillResponseDto> {
 
     private final SkillService skillService;
 
     @PostMapping("api/skill")
-    public Long save(SkillSaveRequestDto requestDto, @RequestParam("file") MultipartFile file) throws Exception {
+    public Header<SkillResponseDto> save(SkillRequestDto requestDto, @RequestParam("file") MultipartFile file) {
         return skillService.save(requestDto, file);
     }
 
     @PutMapping("/api/skill/{id}")
-    public Long update(@PathVariable Long id, SkillUpdateRequestDto requestDto, @RequestParam(name="file", required=false) MultipartFile file) throws Exception {
-        return skillService.update(id, requestDto, file);
+    public Header<SkillResponseDto> update(SkillRequestDto requestDto, @PathVariable Long id, @RequestParam(name="file", required=false) MultipartFile file) {
+        return skillService.update(requestDto, id, file);
     }
 
     @DeleteMapping("/api/skill/{id}")
-    public Long delete(@PathVariable Long id) {
-        skillService.delete(id);
-        return id;
+    public Header<SkillResponseDto> delete(@PathVariable Long id) {
+        return skillService.delete(id);
     }
 
     @GetMapping("api/skill")
-    public List<SkillResponseDto> findAll(@RequestParam(name = "memberId", required=false) Long memberId) {
+    public Header<List<SkillResponseDto>> findAll(@RequestParam(name = "memberId", required=false) Long memberId) {
         return skillService.findAll(memberId);
     }
 
     @GetMapping("api/skill/{id}")
-    public SkillResponseDto findById(@PathVariable Long id) {
+    public Header<SkillResponseDto> findById(@PathVariable Long id) {
         return skillService.findById(id);
     }
 }
