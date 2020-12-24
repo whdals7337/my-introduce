@@ -217,7 +217,7 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
         return dto;
     }
 
-    public Header<SkillResponseDto> response(Skill skill) {
+    private Header<SkillResponseDto> response(Skill skill) {
         SkillResponseDto responseDto = SkillResponseDto.builder()
                 .skillId(skill.getSkillId())
                 .skillName(skill.getSkillName())

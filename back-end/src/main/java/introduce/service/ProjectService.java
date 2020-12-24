@@ -216,7 +216,7 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
         return dto;
     }
 
-    public Header<ProjectResponseDto> response(Project project) {
+    private Header<ProjectResponseDto> response(Project project) {
         ProjectResponseDto responseDto = ProjectResponseDto.builder()
                 .projectId(project.getProjectId())
                 .projectTitle(project.getProjectTitle())

@@ -173,7 +173,7 @@ public class MemberService implements CrudWithFileInterface<MemberRequestDto, Me
         return Header.OK(memberRepository.findAll().stream().map(MemberResponseDto::new).collect(Collectors.toList()));
     }
 
-    public Header<MemberResponseDto> response(Member member) {
+    private Header<MemberResponseDto> response(Member member) {
         MemberResponseDto responseDto = MemberResponseDto.builder()
                 .memberId(member.getMemberId())
                 .comment(member.getComment())
