@@ -2,10 +2,9 @@ package introduce.service;
 
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
+import introduce.domain.network.Header;
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
-import introduce.ifs.CrudWithFileInterface;
-import introduce.domain.network.Header;
 import introduce.utill.FileUtil;
 import introduce.web.dto.skill.SkillRequestDto;
 import introduce.web.dto.skill.SkillResponseDto;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class SkillService implements CrudWithFileInterface<SkillRequestDto, SkillResponseDto> {
+public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto, SkillRepository> {
 
     @Value("${file.upload-dir}")
     private String fileUploadPath;
@@ -34,8 +33,6 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
     private String subFileUploadPath;
 
     private final MemberRepository memberRepository;
-
-    private final SkillRepository skillRepository;
 
     @Override
     @Transactional
@@ -55,7 +52,7 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
 
         // [3] project info DB 등록
         requestDto.settingFileInfo(savePath, originalName);
-        Skill skill = skillRepository.save(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
+        Skill skill = baseRepository.save(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
         log.info("[3] skill info DB 등록");
 
         // [4] file transfer
@@ -77,7 +74,7 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
     @Transactional
     public Header update(SkillRequestDto requestDto, Long id, MultipartFile file) {
         log.info("skill update start");
-        Optional<Skill> optional = skillRepository.findById(id);
+        Optional<Skill> optional = baseRepository.findById(id);
 
         return optional.map(skill -> {
             // 순서값이 변경 된 경우
@@ -88,7 +85,7 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
                 // 원래 순서 값이 변경할 순서 값보다 큰 경우
                 if (originLevel > changedLevel) {
                     // 원래 값부터 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 증가
-                    List<Skill> rangeRows = skillRepository.findByLevelBetween(changedLevel, originLevel-1);
+                    List<Skill> rangeRows = baseRepository.findByLevelBetween(changedLevel, originLevel-1);
                     for(Skill row : rangeRows){
                         row.levelUp();
                     }
@@ -96,7 +93,7 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
                 // 원래 순서 값이 변경할 순서 값보다 작은 경우
                 else {
                     // 원래 값보다 크고 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 감소
-                    List<Skill> rangeRows = skillRepository.findByLevelBetween(originLevel+1, changedLevel);
+                    List<Skill> rangeRows = baseRepository.findByLevelBetween(originLevel+1, changedLevel);
                     for(Skill row : rangeRows){
                         row.levelDown();
                     }
@@ -163,13 +160,13 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
     @Transactional
     public Header delete(Long id) {
         log.info("skill delete start");
-        Optional<Skill> optional = skillRepository.findById(id);
+        Optional<Skill> optional = baseRepository.findById(id);
 
         return optional.map(skill -> {
             String preExistingFilePath = skill.getFilePath();
 
             // [1] skill info DB delete
-            skillRepository.delete(skill);
+            baseRepository.delete(skill);
             log.info("[1] skill info DB delete");
 
             // [2] pre-existing file delete
@@ -186,17 +183,17 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
     public Header<SkillResponseDto> findById(Long id) {
         log.info("skill findById start");
         log.info("member findById end");
-        return skillRepository.findById(id).map(this::response)
+        return baseRepository.findById(id).map(this::response)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Transactional
-    public Header<List<SkillResponseDto>> findAll(Long memberId) {
+    public Header<List<SkillResponseDto>> findAll(SkillRequestDto requestDto) {
         log.info("skill findAll start");
 
         // 특정 멤버 id 값이 들어온 경우
-        if(memberId != null && memberId > 0) {
-            Optional<Member> optional = memberRepository.findById(memberId);
+        if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
+            Optional<Member> optional = memberRepository.findById(requestDto.getMemberId());
             log.info("member findAll end");
             return optional.map((member ->
                     Header.OK(member.getSkillList().stream()
@@ -205,14 +202,14 @@ public class SkillService implements CrudWithFileInterface<SkillRequestDto, Skil
         }
         else {
             log.info("member findAll end");
-            return Header.OK(skillRepository.findAll().stream()
+            return Header.OK(baseRepository.findAll().stream()
                     .map(SkillResponseDto::new).collect(Collectors.toList()));
         }
     }
 
     @Transactional
     public SkillResponseDto getSkill(Long id) {
-        Skill skill = skillRepository.findById(id).get();
+        Skill skill = baseRepository.findById(id).get();
         SkillResponseDto dto = new SkillResponseDto(skill);
         return dto;
     }

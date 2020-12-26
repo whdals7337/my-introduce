@@ -2,13 +2,12 @@ package introduce.service;
 
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
+import introduce.domain.network.Header;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
-import introduce.ifs.CrudWithFileInterface;
-import introduce.domain.network.Header;
 import introduce.utill.FileUtil;
-import introduce.web.dto.project.ProjectResponseDto;
 import introduce.web.dto.project.ProjectRequestDto;
+import introduce.web.dto.project.ProjectResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +24,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, ProjectResponseDto> {
+public class ProjectService extends BaseService<ProjectRequestDto, ProjectResponseDto, ProjectRepository> {
 
     @Value("${file.upload-dir}")
     private String fileUploadPath;
@@ -34,8 +33,6 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
     private String subFileUploadPath;
 
     private final MemberRepository memberRepository;
-
-    private final ProjectRepository projectRepository;
 
     @Override
     @Transactional
@@ -55,7 +52,7 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
 
         // [3] project info DB 등록
         requestDto.settingFileInfo(savePath, originalName);
-        Project project = projectRepository.save(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
+        Project project = baseRepository.save(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
         log.info("[3] project info DB 등록");
 
         // [4] file transfer
@@ -77,7 +74,7 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
     @Transactional
     public Header update(ProjectRequestDto requestDto, Long id, MultipartFile file) {
         log.info("project update start");
-        Optional<Project> optional = projectRepository.findById(id);
+        Optional<Project> optional = baseRepository.findById(id);
 
         return optional.map(project -> {
             // 순서값이 변경 된 경우
@@ -88,7 +85,7 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
                 // 원래 순서 값이 변경할 순서 값보다 큰 경우
                 if (originLevel > changedLevel) {
                     // 원래 값부터 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 증가
-                    List<Project> rangeRows = projectRepository.findByLevelBetween(changedLevel, originLevel-1);
+                    List<Project> rangeRows = baseRepository.findByLevelBetween(changedLevel, originLevel-1);
                     for(Project row : rangeRows){
                         row.levelUp();
                     }
@@ -96,7 +93,7 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
                 // 원래 순서 값이 변경할 순서 값보다 작은 경우
                 else {
                     // 원래 값보다 크고 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 감소
-                    List<Project> rangeRows = projectRepository.findByLevelBetween(originLevel+1, changedLevel);
+                    List<Project> rangeRows = baseRepository.findByLevelBetween(originLevel+1, changedLevel);
                     for(Project row : rangeRows){
                         row.levelDown();
                     }
@@ -162,13 +159,13 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
     @Transactional
     public Header delete(Long id) {
         log.info("project delete start");
-        Optional<Project> optional = projectRepository.findById(id);
+        Optional<Project> optional = baseRepository.findById(id);
 
         return optional.map(project -> {
             String preExistingFilePath = project.getFilePath();
 
             // [1] project info DB delete
-            projectRepository.delete(project);
+            baseRepository.delete(project);
             log.info("[1] project info DB delete");
 
             // [2] pre-existing file delete
@@ -185,17 +182,17 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
     public Header<ProjectResponseDto> findById(Long id) {
         log.info("project findById start");
         log.info("project findById end");
-        return projectRepository.findById(id).map(this::response)
+        return baseRepository.findById(id).map(this::response)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Transactional
-    public Header<List<ProjectResponseDto>> findAll(Long memberId) {
+    public Header<List<ProjectResponseDto>> findAll(ProjectRequestDto requestDto) {
         log.info("project findAll start");
 
         // 특정 멤버 id 값이 들어온 경우
-        if(memberId != null && memberId > 0) {
-            Optional<Member> optional = memberRepository.findById(memberId);
+        if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
+            Optional<Member> optional = memberRepository.findById(requestDto.getMemberId());
             log.info("project findAll end");
             return optional.map(member ->
                     Header.OK(member.getProjectList().stream()
@@ -204,14 +201,14 @@ public class ProjectService implements CrudWithFileInterface<ProjectRequestDto, 
         }
         else {
             log.info("project findAll end");
-            return Header.OK(projectRepository.findAll().stream()
+            return Header.OK(baseRepository.findAll().stream()
                     .map(ProjectResponseDto::new).collect(Collectors.toList()));
         }
     }
 
     @Transactional
     public ProjectResponseDto getProject(Long id) {
-        Project project = projectRepository.findById(id).get();
+        Project project = baseRepository.findById(id).get();
         ProjectResponseDto dto = new ProjectResponseDto(project);
         return dto;
     }

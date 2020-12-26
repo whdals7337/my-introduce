@@ -41,10 +41,10 @@ public class Member extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String email;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "member")
     private List<Project> projectList;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "member")
     private List<Skill> skillList;
 
     public void update(Member member){

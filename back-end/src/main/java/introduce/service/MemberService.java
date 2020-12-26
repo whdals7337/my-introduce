@@ -2,7 +2,6 @@ package introduce.service;
 
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
-import introduce.ifs.CrudWithFileInterface;
 import introduce.domain.network.Header;
 import introduce.utill.FileUtil;
 import introduce.web.dto.member.MemberRequestDto;
@@ -23,22 +22,13 @@ import java.util.stream.Collectors;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class MemberService implements CrudWithFileInterface<MemberRequestDto, MemberResponseDto> {
+public class MemberService extends BaseService<MemberRequestDto, MemberResponseDto, MemberRepository> {
 
     @Value("${file.upload-dir}")
     private String fileUploadPath;
 
     @Value("${file.member-dir}")
     private String subFileUploadPath;
-
-    private final MemberRepository memberRepository;
-
-    @Transactional
-    public MemberResponseDto getMember(Long id) {
-        Member member = memberRepository.findById(id).get();
-        MemberResponseDto dto = new MemberResponseDto(member);
-        return dto;
-    }
 
     @Override
     @Transactional
@@ -58,7 +48,7 @@ public class MemberService implements CrudWithFileInterface<MemberRequestDto, Me
 
         // [3] member info DB 등록
         requestDto.settingFileInfo(savePath, originalName);
-        Member member = memberRepository.save(requestDto.toEntity());
+        Member member = baseRepository.save(requestDto.toEntity());
         log.info("[3] member info DB 등록");
 
         // [4] file transfer
@@ -79,7 +69,7 @@ public class MemberService implements CrudWithFileInterface<MemberRequestDto, Me
     @Transactional
     public Header update(MemberRequestDto requestDto, Long id, MultipartFile file) {
         log.info("member update start");
-        Optional<Member> optional = memberRepository.findById(id);
+        Optional<Member> optional = baseRepository.findById(id);
 
         return optional.map(member -> {
             // 첨부된 파일이 없는 경우
@@ -141,11 +131,11 @@ public class MemberService implements CrudWithFileInterface<MemberRequestDto, Me
     @Transactional
     public Header delete(Long id) {
         log.info("member delete start");
-        Optional<Member> optional = memberRepository.findById(id);
+        Optional<Member> optional = baseRepository.findById(id);
 
         return optional.map(member -> {
             // [1] member info DB delete
-            memberRepository.delete(member);
+            baseRepository.delete(member);
             log.info("[1] member info DB delete");
 
             // [2] pre-existing file delete
@@ -163,14 +153,21 @@ public class MemberService implements CrudWithFileInterface<MemberRequestDto, Me
     public Header<MemberResponseDto> findById(Long id) {
         log.info("member findById start");
         log.info("member findById end");
-        return memberRepository.findById(id).map(this::response).orElseGet(() -> Header.ERROR("데이터 없음"));
+        return baseRepository.findById(id).map(this::response).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Transactional
-    public Header<List<MemberResponseDto>> findAll() {
+    public Header<List<MemberResponseDto>> findAll(MemberRequestDto requestDto) {
         log.info("member findAll start");
         log.info("member findAll end");
-        return Header.OK(memberRepository.findAll().stream().map(MemberResponseDto::new).collect(Collectors.toList()));
+        return Header.OK(baseRepository.findAll().stream().map(MemberResponseDto::new).collect(Collectors.toList()));
+    }
+
+    @Transactional
+    public MemberResponseDto getMember(Long id) {
+        Member member = baseRepository.findById(id).get();
+        MemberResponseDto dto = new MemberResponseDto(member);
+        return dto;
     }
 
     private Header<MemberResponseDto> response(Member member) {
