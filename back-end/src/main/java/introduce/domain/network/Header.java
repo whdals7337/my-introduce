@@ -1,4 +1,4 @@
-package introduce.network;
+package introduce.domain.network;
 
 import introduce.utill.DateUtil;
 import lombok.AllArgsConstructor;

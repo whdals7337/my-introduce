@@ -5,7 +5,7 @@ import introduce.domain.member.MemberRepository;
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
 import introduce.ifs.CrudWithFileInterface;
-import introduce.network.Header;
+import introduce.domain.network.Header;
 import introduce.utill.FileUtil;
 import introduce.web.dto.skill.SkillRequestDto;
 import introduce.web.dto.skill.SkillResponseDto;

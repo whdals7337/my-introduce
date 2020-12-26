@@ -1,6 +1,6 @@
 package introduce.ifs;
 
-import introduce.network.Header;
+import introduce.domain.network.Header;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface CrudWithFileInterface<Req, Res> {

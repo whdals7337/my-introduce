@@ -3,7 +3,7 @@ package introduce.service;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.ifs.CrudWithFileInterface;
-import introduce.network.Header;
+import introduce.domain.network.Header;
 import introduce.utill.FileUtil;
 import introduce.web.dto.member.MemberRequestDto;
 import introduce.web.dto.member.MemberResponseDto;

@@ -1,7 +1,7 @@
 package introduce.web;
 
 import introduce.ifs.CrudWithFileInterface;
-import introduce.network.Header;
+import introduce.domain.network.Header;
 import introduce.service.SkillService;
 import introduce.web.dto.skill.SkillResponseDto;
 import introduce.web.dto.skill.SkillRequestDto;

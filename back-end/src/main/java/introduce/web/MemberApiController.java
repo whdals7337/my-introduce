@@ -1,7 +1,7 @@
 package introduce.web;
 
 import introduce.ifs.CrudWithFileInterface;
-import introduce.network.Header;
+import introduce.domain.network.Header;
 import introduce.service.MemberService;
 import introduce.web.dto.member.MemberResponseDto;
 import introduce.web.dto.member.MemberRequestDto;

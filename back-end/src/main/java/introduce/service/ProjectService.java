@@ -5,7 +5,7 @@ import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
 import introduce.ifs.CrudWithFileInterface;
-import introduce.network.Header;
+import introduce.domain.network.Header;
 import introduce.utill.FileUtil;
 import introduce.web.dto.project.ProjectResponseDto;
 import introduce.web.dto.project.ProjectRequestDto;
