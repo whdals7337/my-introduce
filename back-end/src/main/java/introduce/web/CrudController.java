@@ -4,6 +4,9 @@ import introduce.domain.network.Header;
 import introduce.ifs.CrudWithFileInterface;
 import introduce.service.BaseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,27 +26,27 @@ public abstract class CrudController<Req, Res, Repository> implements CrudWithFi
     }
 
     @Override
-    @PutMapping("/{id}")
+    @PutMapping("{id}")
     public Header<Res> update(Req requestDto, @PathVariable Long id, @RequestParam(name="file", required=false) MultipartFile file) {
         return baseService.update(requestDto, id, file);
     }
 
     @Override
-    @DeleteMapping("/{id}")
+    @DeleteMapping("{id}")
     public Header delete( @PathVariable Long id) {
         return baseService.delete(id);
     }
 
     @Override
-    @GetMapping("/{id}")
+    @GetMapping("{id}")
     public Header<Res> findById( @PathVariable Long id) {
         return baseService.findById(id);
     }
 
     @Override
     @GetMapping("")
-    public Header<List<Res>> findAll(Req requestDto) {
-        return baseService.findAll(requestDto);
+    public Header<List<Res>> findAll(Req requestDto, @PageableDefault(sort="rgDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        return baseService.findAll(requestDto, pageable);
     }
 }
 

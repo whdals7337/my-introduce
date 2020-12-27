@@ -3,6 +3,7 @@ package introduce.service;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.network.Header;
+import introduce.domain.network.Pagination;
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
 import introduce.utill.FileUtil;
@@ -11,6 +12,8 @@ import introduce.web.dto.skill.SkillResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,7 +70,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         }
 
         log.info("project save end");
-        return response(skill);
+        return Header.OK(response(skill));
     }
 
     @Override
@@ -151,9 +154,8 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
             }
 
             log.info("skill update end");
-            return response(skill);
+            return Header.OK(response(skill));
         }).orElseGet(() -> Header.ERROR("데이터 없음"));
-
     }
 
     @Override
@@ -183,28 +185,40 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
     public Header<SkillResponseDto> findById(Long id) {
         log.info("skill findById start");
         log.info("member findById end");
-        return baseRepository.findById(id).map(this::response)
+        return baseRepository.findById(id)
+                .map(this::response)
+                .map(Header::OK)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Transactional
-    public Header<List<SkillResponseDto>> findAll(SkillRequestDto requestDto) {
+    public Header<List<SkillResponseDto>> findAll(SkillRequestDto requestDto, Pageable pageable) {
         log.info("skill findAll start");
-
+        Page<Skill> skills;
         // 특정 멤버 id 값이 들어온 경우
         if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
-            Optional<Member> optional = memberRepository.findById(requestDto.getMemberId());
-            log.info("member findAll end");
-            return optional.map((member ->
-                    Header.OK(member.getSkillList().stream()
-                            .map(SkillResponseDto::new).collect(Collectors.toList()))))
-                    .orElseGet(() -> Header.ERROR("데이터 없음"));
+            log.info("exist memberId");
+            Member member = memberRepository.findById(requestDto.getMemberId()).get();
+            skills = baseRepository.findAllByMember(member, pageable);
         }
         else {
-            log.info("member findAll end");
-            return Header.OK(baseRepository.findAll().stream()
-                    .map(SkillResponseDto::new).collect(Collectors.toList()));
+            log.info("no memberId");
+            skills = baseRepository.findAll(pageable);
         }
+
+        List<SkillResponseDto> skillResponseDtoList = skills.stream()
+                .map(this::response)
+                .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder()
+                .totalPages(skills.getTotalPages())
+                .totalElements(skills.getTotalElements())
+                .currentPage(skills.getNumber())
+                .currentElements(skills.getNumberOfElements())
+                .build();
+
+        log.info("member findAll end");
+        return Header.OK(skillResponseDtoList, pagination);
     }
 
     @Transactional
@@ -214,7 +228,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         return dto;
     }
 
-    private Header<SkillResponseDto> response(Skill skill) {
+    public SkillResponseDto response(Skill skill) {
         SkillResponseDto responseDto = SkillResponseDto.builder()
                 .skillId(skill.getSkillId())
                 .skillName(skill.getSkillName())
@@ -225,6 +239,6 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
                 .memberId(skill.getMember().getMemberId())
                 .build();
 
-        return Header.OK(responseDto);
+        return responseDto;
     }
 }

@@ -3,6 +3,7 @@ package introduce.service;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.network.Header;
+import introduce.domain.network.Pagination;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
 import introduce.utill.FileUtil;
@@ -11,6 +12,8 @@ import introduce.web.dto.project.ProjectResponseDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -67,7 +70,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         }
 
         log.info("project save end");
-        return response(project);
+        return Header.OK(response(project));
     }
 
     @Override
@@ -151,7 +154,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
             }
 
             log.info("project update end");
-            return response(project);
+            return Header.OK(response(project));
         }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
@@ -182,28 +185,40 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
     public Header<ProjectResponseDto> findById(Long id) {
         log.info("project findById start");
         log.info("project findById end");
-        return baseRepository.findById(id).map(this::response)
+        return baseRepository.findById(id)
+                .map(this::response)
+                .map(Header::OK)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
     @Transactional
-    public Header<List<ProjectResponseDto>> findAll(ProjectRequestDto requestDto) {
+    public Header<List<ProjectResponseDto>> findAll(ProjectRequestDto requestDto, Pageable pageable) {
         log.info("project findAll start");
-
+        Page<Project> projects;
         // 특정 멤버 id 값이 들어온 경우
         if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
-            Optional<Member> optional = memberRepository.findById(requestDto.getMemberId());
-            log.info("project findAll end");
-            return optional.map(member ->
-                    Header.OK(member.getProjectList().stream()
-                            .map(ProjectResponseDto::new).collect(Collectors.toList())))
-                    .orElseGet(() -> Header.ERROR("데이터가 없음"));
+            log.info("exist memberId");
+            Member member = memberRepository.findById(requestDto.getMemberId()).get();
+            projects = baseRepository.findAllByMember(member, pageable);
         }
         else {
-            log.info("project findAll end");
-            return Header.OK(baseRepository.findAll().stream()
-                    .map(ProjectResponseDto::new).collect(Collectors.toList()));
+            log.info("no memberId");
+            projects = baseRepository.findAll(pageable);
         }
+
+        List<ProjectResponseDto> projectResponseDtoList = projects.stream()
+                        .map(this::response)
+                        .collect(Collectors.toList());
+
+        Pagination pagination = Pagination.builder()
+                .totalPages(projects.getTotalPages())
+                .totalElements(projects.getTotalElements())
+                .currentPage(projects.getNumber())
+                .currentElements(projects.getNumberOfElements())
+                .build();
+
+        log.info("project findAll end");
+        return Header.OK(projectResponseDtoList, pagination);
     }
 
     @Transactional
@@ -213,7 +228,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         return dto;
     }
 
-    private Header<ProjectResponseDto> response(Project project) {
+    public ProjectResponseDto response(Project project) {
         ProjectResponseDto responseDto = ProjectResponseDto.builder()
                 .projectId(project.getProjectId())
                 .projectTitle(project.getProjectTitle())
@@ -226,6 +241,6 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
                 .memberId(project.getMember().getMemberId())
                 .build();
 
-        return Header.OK(responseDto);
+        return responseDto;
     }
 }

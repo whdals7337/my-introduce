@@ -16,6 +16,7 @@ public class Header<T> {
     private String resultCode; //api 응답코드
     private String description; //api 부가설명
     private T data;
+    private Pagination pagination;
 
     public static <T> Header<T> OK() {
         return (Header<T>) Header.builder()
@@ -31,6 +32,16 @@ public class Header<T> {
                 .resultCode("200")
                 .description("OK")
                 .data(data)
+                .build();
+    }
+
+    public static <T> Header<T> OK(T data, Pagination pagination) {
+        return (Header<T>) Header.builder()
+                .transactionTime(DateUtil.getTodayByCustomFormat("YYYY-dd-MM"))
+                .resultCode("200")
+                .description("OK")
+                .data(data)
+                .pagination(pagination)
                 .build();
     }
 
