@@ -11,7 +11,7 @@ function HeaderLoader() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getMemberThunk(data?.memberId ? data.memberId : 1));
+    dispatch(getMemberThunk(data?.data.member_id ? data.data.member_id : 1));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -20,11 +20,7 @@ function HeaderLoader() {
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
       {data && (
-        <Header
-          comment={data.comment}
-          filePath={data.filePath}
-          fileOriginName={data.fileOriginName}
-        />
+        <Header comment={data.data.comment} fileUrl={data.data.file_url} />
       )}
     </>
   );

@@ -14,8 +14,8 @@ function IntroduceLoader() {
       {error && <p>에러발생</p>}
       {data && (
         <Introduce
-          subIntroduction={data.subIntroduction}
-          introduction={data.introduction}
+          subIntroduction={data.data.sub_introduction}
+          introduction={data.data.introduction}
         />
       )}
     </>

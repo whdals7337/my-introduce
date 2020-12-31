@@ -1,21 +1,14 @@
 import React from "react";
-import Menu from "./components/menu/Menu";
-import FooterLoader from "./container/FooterLoader";
-import HeaderLoader from "./container/HeaderLoader";
-import IntroduceLoader from "./container/IntroduceLoader";
-import ProjectLoader from "./container/ProjectLoader";
-import SkillLoader from "./container/SkillLoader";
+import { Route } from "react-router-dom";
+import Home from "./page/Home";
+import Test from "./page/Test";
 
 function App() {
   return (
-    <>
-      <Menu />
-      <HeaderLoader />
-      <IntroduceLoader />
-      <SkillLoader />
-      <ProjectLoader />
-      <FooterLoader />
-    </>
+    <div>
+      <Route path="/" component={Home} exact />
+      <Route path="/test" component={Test} exact />
+    </div>
   );
 }
 

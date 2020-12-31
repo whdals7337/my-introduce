@@ -1,5 +1,6 @@
 import React from "react";
 import Title from "../title/Ttitle";
+import "./Footer.css";
 
 type FooterProps = {
   phoneNumber: string;
@@ -8,13 +9,13 @@ type FooterProps = {
 
 function Footer({ phoneNumber, email }: FooterProps) {
   return (
-    <>
-      <Title title="Contact me" />
-      <div>
-        <div>연락처: {phoneNumber}</div>
-        <div>E-MAIL: {email}</div>
+    <div id="footer_wrap">
+      <Title title="Contact" />
+      <div className="footer_content">
+        <div className="footer_item">연락처: {phoneNumber}</div>
+        <div className="footer_item">E-MAIL: {email}</div>
       </div>
-    </>
+    </div>
   );
 }
 

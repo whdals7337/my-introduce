@@ -1,0 +1,108 @@
+.menu_container {
+  width: 100%;
+  position: fixed;
+}
+
+.menu_container .menu__list {
+  width: 900px;
+  float: right;
+  height: 55px;
+  background-color: black;
+  border-radius: 2px 2px 30px 30px;
+  margin-right: 2px;
+}
+
+.menu_container .menu_bar_grid {
+  display: none;
+}
+
+.bar_01,
+.bar_02,
+.bar_03 {
+  width: 35px;
+  height: 5px;
+  background-color: grey;
+  margin: 6px 0;
+  transition: 0.4s;
+}
+
+.menu_container .menu_bar_grid #menu_bar + ul {
+  list-style: none;
+  margin: 0;
+  color: grey;
+  font-size: 17px;
+  padding: 0;
+  grid-gap: 10px;
+  display: none;
+}
+
+.menu_container .menu_bar_grid #menu_bar + ul li a {
+  font-family: Roboto, sans-serif;
+  cursor: pointer;
+  color: grey;
+  opacity: 0.6;
+  text-decoration: unset;
+}
+
+.menu_container .menu__list ul {
+  list-style: none;
+  margin: 0;
+}
+
+.menu_container .menu__list ul li {
+  text-align: center;
+  display: inline-block;
+  width: 162px;
+  margin-top: 12px;
+}
+
+.menu_container .menu__list ul li a {
+  opacity: 0.6;
+  color: #fff;
+  cursor: pointer;
+  font-size: 1.25rem;
+  text-decoration: none;
+}
+
+@media (max-width: 930px) {
+  .menu_container .menu__list {
+    display: none;
+  }
+
+  .menu_container .menu_bar_grid {
+    display: grid;
+    justify-content: flex-end;
+  }
+
+  .menu_container .menu_bar_grid #menu_bar {
+    display: unset;
+    padding: 20px;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .menu_container .menu_bar_grid #menu_bar.close + ul {
+    list-style: none;
+    display: grid;
+  }
+
+  .menu_container .menu_bar_grid #menu_bar.close {
+    padding: 20px 20px 10px 20px;
+    cursor: pointer;
+    margin: 0;
+  }
+
+  .menu_container .menu_bar_grid #menu_bar.close .bar_01 {
+    -webkit-transform: rotate(-45deg) translate(-9px, 6px);
+    transform: rotate(-45deg) translate(-9px, 6px);
+  }
+
+  .menu_container .menu_bar_grid #menu_bar.close .bar_02 {
+    opacity: 0;
+  }
+
+  .menu_container .menu_bar_grid #menu_bar.close .bar_03 {
+    -webkit-transform: rotate(45deg) translate(-8px, -8px);
+    transform: rotate(45deg) translate(-8px, -8px);
+  }
+}

@@ -1,20 +1,21 @@
 import React from "react";
+import "./Header.css";
 
 type HeaderProps = {
   comment: string;
-  filePath: string;
-  fileOriginName: string;
+  fileUrl: string;
 };
-function Header({ comment, filePath, fileOriginName }: HeaderProps) {
+
+function Header({ comment, fileUrl }: HeaderProps) {
   return (
-    <>
-      <div>
-        <div>
-          {filePath} {fileOriginName}
-          <h3>{comment}</h3>
-        </div>
-      </div>
-    </>
+    <div
+      id="header_container"
+      style={{
+        backgroundImage: "url(" + fileUrl + ")",
+      }}
+    >
+      <h1 className="header__comment">{comment}</h1>
+    </div>
   );
 }
 

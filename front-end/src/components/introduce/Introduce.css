@@ -1,0 +1,38 @@
+#introduce_wrap {
+  width: 100%;
+  height: auto;
+  background-color: #e7e6e6;
+  padding-bottom: 50px;
+}
+
+#introduce_wrap .intro {
+  padding-top: 60px;
+  width: 830px;
+  margin: auto;
+}
+
+#introduce_wrap .intro .intro_sub_intro {
+  text-align: center;
+  height: 50px;
+  font-size: 2.5rem;
+  font-weight: bold;
+  font-family: Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+}
+
+#introduce_wrap .intro .intro_main_intro {
+  padding-top: 50px;
+  text-align: center;
+  font-size: 1rem;
+}
+
+@media (max-width: 930px) {
+  #introduce_wrap .intro {
+    width: 90%;
+    margin: auto;
+  }
+
+  #introduce_wrap .intro .intro_sub_intro {
+    font-size: 1.5rem;
+    height: 20px;
+  }
+}

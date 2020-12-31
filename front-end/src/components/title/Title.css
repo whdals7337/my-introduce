@@ -1,0 +1,15 @@
+.title_wrap {
+  width: 100%;
+  height: 50px;
+}
+
+.title_wrap h3 {
+  text-align: center;
+  font-size: 2.5rem;
+  margin: 0px;
+  font-family: "Courier New", Courier, monospace;
+  padding-top: 45px;
+  text-decoration: underline;
+  text-decoration-color: dodgerblue;
+  display: block;
+}

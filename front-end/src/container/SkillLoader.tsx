@@ -11,7 +11,7 @@ function SkillLoader() {
   const dispatch = useDispatch();
 
   let memberId = useSelector(
-    (state: RootState) => state.member.member.data?.memberId
+    (state: RootState) => state.member.member.data?.data.member_id
   );
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function SkillLoader() {
     <>
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
-      {data && <SkillList skills={data} />}
+      {data && <SkillList skills={data.data} />}
     </>
   );
 }

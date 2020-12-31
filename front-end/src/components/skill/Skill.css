@@ -1,0 +1,99 @@
+#skill_wrap {
+  width: 100%;
+  height: auto;
+  padding-bottom: 50px;
+}
+
+#skill_wrap .skill_list {
+  padding-top: 50px;
+  width: 830px;
+  margin: auto;
+  align-items: center;
+  text-align: center;
+}
+
+#skill_wrap .skill_list .skill_category_title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+
+#skill_wrap .skill_list ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+#skill_wrap .skill_list ul li {
+  width: 150px;
+  height: 200px;
+  display: inline-block;
+}
+
+#skill_wrap .skill_list li .skill_image {
+  width: 140px;
+  height: 140px;
+  border-radius: 30px;
+  display: inline-block;
+  background-size: cover;
+  background-repeat: no-repeat;
+  margin-top: 20px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+
+#skill_wrap .skill_list li .skill_image .skill_image_label {
+  visibility: hidden;
+}
+
+#skill_wrap .skill_list li .skill_image:hover .skill_image_label {
+  width: 140px;
+  height: 140px;
+  border-radius: 30px;
+  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #000;
+  opacity: 0.8;
+  font-weight: 400;
+  font-size: 1rem;
+  color: #fff;
+  visibility: visible;
+}
+
+@media (max-width: 930px) {
+  #skill_wrap .skill_list {
+    width: 90%;
+    margin: auto;
+  }
+
+  #skill_wrap .skill_list ul li {
+    width: 150px;
+  }
+
+  #skill_wrap .skill_list li .skill_image {
+    width: 120px;
+    height: 120px;
+  }
+
+  #skill_wrap .skill_list li .skill_image:hover .skill_image_label {
+    width: 120px;
+    height: 120px;
+  }
+}
+
+@media (max-width: 333px) {
+  #skill_wrap .skill_list ul li {
+    width: 100px;
+  }
+
+  #skill_wrap .skill_list li .skill_image {
+    width: 80px;
+    height: 80px;
+  }
+
+  #skill_wrap .skill_list li .skill_image:hover .skill_image_label {
+    width: 80px;
+    height: 80px;
+  }
+}

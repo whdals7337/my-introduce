@@ -1,0 +1,29 @@
+#footer_wrap {
+  width: 100%;
+  height: auto;
+  padding-bottom: 50px;
+}
+
+#footer_wrap .footer_content {
+  width: 830px;
+  margin: auto;
+  padding-top: 60px;
+}
+
+#footer_wrap .footer_content .footer_item {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 930px) {
+  #footer_wrap .footer_content {
+    width: 90%;
+    margin: auto;
+  }
+
+  #footer_wrap .footer_content .footer_item {
+    font-size: 1rem;
+  }
+}

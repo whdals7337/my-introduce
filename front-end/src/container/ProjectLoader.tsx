@@ -11,7 +11,7 @@ function ProjectLoader() {
   const dispatch = useDispatch();
 
   let memberId = useSelector(
-    (state: RootState) => state.member.member.data?.memberId
+    (state: RootState) => state.member.member.data?.data.member_id
   );
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function ProjectLoader() {
     <>
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
-      {data && <ProjectList projects={data} />}
+      {data && <ProjectList projects={data.data} />}
     </>
   );
 }

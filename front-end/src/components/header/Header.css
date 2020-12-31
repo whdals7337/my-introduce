@@ -1,0 +1,23 @@
+#header_container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  color: #fff;
+  width: 100%;
+}
+
+#header_container .header__comment {
+  font-family: Noto Sans KR, sans-serif;
+  border-right: 0.1em solid #fff;
+  font-size: 4vw;
+  white-space: pre;
+  line-height: 1;
+  letter-spacing: 0.1rem;
+  padding-top: 0.2em;
+  -webkit-animation: blink 1s step-end infinite;
+  animation: blink 1s step-end infinite;
+}
