@@ -24,7 +24,7 @@ public class Project extends BaseTimeEntity {
     @Column(columnDefinition = "TEXT", nullable = false)
     private String projectContent;
 
-    @Column(length = 100, nullable = false)
+    @Column(length = 500, nullable = false)
     private String projectPostScript;
 
     @Column(length = 500, nullable = false)
