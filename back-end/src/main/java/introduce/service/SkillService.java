@@ -32,6 +32,12 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
     @Value("${file.upload-dir}")
     private String fileUploadPath;
 
+    @Value("${server-domain}")
+    private String domain;
+
+    @Value("${file.images-dir}")
+    private String dirType;
+
     @Value("${file.skill-dir}")
     private String subFileUploadPath;
 
@@ -45,7 +51,8 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         // [1] file parameter setting
         String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
         String saveName = FileUtil.getRandomFileName(originalName);
-        String saveDir = fileUploadPath + "/" + subFileUploadPath;
+        String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+        String saveDir = fileUploadPath + subFileUploadPath;
         String savePath =  saveDir +"/"+ saveName;
         log.info("[1] file parameter setting");
 
@@ -70,7 +77,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         }
 
         log.info("project save end");
-        return Header.OK(response(skill));
+        return Header.OK(response(skill, fileUrl));
     }
 
     @Override
@@ -80,6 +87,8 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         Optional<Skill> optional = baseRepository.findById(id);
 
         return optional.map(skill -> {
+            String saveName;
+
             // 순서값이 변경 된 경우
             if(skill.getLevel() != requestDto.getLevel()){
                 int originLevel = skill.getLevel();
@@ -110,6 +119,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
 
                 // [2] 기존 정보 셋팅
                 requestDto.settingFileInfo(skill.getFilePath(), skill.getFileOriginName());
+                saveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
                 log.info("[2] 기존 정보 셋팅");
 
                 // [3] skill info DB update
@@ -122,8 +132,8 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
 
                 // [2] file parameter setting
                 String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
-                String saveName = FileUtil.getRandomFileName(originalName);
-                String saveDir = fileUploadPath + "/" + subFileUploadPath;
+                saveName = FileUtil.getRandomFileName(originalName);
+                String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath =  saveDir +"/"+ saveName;
                 String preExistingFilePath = skill.getFilePath();
                 requestDto.settingFileInfo(savePath, originalName);
@@ -152,9 +162,10 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
                 FileUtil.deleteFile(preExistingFilePath);
                 log.info("[6] pre-existing file delete");
             }
+            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
 
             log.info("skill update end");
-            return Header.OK(response(skill));
+            return Header.OK(response(skill, fileUrl));
         }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
@@ -186,7 +197,11 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         log.info("skill findById start");
         log.info("member findById end");
         return baseRepository.findById(id)
-                .map(this::response)
+                .map(skill -> {
+                    String saveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
+                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                    return response(skill, fileUrl);
+                })
                 .map(Header::OK)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -207,7 +222,11 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         }
 
         List<SkillResponseDto> skillResponseDtoList = skills.stream()
-                .map(this::response)
+                .map(skill -> {
+                    String saveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
+                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                    return response(skill, fileUrl);
+                })
                 .collect(Collectors.toList());
 
         Pagination pagination = Pagination.builder()
@@ -222,17 +241,16 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
     }
 
     @Transactional
-    public SkillResponseDto getSkill(Long id) {
+    public Skill getSkill(Long id) {
         Skill skill = baseRepository.findById(id).get();
-        SkillResponseDto dto = new SkillResponseDto(skill);
-        return dto;
+        return skill;
     }
 
-    public SkillResponseDto response(Skill skill) {
+    public SkillResponseDto response(Skill skill, String fileUrl) {
         SkillResponseDto responseDto = SkillResponseDto.builder()
                 .skillId(skill.getSkillId())
                 .skillName(skill.getSkillName())
-                .filePath(skill.getFilePath())
+                .fileUrl(fileUrl)
                 .fileOriginName(skill.getFileOriginName())
                 .skillLevel(skill.getSkillLevel())
                 .level(skill.getLevel())

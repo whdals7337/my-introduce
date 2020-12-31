@@ -35,8 +35,20 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
     @Value("${file.upload-dir}")
     private String fileUploadPath;
 
+    @Value("${server-domain}")
+    private String domain;
+
+    @Value("${file.images-dir}")
+    private String dirType;
+
     @Value("${file.member-dir}")
     private String subFileUploadPath;
+
+    @Value("${file.project-dir}")
+    private String projectFileUploadPath;
+
+    @Value("${file.skill-dir}")
+    private String skillFileUploadPath;
 
     private final SkillService skillService;
 
@@ -50,7 +62,8 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         // [1] file parameter setting
         String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
         String saveName = FileUtil.getRandomFileName(originalName);
-        String saveDir = fileUploadPath + "/" + subFileUploadPath;
+        String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+        String saveDir = fileUploadPath + subFileUploadPath;
         String savePath =  saveDir +"/"+ saveName;
         log.info("[1] file parameter setting");
 
@@ -75,8 +88,9 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         }
 
         log.info("member save end");
-        return Header.OK(response(member));
+        return Header.OK(response(member, fileUrl));
     }
+
     @Override
     @Transactional
     public Header update(MemberRequestDto requestDto, Long id, MultipartFile file) {
@@ -84,12 +98,15 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         Optional<Member> optional = baseRepository.findById(id);
 
         return optional.map(member -> {
+            String saveName;
+
             // 첨부된 파일이 없는 경우
             if(file == null || file.isEmpty()) {
                 log.info("첨부된 파일 없음");
 
                 // [1] 기존 정보 셋팅
                 requestDto.settingFileInfo(member.getFilePath(), member.getFileOriginName());
+                saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
                 log.info("[1] 기존 정보 셋팅");
 
                 // [2] member info DB update
@@ -102,8 +119,8 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
 
                 // [1] file parameter setting
                 String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
-                String saveName = FileUtil.getRandomFileName(originalName);
-                String saveDir = fileUploadPath + "/" + subFileUploadPath;
+                saveName = FileUtil.getRandomFileName(originalName);
+                String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath = saveDir + "/" + saveName;
                 String preExistingFilePath = member.getFilePath();
                 requestDto.settingFileInfo(savePath, originalName);
@@ -133,9 +150,10 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
                 log.info("[5] pre-existing file delete");
 
             }
+            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
 
             log.info("member update end");
-            return Header.OK(response(member));
+            return Header.OK(response(member, fileUrl));
         }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
@@ -166,7 +184,11 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         log.info("member findById start");
         log.info("member findById end");
         return baseRepository.findById(id)
-                .map(this::response)
+                .map((member -> {
+                    String saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
+                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                    return response(member, fileUrl);
+                }))
                 .map(Header::OK)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -177,7 +199,11 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         Page<Member> members = baseRepository.findAll(pageable);
 
         List<MemberResponseDto> memberResponseDtoList = members.stream()
-                .map(this::response)
+                .map(member -> {
+                    String saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
+                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                    return response(member, fileUrl);
+                })
                 .collect(Collectors.toList());
 
         Pagination pagination = Pagination.builder()
@@ -197,14 +223,18 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
 
         // [1] MemberResponseDto 조회
         Member member = baseRepository.getOne(id);
-        MemberResponseDto memberResponseDto = response(member);
+        String saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
+        String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+        MemberResponseDto memberResponseDto = response(member, fileUrl);
         log.info("[1] MemberResponseDto 조회");
 
         // [2] skillResponseDtoList 조회
         List<Skill> skillList = member.getSkillList();
         List<SkillResponseDto> skillResponseDtoList = skillList.stream()
                 .map(skill -> {
-                    return skillService.response(skill);
+                    String SkillSaveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
+                    String SkillFileUrl = domain + "/" + dirType + "/" + projectFileUploadPath + "/" + SkillSaveName;
+                    return skillService.response(skill, SkillFileUrl);
                 })
                 .map(response -> Header.OK(response).getData())
                 .collect(Collectors.toList());
@@ -214,7 +244,9 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         List<Project> projectList = member.getProjectList();
         List<ProjectResponseDto> projectResponseDtoList = projectList.stream()
                 .map(project -> {
-                    return projectService.response(project);
+                    String projectSaveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
+                    String projectFileUrl = domain + "/" + dirType + "/" + projectFileUploadPath + "/" + projectSaveName;
+                    return projectService.response(project, projectFileUrl);
                 })
                 .map(response -> Header.OK(response).getData())
                 .collect(Collectors.toList());
@@ -233,17 +265,16 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
     }
 
     @Transactional
-    public MemberResponseDto getMember(Long id) {
+    public Member getMember(Long id) {
         Member member = baseRepository.findById(id).get();
-        MemberResponseDto dto = new MemberResponseDto(member);
-        return dto;
+        return member;
     }
 
-    private MemberResponseDto response(Member member) {
+    private MemberResponseDto response(Member member, String fileUrl) {
         MemberResponseDto responseDto = MemberResponseDto.builder()
                 .memberId(member.getMemberId())
                 .comment(member.getComment())
-                .filePath(member.getFilePath())
+                .fileUrl(fileUrl)
                 .fileOriginName(member.getFileOriginName())
                 .subIntroduction(member.getSubIntroduction())
                 .introduction(member.getIntroduction())

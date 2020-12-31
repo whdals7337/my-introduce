@@ -32,6 +32,12 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
     @Value("${file.upload-dir}")
     private String fileUploadPath;
 
+    @Value("${server-domain}")
+    private String domain;
+
+    @Value("${file.images-dir}")
+    private String dirType;
+
     @Value("${file.project-dir}")
     private String subFileUploadPath;
 
@@ -45,7 +51,8 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         // [1] file parameter setting
         String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
         String saveName = FileUtil.getRandomFileName(originalName);
-        String saveDir = fileUploadPath + "/" + subFileUploadPath;
+        String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+        String saveDir = fileUploadPath + subFileUploadPath;
         String savePath =  saveDir +"/"+ saveName;
         log.info("[1] file parameter setting");
 
@@ -70,7 +77,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         }
 
         log.info("project save end");
-        return Header.OK(response(project));
+        return Header.OK(response(project, fileUrl));
     }
 
     @Override
@@ -80,6 +87,8 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         Optional<Project> optional = baseRepository.findById(id);
 
         return optional.map(project -> {
+            String saveName;
+
             // 순서값이 변경 된 경우
             if(project.getLevel() != requestDto.getLevel()){
                 int originLevel = project.getLevel();
@@ -110,6 +119,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
 
                 // [2] 기존 정보 셋팅
                 requestDto.settingFileInfo(project.getFilePath(), project.getFileOriginName());
+                saveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
                 log.info("[2] 기존 정보 셋팅");
 
                 // [3] project info DB update
@@ -122,8 +132,8 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
 
                 // [2] file parameter setting
                 String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
-                String saveName = FileUtil.getRandomFileName(originalName);
-                String saveDir = fileUploadPath + "/" + subFileUploadPath;
+                saveName = FileUtil.getRandomFileName(originalName);
+                String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath =  saveDir +"/"+ saveName;
                 String preExistingFilePath = project.getFilePath();
                 requestDto.settingFileInfo(savePath, originalName);
@@ -152,9 +162,11 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
                 FileUtil.deleteFile(preExistingFilePath);
                 log.info("[6] pre-existing file delete");
             }
+            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+
 
             log.info("project update end");
-            return Header.OK(response(project));
+            return Header.OK(response(project, fileUrl));
         }).orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
@@ -186,7 +198,11 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         log.info("project findById start");
         log.info("project findById end");
         return baseRepository.findById(id)
-                .map(this::response)
+                .map(project -> {
+                    String saveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
+                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                    return response(project, fileUrl);
+                })
                 .map(Header::OK)
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
@@ -207,7 +223,11 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         }
 
         List<ProjectResponseDto> projectResponseDtoList = projects.stream()
-                        .map(this::response)
+                        .map(project -> {
+                            String saveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
+                            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                            return response(project, fileUrl);
+                        })
                         .collect(Collectors.toList());
 
         Pagination pagination = Pagination.builder()
@@ -222,19 +242,18 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
     }
 
     @Transactional
-    public ProjectResponseDto getProject(Long id) {
+    public Project getProject(Long id) {
         Project project = baseRepository.findById(id).get();
-        ProjectResponseDto dto = new ProjectResponseDto(project);
-        return dto;
+        return project;
     }
 
-    public ProjectResponseDto response(Project project) {
+    public ProjectResponseDto response(Project project, String fileUrl) {
         ProjectResponseDto responseDto = ProjectResponseDto.builder()
                 .projectId(project.getProjectId())
                 .projectTitle(project.getProjectTitle())
                 .projectContent(project.getProjectContent())
                 .projectPostScript(project.getProjectPostScript())
-                .filePath(project.getFilePath())
+                .fileUrl(fileUrl)
                 .fileOriginName(project.getFileOriginName())
                 .projectLink(project.getProjectLink())
                 .level(project.getLevel())
