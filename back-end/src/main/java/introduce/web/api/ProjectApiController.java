@@ -1,6 +1,7 @@
-package introduce.web;
+package introduce.web.api;
 
 import introduce.domain.project.ProjectRepository;
+import introduce.web.CrudController;
 import introduce.web.dto.project.ProjectRequestDto;
 import introduce.web.dto.project.ProjectResponseDto;
 import lombok.RequiredArgsConstructor;

@@ -1,6 +1,7 @@
-package introduce.web;
+package introduce.web.api;
 
 import introduce.domain.skill.SkillRepository;
+import introduce.web.CrudController;
 import introduce.web.dto.skill.SkillRequestDto;
 import introduce.web.dto.skill.SkillResponseDto;
 import lombok.RequiredArgsConstructor;

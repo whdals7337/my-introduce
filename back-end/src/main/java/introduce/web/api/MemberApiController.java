@@ -1,8 +1,9 @@
-package introduce.web;
+package introduce.web.api;
 
 import introduce.domain.member.MemberRepository;
 import introduce.domain.network.Header;
 import introduce.service.MemberService;
+import introduce.web.CrudController;
 import introduce.web.dto.member.MemberRequestDto;
 import introduce.web.dto.member.MemberResponseDto;
 import introduce.web.dto.membertotalinfo.MemberTotalInfoResponseDto;
