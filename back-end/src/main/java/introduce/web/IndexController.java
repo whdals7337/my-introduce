@@ -6,7 +6,7 @@ import introduce.service.SkillService;
 import introduce.web.dto.member.MemberRequestDto;
 import introduce.web.dto.project.ProjectRequestDto;
 import introduce.web.dto.skill.SkillRequestDto;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
@@ -15,17 +15,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+@RequiredArgsConstructor
 @Controller
 public class IndexController {
 
-    @Autowired
-    private MemberService memberService;
+    private final MemberService memberService;
 
-    @Autowired
-    private SkillService skillService;
+    private final SkillService skillService;
 
-    @Autowired
-    private ProjectService projectService;
+    private final ProjectService projectService;
 
     @GetMapping("/")
     public String index() {
