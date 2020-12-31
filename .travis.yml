@@ -10,8 +10,8 @@ matrix:
           - '$HOME/.gradle'
 
       before_install:
-        - sudo mkdir -p /home/ec2-user/webSrc/MY_INTRODUCE_FILE
-        - sudo chmod 777 /home/ec2-user/webSrc/MY_INTRODUCE_FILE
+        - sudo mkdir -p /test-dir/files
+        - sudo chmod 777 /test-dir/files
         - cd back-end/
         - chmod +x gradlew
 
