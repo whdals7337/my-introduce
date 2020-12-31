@@ -1,8 +1,10 @@
 package introduce.web;
 
+import introduce.domain.SessionDto;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -26,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class MemberApiControllerTest {
 
@@ -35,12 +39,21 @@ public class MemberApiControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    protected MockHttpSession session;
+
     @Autowired
     private MemberRepository memberRepository;
 
+    @Before
+    public void before() {
+        session = new MockHttpSession();
+        SessionDto sessionDto = SessionDto.builder().isAccess("access").build();
+        session.setAttribute("accessObject", sessionDto);
+    }
     @After
     public void tearDown() throws Exception {
         memberRepository.deleteAll();
+        session.clearAttributes();
     }
 
     @Test
@@ -63,6 +76,7 @@ public class MemberApiControllerTest {
 
         this.mockMvc.perform(multipart(url)
                 .file(testFile)
+                .session(session)
                 .param("comment",comment)
                 .param("subIntroduction", subIntroduction)
                 .param("introduction",introduction)
@@ -121,6 +135,7 @@ public class MemberApiControllerTest {
 
         mockMvc.perform(builder
                 .file(testFile)
+                .session(session)
                 .param("comment", expectedComment)
                 .param("subIntroduction", expectedSubIntroduction)
                 .param("introduction", expectedIntroduction)

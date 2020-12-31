@@ -1,5 +1,6 @@
 package introduce.web;
 
+import introduce.domain.SessionDto;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
@@ -12,8 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
-import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
@@ -23,8 +25,8 @@ import org.springframework.test.web.servlet.request.RequestPostProcessor;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
@@ -37,6 +39,8 @@ public class ProjectApiControllerTest {
     @Autowired
     MockMvc mockMvc;
 
+    protected MockHttpSession session;
+
     @Autowired
     private ProjectRepository projectRepository;
 
@@ -45,6 +49,10 @@ public class ProjectApiControllerTest {
 
     @Before
     public void memberSetting() {
+        session = new MockHttpSession();
+        SessionDto sessionDto = SessionDto.builder().isAccess("access").build();
+        session.setAttribute("accessObject", sessionDto);
+
         String comment = "페이지 탑 영역 내용 부분입니다.";
         String headerImagePath = "헤더 이미지 경로";
         String memimageOriginName ="헤더 이미지 원본 이름";
@@ -68,6 +76,7 @@ public class ProjectApiControllerTest {
     public void tearDown() throws Exception {
         projectRepository.deleteAll();
         memberRepository.deleteAll();
+        session.clearAttributes();
     }
 
     @Test
@@ -91,6 +100,7 @@ public class ProjectApiControllerTest {
 
         this.mockMvc.perform(multipart(url)
                 .file(testFile)
+                .session(session)
                 .param("projectTitle", projectTitle)
                 .param("projectContent", projectContent)
                 .param("projectPostScript", projectPostScript)
@@ -165,6 +175,7 @@ public class ProjectApiControllerTest {
 
         this.mockMvc.perform(builder
                 .file(testFile)
+                .session(session)
                 .param("projectTitle", expectedProjectTitle)
                 .param("projectContent", expectedProjectContent)
                 .param("projectPostScript", expectedProjectPostScript)

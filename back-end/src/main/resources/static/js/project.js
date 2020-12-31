@@ -5,6 +5,9 @@ var clickSubmit = function () {
     $.ajax({
         type: "POST",
         url: "/api/project",
+        headers : { // ajax 해더 명시 필수
+                    'X-Requested-With' : 'XMLHttpRequest'
+                },
         data: data,
         processData: false,
         contentType: false,
@@ -27,6 +30,9 @@ var clickUpdate = function (id) {
     $.ajax({
         type: "PUT",
         url: "/api/project/"+id,
+        headers : { // ajax 해더 명시 필수
+                    'X-Requested-With' : 'XMLHttpRequest'
+                },
         data: data,
         processData: false,
         contentType: false,
@@ -47,6 +53,9 @@ var clickDelete = function(id) {
     $.ajax({
         type: "DELETE",
         url: "/api/project/"+id,
+        headers : { // ajax 해더 명시 필수
+                    'X-Requested-With' : 'XMLHttpRequest'
+                },
         processData: false,
         contentType: false,
         cache: false,
