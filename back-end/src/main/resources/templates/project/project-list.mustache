@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/" role="button" class="btn btn-secondary">Home</a>
+            </div>
+        </div>
+        <h3>project List</h3>
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+                <tr>
+                    <th>projectId</th>
+                    <th>projectTitle</th>
+                    <th>projectContent</th>
+                    <th>projectPostScript</th>
+                    <th>projectLink</th>
+                    <th>level</th>
+                    <th>memberId</th>
+                    <th>fileUrl</th>
+                    <th>fileOriginName</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                {{#result.data}}
+                    <tr>
+                        <td>{{projectId}}</td>
+                        <td>{{projectTitle}}</td>
+                        <td>{{projectContent}}</td>
+                        <td>{{projectPostScript}}</td>
+                        <td>{{projectLink}}</td>
+                        <td>{{level}}</td>
+                        <td>{{memberId}}</td>
+                        <td>{{fileUrl}}</td>
+                        <td>
+                            {{fileOriginName}}
+                            <a href="/api/download/project/{{projectId}}">다운로드</a>
+                        </td>
+                        <td><a href='/project/projectDetail?id={{projectId}}' role="button" class="btn btn-primary">update</a></td>
+                        <td><a role="button" class="btn btn-danger" onclick="clickDelete({{projectId}})">delete</a></td>
+                    </tr>
+                {{/result.data}}
+            </tbody>
+        </table>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/project/projectForm" role="button" class="btn btn-primary">Project Form</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!--index.js 추가-->
+    <script src="/js/project.js"></script>
+</body>
+</html>

@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/">Home</a>
+
+    {{^result.data}}
+        <h3>member 등록</h3>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <form id="myForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="comment">코멘트</label>
+                        <input type="text" class="form-control" id="comment" name="comment" />
+                    </div>
+                    <div class="form-group">
+                        <label for="subIntroduction">서브 자기소개</label>
+                        <textarea class="form-control" id="subIntroduction" name="subIntroduction"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="introduction">자기소개</label>
+                        <textarea class="form-control" id="introduction" name="introduction"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">연락처</label>
+                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="text" class="form-control" id="email" name="email" />
+                    </div>
+                    <div class="form-group">
+                        <label for="file">이미지파일</label>
+                        <input type="file" class="form-control" id="file" name="file" />
+                    </div>
+                    <button type="button" id="save-btn" class="btn btn-primary" onclick="clickSubmit()">등록</button>
+                </form>
+            </div>
+        </div>
+    {{/result.data}}
+
+    {{#result.data}}
+        <h3>member 수정</h3>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <form id="myForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="comment">코멘트</label>
+                        <input type="text" class="form-control" id="comment" name="comment" value="{{comment}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="subIntroduction">서브 자기소개</label>
+                        <textarea class="form-control" id="subIntroduction" name="subIntroduction">{{subIntroduction}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="introduction">자기소개</label>
+                        <textarea class="form-control" id="introduction" name="introduction">{{introduction}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="phoneNumber">연락처</label>
+                        <input type="text" class="form-control" id="phoneNumber" name="phoneNumber" value="{{phoneNumber}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="email">이메일</label>
+                        <input type="text" class="form-control" id="email" name="email" value="{{email}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="register">등록된 이미지 파일</label>
+                        <input type="text" class="form-control" id="register" value="{{fileOriginName}}" readonly />
+                        <a href="{{fileUrl}}" target="_blank">보기</a><br></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="file">이미지파일</label>
+                        <input type="file" class="form-control" id="file" name="file" />
+                    </div>
+                    <button type="button" id="save-btn" class="btn btn-primary" onclick="clickUpdate({{memberId}})">수정</button>
+                </form>
+            </div>
+        </div>
+    {{/result.data}}
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!--index.js 추가-->
+    <script src="/js/member.js"></script>
+</body>
+</html>

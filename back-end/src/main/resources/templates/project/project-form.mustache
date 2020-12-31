@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>Document</title>
+</head>
+<body>
+    <a href="/">Home</a>
+    {{^result.data}}
+        <h3>project 등록</h3>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <form id="myForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="projectTitle">프로젝트 명</label>
+                        <input type="text" class="form-control" id="projectTitle" name="projectTitle" />
+                    </div>
+                    <div class="form-group">
+                        <label for="projectContent">프로젝트 내용</label>
+                        <textarea class="form-control" id="projectContent" name="projectContent"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectPostScript">프로젝트 추신</label>
+                        <input type="text" class="form-control" id="projectPostScript" name="projectPostScript" />
+                    </div>
+                    <div class="form-group">
+                        <label for="projectLink">프로젝트 링크</label>
+                        <input type="text" class="form-control" id="projectLink" name="projectLink" />
+                    </div>
+                    <div class="form-group">
+                        <label for="level">프로젝트 level</label>
+                        <input type="number" class="form-control" id="level" name="level" />
+                    </div>
+                    <div class="form-group">
+                        <label for="memberId">멤버 ID</label>
+                        <input type="number" class="form-control" id="memberId" name="memberId" />
+                    </div>
+                    <div class="form-group">
+                        <label for="file">이미지파일</label>
+                        <input type="file" class="form-control" id="file" name="file" />
+                    </div>
+                    <button type="button" id="save-btn" class="btn btn-primary" onclick="clickSubmit()">등록</button>
+                </form>
+            </div>
+        </div>
+    {{/result.data}}
+
+    {{#result.data}}
+        <h3>project 수정</h3>
+        <div class="col-md-12">
+            <div class="col-md-4">
+                <form id="myForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="projectTitle">프로젝트 명</label>
+                        <input type="text" class="form-control" id="projectTitle" name="projectTitle" value="{{projectTitle}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="projectContent">프로젝트 내용</label>
+                        <textarea class="form-control" id="projectContent" name="projectContent">{{projectContent}}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="projectPostScript">프로젝트 추신</label>
+                        <input type="text" class="form-control" id="projectPostScript" name="projectPostScript" value="{{projectPostScript}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="projectLink">프로젝트 링크</label>
+                        <input type="text" class="form-control" id="projectLink" name="projectLink" value="{{projectLink}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="level">프로젝트 링크</label>
+                        <input type="text" class="form-control" id="level" name="level" value="{{level}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="memberId">멤버 ID</label>
+                        <input type="number" class="form-control" id="memberId" name="memberId" value="{{memberId}}" />
+                    </div>
+                    <div class="form-group">
+                        <label for="register">등록된 이미지 파일</label>
+                        <input type="text" class="form-control" id="register" value="{{fileOriginName}}" readonly />
+                        <a href="{{fileUrl}}" target="_blank">보기</a><br></span>
+                    </div>
+                    <div class="form-group">
+                        <label for="file">이미지파일</label>
+                        <input type="file" class="form-control" id="file" name="file" />
+                    </div>
+                    <button type="button" id="save-btn" class="btn btn-primary" onclick="clickUpdate({{memberId}})">수정</button>
+                </form>
+            </div>
+        </div>
+    {{/result.data}}
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!--index.js 추가-->
+    <script src="/js/project.js"></script>
+</body>
+</html>

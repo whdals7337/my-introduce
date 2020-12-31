@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="col-md-12">
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/" role="button" class="btn btn-secondary">Home</a>
+            </div>
+        </div>
+        <h3>member List</h3>
+        <table class="table table-horizontal table-bordered">
+            <thead class="thead-strong">
+                <tr>
+                    <th>memberId</th>
+                    <th>comment</th>
+                    <th>fileUrl</th>
+                    <th>fileOriginName</th>
+                    <th>subIntroduction</th>
+                    <th>introduction</th>
+                    <th>phoneNumber</th>
+                    <th>email</th>
+                    <th>수정</th>
+                    <th>삭제</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                {{#result.data}}
+                    <tr>
+                        <td>{{memberId}}</td>
+                        <td>{{comment}}</td>
+                        <td>{{fileUrl}}</td>
+                        <td>
+                            {{fileOriginName}}
+                            <a href="/api/download/member/{{memberId}}">다운로드</a>
+                        </td>
+                        <td>{{subIntroduction}}</td>
+                        <td>{{introduction}}</td>
+                        <td>{{phoneNumber}}</td>
+                        <td>{{email}}</td>
+                        <td><a href='/member/memberDetail?id={{memberId}}' role="button" class="btn btn-primary">update</a></td>
+                        <td><a role="button" class="btn btn-danger" onclick="clickDelete({{memberId}})">delete</a></td>
+                    </tr>
+                {{/result.data}}
+            </tbody>
+        </table>
+        <br />
+        <div class="row">
+            <div class="col-md-6">
+                <a href="/member/memberForm" role="button" class="btn btn-primary">Member Form</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <!--index.js 추가-->
+    <script src="/js/member.js"></script>
+</body>
+</html>
