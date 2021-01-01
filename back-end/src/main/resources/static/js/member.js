@@ -71,9 +71,9 @@ var clickDelete = function(id) {
 }
 
 
-var clickSelect = function (id) {
-    if(id == "Y"){
-        console.log("이미 대표설정된 멤버입니다.");
+var clickSelect = function (id, selectYN) {
+    if(selectYN == "Y"){
+        alert("이미 대표설정된 멤버입니다.");
         return false;
     }
     var data = new FormData();
