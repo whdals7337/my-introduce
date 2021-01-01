@@ -24,7 +24,9 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addInterceptor(certificationInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login/**")
-                .excludePathPatterns("/js/**");
+                .excludePathPatterns("/js/**")
+                .excludePathPatterns("/images/**");
+
     }
 
     // resource mapping //
