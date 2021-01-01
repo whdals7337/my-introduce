@@ -15,9 +15,11 @@ function ProjectLoader() {
   );
 
   useEffect(() => {
-    dispatch(getProjectsByMemberIdThunk(memberId ? memberId : 1));
+    if (memberId) {
+      dispatch(getProjectsByMemberIdThunk(memberId));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [memberId]);
 
   return (
     <>

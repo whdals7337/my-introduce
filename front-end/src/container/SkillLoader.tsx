@@ -15,9 +15,11 @@ function SkillLoader() {
   );
 
   useEffect(() => {
-    dispatch(getSkillsByMemberIdThunk(memberId ? memberId : 1));
+    if (memberId) {
+      dispatch(getSkillsByMemberIdThunk(memberId));
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [memberId]);
 
   return (
     <>
