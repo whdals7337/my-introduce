@@ -92,13 +92,12 @@ var clickSelect = function (id) {
         timeout: 600000,
         success: function (data) {
             if(data.member_id){
-            alert('선택완료')
-                        window.location.href="/member/memberList";
+                alert('선택완료')
+                window.location.href="/member/memberList";
             }
-            alert('대표설정에 실패하였습니다.')
         },
         error: function (e) {
-            alert('대펴설정에 실패하였습니다.')
+            alert('대표설정에 실패하였습니다.')
         }
     });
 };
