@@ -9,67 +9,51 @@ type SkillListProps = {
 };
 
 function SkillList({ skills }: SkillListProps) {
-  // Language
-  const languageSkills = skills.filter(function (skill) {
+  // front-end
+  const frontEndList = skills.filter(function (skill) {
     return skill.level === 1;
   });
 
-  // Web
-  const webskills = skills.filter(function (skill) {
+  // back-end
+  const backEndList = skills.filter(function (skill) {
     return skill.level === 2;
   });
 
-  //FrameWork
-  const frameWorkskills = skills.filter(function (skill) {
+  //etc
+  const etcList = skills.filter(function (skill) {
     return skill.level === 3;
-  });
-
-  //Database
-  const databaseskills = skills.filter(function (skill) {
-    return skill.level === 4;
   });
 
   return (
     <div id="skill_wrap">
       <Title title="Skill" />
-      {languageSkills && languageSkills.length > 0 && (
+      {frontEndList && frontEndList.length > 0 && (
         <div className="skill_list">
-          <div className="skill_category_title">Language</div>
+          <div className="skill_category_title">FrontEnd</div>
           <ul>
-            {languageSkills.map((skill) => (
+            {frontEndList.map((skill) => (
               <SkillItem skill={skill} key={skill.skill_id} />
             ))}
           </ul>
         </div>
       )}
 
-      {webskills && webskills.length > 0 && (
+      {backEndList && backEndList.length > 0 && (
         <div className="skill_list">
-          <div className="skill_category_title">Web</div>
+          <div className="skill_category_title">BackEnd</div>
           <ul>
-            {webskills.map((skill) => (
+            {backEndList.map((skill) => (
               <SkillItem skill={skill} key={skill.skill_id} />
             ))}
           </ul>
         </div>
       )}
 
-      {frameWorkskills && frameWorkskills.length > 0 && (
+      {etcList && etcList.length > 0 && (
         <div className="skill_list">
-          <div className="skill_category_title">FrameWork</div>
+          <div className="skill_category_title">Etc</div>
           <ul>
-            {frameWorkskills.map((skill) => (
-              <SkillItem skill={skill} key={skill.skill_id} />
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {databaseskills && databaseskills.length > 0 && (
-        <div className="skill_list">
-          <div className="skill_category_title">Database</div>
-          <ul>
-            {databaseskills.map((skill) => (
+            {etcList.map((skill) => (
               <SkillItem skill={skill} key={skill.skill_id} />
             ))}
           </ul>
