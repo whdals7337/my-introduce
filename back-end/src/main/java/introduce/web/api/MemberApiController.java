@@ -24,4 +24,7 @@ public class MemberApiController extends CrudController<MemberRequestDto, Member
     public Header<MemberTotalInfoResponseDto> totalInfo(@PathVariable Long id) {
         return memberService.totalInfo(id);
     }
+
+    @GetMapping("/select")
+    public Header<MemberResponseDto> findBySelectYN() {return memberService.findBySelectYN(); }
 }

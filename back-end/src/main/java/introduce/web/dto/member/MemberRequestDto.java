@@ -15,6 +15,7 @@ public class MemberRequestDto {
     private String introduction;
     private String phoneNumber;
     private String email;
+    private char selectYN;
 
     public Member toEntity() {
         return  Member.builder()
@@ -25,6 +26,7 @@ public class MemberRequestDto {
                 .introduction(introduction)
                 .phoneNumber(phoneNumber)
                 .email(email)
+                .selectYN(selectYN)
                 .build();
     }
     
@@ -32,5 +34,9 @@ public class MemberRequestDto {
     public void settingFileInfo(String filePath, String fileOriginName) {
         this.filePath = filePath;
         this.fileOriginName = fileOriginName;
+    }
+
+    public void settingSelectYN( char selectYN) {
+        this.selectYN = selectYN;
     }
 }

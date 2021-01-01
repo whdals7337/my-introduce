@@ -73,6 +73,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
 
         // [3] member info DB 등록
         requestDto.settingFileInfo(savePath, originalName);
+        requestDto.settingSelectYN('N');
         Member member = baseRepository.save(requestDto.toEntity());
         log.info("[3] member info DB 등록");
 
@@ -106,6 +107,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
 
                 // [1] 기존 정보 셋팅
                 requestDto.settingFileInfo(member.getFilePath(), member.getFileOriginName());
+                requestDto.settingSelectYN(member.getSelectYN());
                 saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
                 log.info("[1] 기존 정보 셋팅");
 
@@ -179,7 +181,6 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
     }
 
     @Override
-    @Transactional
     public Header<MemberResponseDto> findById(Long id) {
         log.info("member findById start");
         log.info("member findById end");
@@ -193,7 +194,6 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
-    @Transactional
     public Header<List<MemberResponseDto>> findAll(MemberRequestDto requestDto, Pageable pageable) {
         log.info("member findAll start");
         Page<Member> members = baseRepository.findAll(pageable);
@@ -215,6 +215,25 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
 
         log.info("member findAll end");
         return Header.OK(memberResponseDtoList, pagination);
+    }
+
+    public Header<MemberResponseDto> findBySelectYN() {
+        log.info("member findBySelectYN start");
+        log.info("member findBySelectYN end");
+        return baseRepository.findBySelectYN('Y')
+                .map(member -> {
+                    String saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
+                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                    return response(member, fileUrl);
+                }).map(Header::OK)
+                .orElseGet(() -> baseRepository.findById((long) 1)
+                        .map(member -> {
+                            String saveName = member.getFilePath().substring(member.getFilePath().lastIndexOf("/")+1);
+                            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
+                            return response(member, fileUrl);
+                        })
+                        .map(Header::OK)
+                        .orElseGet(()->Header.ERROR("데이터 없음")));
     }
 
     @Transactional
@@ -265,6 +284,19 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
     }
 
     @Transactional
+    public MemberResponseDto updateSelect(Long id){
+        List<Member> memberList = baseRepository.findAll();
+        for(Member member : memberList){
+            member.unSelect();
+        }
+        Member member = baseRepository.getOne(id);
+        member.select();
+
+        return MemberResponseDto.builder()
+                .memberId(member.getMemberId())
+                .build();
+    }
+
     public Member getMember(Long id) {
         Member member = baseRepository.findById(id).get();
         return member;
@@ -280,6 +312,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
                 .introduction(member.getIntroduction())
                 .phoneNumber(member.getPhoneNumber())
                 .email(member.getEmail())
+                .selectYN(member.getSelectYN())
                 .build();
 
         return responseDto;

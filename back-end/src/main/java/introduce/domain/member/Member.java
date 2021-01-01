@@ -41,6 +41,9 @@ public class Member extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String email;
 
+    @Column(length = 1, nullable = false)
+    private char selectYN;
+
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "member")
     private List<Project> projectList;
 
@@ -55,5 +58,14 @@ public class Member extends BaseTimeEntity {
         this.introduction =member.getIntroduction();
         this.phoneNumber = member.getPhoneNumber();
         this.email = member.getEmail();
+        this.selectYN = member.getSelectYN();
+    }
+
+    public void select() {
+        this.selectYN ='Y';
+    }
+
+    public void unSelect() {
+        this.selectYN ='N';
     }
 }

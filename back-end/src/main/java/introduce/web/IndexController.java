@@ -5,6 +5,7 @@ import introduce.service.MemberService;
 import introduce.service.ProjectService;
 import introduce.service.SkillService;
 import introduce.web.dto.member.MemberRequestDto;
+import introduce.web.dto.member.MemberResponseDto;
 import introduce.web.dto.project.ProjectRequestDto;
 import introduce.web.dto.skill.SkillRequestDto;
 import lombok.RequiredArgsConstructor;
@@ -85,6 +86,12 @@ public class IndexController {
         ModelAndView mav = new ModelAndView("member/member-form");
         mav.addObject("result", memberService.findById(id));
         return mav;
+    }
+
+    @ResponseBody
+    @PostMapping("/member/select")
+    public MemberResponseDto memberSelect(@RequestParam Long id) {
+        return memberService.updateSelect(id);
     }
 
     @GetMapping("/project/projectForm")

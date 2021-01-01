@@ -17,6 +17,7 @@
         <table class="table table-horizontal table-bordered">
             <thead class="thead-strong">
                 <tr>
+                    <th>대표설정</th>
                     <th>memberId</th>
                     <th>comment</th>
                     <th>fileUrl</th>
@@ -32,6 +33,7 @@
             <tbody id="tbody">
                 {{#result.data}}
                     <tr>
+                        <td><a role="button" class="btn btn-primary" onclick="clickSelect({{memberId}})">{{selectYN}}</a></td>
                         <td>{{memberId}}</td>
                         <td>{{comment}}</td>
                         <td>{{fileUrl}}</td>

@@ -193,7 +193,6 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
     }
 
     @Override
-    @Transactional
     public Header<ProjectResponseDto> findById(Long id) {
         log.info("project findById start");
         log.info("project findById end");
@@ -207,6 +206,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
                 .orElseGet(() -> Header.ERROR("데이터 없음"));
     }
 
+    @Override
     @Transactional
     public Header<List<ProjectResponseDto>> findAll(ProjectRequestDto requestDto, Pageable pageable) {
         log.info("project findAll start");
@@ -241,7 +241,6 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         return Header.OK(projectResponseDtoList, pagination);
     }
 
-    @Transactional
     public Project getProject(Long id) {
         Project project = baseRepository.findById(id).get();
         return project;

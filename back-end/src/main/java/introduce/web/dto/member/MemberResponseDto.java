@@ -18,4 +18,5 @@ public class MemberResponseDto {
     private String introduction;
     private String phoneNumber;
     private String email;
+    private char selectYN;
 }
