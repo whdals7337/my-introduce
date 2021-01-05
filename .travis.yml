@@ -15,15 +15,9 @@ matrix:
         - cd back-end/
         - chmod +x gradlew
 
-      before_script:
-        - echo $AWS_ACCESS_KEY
-        - echo $AWS_SECRET_KEY
-
       script: "./gradlew clean build"
 
       before_deploy:
-        - echo $AWS_ACCESS_KEY
-        - echo $AWS_SECRET_KEY
         - mkdir -p before-backend-deploy
         - cp scripts/*.sh before-backend-deploy/
         - cp appspec.yml before-backend-deploy/
@@ -34,8 +28,8 @@ matrix:
 
       deploy:
         - provider: s3
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: $aergarg
+          secret_access_key: $aergarg
           bucket: myintroduce-springboot-build
           region: ap-northeast-2
           skip_cleanup: true
@@ -44,8 +38,8 @@ matrix:
           wait-until-deployed: true
 
         - provider: codedeploy
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: $aergarg
+          secret_access_key: $aergarg
           bucket: myintroduce-springboot-build
           key: back-end.zip
           bundle_type: zip
@@ -66,8 +60,6 @@ matrix:
         - npm run build
 
       before_deploy:
-        - echo $AWS_ACCESS_KEY
-        - echo $AWS_SECRET_KEY
         - mkdir -p before-frontend-deploy
         - cp scripts/*.sh before-frontend-deploy/
         - cp appspec.yml before-frontend-deploy/
@@ -78,8 +70,8 @@ matrix:
 
       deploy:
         - provider: s3
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: $aergarg
+          secret_access_key: $aergaerg
           bucket: myintroduce-springboot-build
           region: ap-northeast-2
           skip_cleanup: true
@@ -88,8 +80,8 @@ matrix:
           wait-until-deployed: true
 
         - provider: codedeploy
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: $aergarg
+          secret_access_key: $aergarg
           bucket: myintroduce-springboot-build
           key: front-end.zip
           bundle_type: zip
