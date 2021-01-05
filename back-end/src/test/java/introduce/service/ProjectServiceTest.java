@@ -43,11 +43,12 @@ public class ProjectServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         projectService = new ProjectService(memberRepository);
+        projectService.baseRepository = projectRepository;
         ReflectionTestUtils.setField(projectService, "fileUploadPath","/test-dir/files/");
         ReflectionTestUtils.setField(projectService, "domain", "http://localhost:8080");
         ReflectionTestUtils.setField(projectService, "dirType", "images");
         ReflectionTestUtils.setField(projectService, "subFileUploadPath", "project");
-        projectService.baseRepository = projectRepository;
+
     }
 
     @Test

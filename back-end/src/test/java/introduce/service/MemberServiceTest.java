@@ -11,7 +11,6 @@ import introduce.web.dto.member.MemberResponseDto;
 import introduce.web.dto.membertotalinfo.MemberTotalInfoResponseDto;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
@@ -31,7 +30,6 @@ import static org.mockito.BDDMockito.given;
 
 public class MemberServiceTest {
 
-    @InjectMocks
     private MemberService memberService;
     @Mock
     private MemberRepository memberRepository;
@@ -44,11 +42,11 @@ public class MemberServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         memberService = new MemberService(skillService, projectService);
+        memberService.baseRepository = memberRepository;
         ReflectionTestUtils.setField(memberService, "fileUploadPath","/test-dir/files/");
         ReflectionTestUtils.setField(memberService, "domain", "http://localhost:8080");
         ReflectionTestUtils.setField(memberService, "dirType", "images");
         ReflectionTestUtils.setField(memberService, "subFileUploadPath", "member");
-        memberService.baseRepository = memberRepository;
     }
 
     @Test

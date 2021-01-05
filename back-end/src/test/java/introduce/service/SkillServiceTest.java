@@ -45,11 +45,12 @@ public class SkillServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         skillService = new SkillService(memberRepository);
+        skillService.baseRepository = skillRepository;
         ReflectionTestUtils.setField(skillService, "fileUploadPath","/test-dir/files/");
         ReflectionTestUtils.setField(skillService, "domain", "http://localhost:8080");
         ReflectionTestUtils.setField(skillService, "dirType", "images");
         ReflectionTestUtils.setField(skillService, "subFileUploadPath", "skill");
-        skillService.baseRepository = skillRepository;
+
     }
 
     @Test
