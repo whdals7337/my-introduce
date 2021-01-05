@@ -29,6 +29,9 @@ public class Member extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String fileOriginName;
 
+    @Column(length = 500, nullable = false)
+    private String fileUrl;
+
     @Column(length = 50, nullable = false)
     private String subIntroduction;
 
@@ -42,7 +45,7 @@ public class Member extends BaseTimeEntity {
     private String email;
 
     @Column(length = 1, nullable = false)
-    private char selectYN;
+    private String selectYN;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "member")
     private List<Project> projectList;
@@ -54,6 +57,7 @@ public class Member extends BaseTimeEntity {
         this.comment = member.getComment();
         this.filePath = member.getFilePath();
         this.fileOriginName = member.getFileOriginName();
+        this.fileUrl = member.getFileUrl();
         this.subIntroduction = member.getSubIntroduction();
         this.introduction =member.getIntroduction();
         this.phoneNumber = member.getPhoneNumber();
@@ -62,10 +66,10 @@ public class Member extends BaseTimeEntity {
     }
 
     public void select() {
-        this.selectYN ='Y';
+        this.selectYN ="Y";
     }
 
     public void unSelect() {
-        this.selectYN ='N';
+        this.selectYN ="N";
     }
 }
