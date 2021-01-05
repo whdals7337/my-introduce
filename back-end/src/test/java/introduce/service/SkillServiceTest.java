@@ -18,6 +18,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -44,6 +45,10 @@ public class SkillServiceTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         skillService = new SkillService(memberRepository);
+        ReflectionTestUtils.setField(skillService, "fileUploadPath","/test-dir/files/");
+        ReflectionTestUtils.setField(skillService, "domain", "http://localhost:8080");
+        ReflectionTestUtils.setField(skillService, "dirType", "images");
+        ReflectionTestUtils.setField(skillService, "subFileUploadPath", "skill");
         skillService.baseRepository = skillRepository;
     }
 
