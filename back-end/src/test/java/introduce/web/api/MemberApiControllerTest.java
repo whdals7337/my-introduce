@@ -312,7 +312,7 @@ public class MemberApiControllerTest {
             givenMember();
         }
 
-        String url = "http://localhost:" + port + "/api/member/";
+        String url = "http://localhost:" + port + "/api/member";
 
         mockMvc.perform(get(url)
                 .session(session)
