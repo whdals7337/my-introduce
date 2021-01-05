@@ -156,6 +156,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
     }
 
     @Override
+    @Transactional
     public Header<SkillResponseDto> findById(Long id) {
         log.info("skill findById start");
         log.info("member findById end");
@@ -195,6 +196,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         return Header.OK(skillResponseDtoList, pagination);
     }
 
+    @Transactional
     public Skill getSkill(Long id) {
         return baseRepository.findById(id).orElseThrow(SkillNotFoundException::new);
     }

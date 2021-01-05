@@ -6,6 +6,7 @@ import introduce.domain.network.Header;
 import introduce.domain.network.Pagination;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
+import introduce.error.exception.member.MemberNotFoundException;
 import introduce.error.exception.project.ProjectNotFoundException;
 import introduce.web.dto.project.ProjectRequestDto;
 import introduce.web.dto.project.ProjectResponseDto;
@@ -235,9 +236,9 @@ public class ProjectServiceTest {
 
         given(memberRepository.findById(1L)).willReturn(Optional.empty());
 
-        assertThatExceptionOfType(ProjectNotFoundException.class)
+        assertThatExceptionOfType(MemberNotFoundException.class)
                 .isThrownBy(() -> projectService.findAll(mockProjectRequestDto(1L, 1), PageRequest.of(0,4)))
-                .withMessage("Project Entity가 존재하지 않습니다.");
+                .withMessage("Member Entity가 존재하지 않습니다.");
     }
 
     @Test

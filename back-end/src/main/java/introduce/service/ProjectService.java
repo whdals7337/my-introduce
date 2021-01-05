@@ -6,6 +6,7 @@ import introduce.domain.network.Header;
 import introduce.domain.network.Pagination;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
+import introduce.error.exception.member.MemberNotFoundException;
 import introduce.error.exception.project.ProjectNotFoundException;
 import introduce.utill.FileUtil;
 import introduce.web.dto.project.ProjectRequestDto;
@@ -177,6 +178,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
     }
 
     @Override
+    @Transactional
     public Header<ProjectResponseDto> findById(Long id) {
         log.info("project findById start");
         log.info("project findById end");
@@ -194,7 +196,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         // 특정 멤버 id 값이 들어온 경우
         if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
             log.info("exist memberId");
-            Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(ProjectNotFoundException::new);
+            Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
             projects = baseRepository.findAllByMember(member, pageable);
         }
         else {
@@ -217,6 +219,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         return Header.OK(projectResponseDtoList, pagination);
     }
 
+    @Transactional
     public Project getProject(Long id) {
         return baseRepository.findById(id).orElseThrow(ProjectNotFoundException::new);
     }

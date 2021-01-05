@@ -162,6 +162,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
     }
 
     @Override
+    @Transactional
     public Header<MemberResponseDto> findById(Long id) {
         log.info("member findById start");
         log.info("member findById end");
@@ -171,6 +172,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
                 .orElseThrow(MemberNotFoundException::new);
     }
 
+    @Transactional
     public Header<List<MemberResponseDto>> findAll(MemberRequestDto requestDto, Pageable pageable) {
         log.info("member findAll start");
         Page<Member> members = baseRepository.findAll(pageable);
@@ -190,6 +192,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         return Header.OK(memberResponseDtoList, pagination);
     }
 
+    @Transactional
     public Header<MemberResponseDto> findBySelectYN() {
         log.info("member findBySelectYN start");
         log.info("member findBySelectYN end");
