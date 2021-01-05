@@ -12,7 +12,7 @@ function IntroduceLoader() {
     <>
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
-      {data && (
+      {data && data.data && (
         <Introduce
           subIntroduction={data.data.sub_introduction}
           introduction={data.data.introduction}

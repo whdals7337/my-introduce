@@ -25,7 +25,7 @@ function ProjectLoader() {
     <>
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
-      {data && <ProjectList projects={data.data} />}
+      {data && data.data && <ProjectList projects={data.data} />}
     </>
   );
 }

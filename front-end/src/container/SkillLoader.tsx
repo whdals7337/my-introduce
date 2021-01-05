@@ -25,7 +25,7 @@ function SkillLoader() {
     <>
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
-      {data && <SkillList skills={data.data} />}
+      {data && data.data && <SkillList skills={data.data} />}
     </>
   );
 }

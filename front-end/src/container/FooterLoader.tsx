@@ -12,7 +12,7 @@ function FooterLoader() {
     <>
       {loading && <p>로딩중....</p>}
       {error && <p>에러발생</p>}
-      {data && (
+      {data && data.data && (
         <Footer phoneNumber={data.data.phone_number} email={data.data.email} />
       )}
     </>
