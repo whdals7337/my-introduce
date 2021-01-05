@@ -391,7 +391,7 @@ public class MemberApiControllerTest {
                 .andExpect(jsonPath("$.msg").value("Member Entity가 존재하지 않습니다."));
     }
 
-    public Member givenMember(String selectYN) {
+    private Member givenMember(String selectYN) {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
                 .filePath("헤어 이미지 경로")
@@ -405,7 +405,7 @@ public class MemberApiControllerTest {
                 .build());
     }
 
-    public Member givenMember() {
+    private Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
                 .filePath("헤어 이미지 경로")
@@ -419,7 +419,7 @@ public class MemberApiControllerTest {
                 .build());
     }
 
-    public Project givenProject(Member member) {
+    private Project givenProject(Member member) {
         return projectRepository.save(Project.builder()
                 .projectTitle("프로젝트 이름0")
                 .projectContent("프로젝트 내용0")
@@ -433,7 +433,7 @@ public class MemberApiControllerTest {
                 .build());
     }
 
-    public Skill givenSkill(Member member) {
+    private Skill givenSkill(Member member) {
         return skillRepository.save(Skill.builder()
                 .skillName("스킬 이름0")
                 .filePath("스킬 이미지 경로0")

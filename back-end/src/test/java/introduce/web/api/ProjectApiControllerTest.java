@@ -398,7 +398,7 @@ public class ProjectApiControllerTest {
                 .andExpect(jsonPath("$.pagination.current_elements").value(2));
     }
 
-    public Member givenMember() {
+    private Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
                 .filePath("헤어 이미지 경로")
@@ -412,7 +412,7 @@ public class ProjectApiControllerTest {
                 .build());
     }
 
-    public Project givenProject(Member member) {
+    private Project givenProject(Member member) {
         return projectRepository.save(Project.builder()
                 .projectTitle("프로젝트 이름0")
                 .projectContent("프로젝트 내용0")

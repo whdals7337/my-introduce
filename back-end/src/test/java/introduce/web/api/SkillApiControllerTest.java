@@ -350,7 +350,7 @@ public class SkillApiControllerTest {
                 .andExpect(jsonPath("$.pagination.current_elements").value(2));
     }
 
-    public Member givenMember() {
+    private Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
                 .filePath("헤어 이미지 경로")
@@ -364,7 +364,7 @@ public class SkillApiControllerTest {
                 .build());
     }
 
-    public Skill givenSkill(Member member) {
+    private Skill givenSkill(Member member) {
         return skillRepository.save(Skill.builder()
                 .skillName("스킬 이름0")
                 .filePath("스킬 이미지 경로0")
