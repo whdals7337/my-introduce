@@ -6,6 +6,8 @@ import introduce.domain.network.Header;
 import introduce.domain.network.Pagination;
 import introduce.domain.skill.Skill;
 import introduce.domain.skill.SkillRepository;
+import introduce.error.exception.member.MemberNotFoundException;
+import introduce.error.exception.skill.SkillNotFoundException;
 import introduce.utill.FileUtil;
 import introduce.web.dto.skill.SkillRequestDto;
 import introduce.web.dto.skill.SkillResponseDto;
@@ -21,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,11 +48,11 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
 
     @Override
     @Transactional
-    public Header<SkillResponseDto> save(SkillRequestDto requestDto, MultipartFile file) {
+    public Header<SkillResponseDto> save(SkillRequestDto requestDto, MultipartFile file) throws IOException {
         log.info("skill save start");
 
         // [1] file parameter setting
-        String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
+        String originalName = FileUtil.cutFileName(Objects.requireNonNull(file.getOriginalFilename()), 100);
         String saveName = FileUtil.getRandomFileName(originalName);
         String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
         String saveDir = fileUploadPath + subFileUploadPath;
@@ -61,23 +64,16 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         log.info("[2] file 디렉토리 생성");
 
         // [3] project info DB 등록
-        requestDto.settingFileInfo(savePath, originalName);
-        Skill skill = baseRepository.save(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
+        Skill skill = baseRepository.save(requestDto.toEntity(memberRepository
+                .getOne(requestDto.getMemberId()), savePath, originalName, fileUrl));
         log.info("[3] skill info DB 등록");
 
         // [4] file transfer
-        try {
-            file.transferTo(new File(savePath));
-            log.info("[4] file transfer");
-
-        } catch (IOException e) {
-            log.info("[4] file transfer fail");
-            e.printStackTrace();
-            return Header.ERROR("파일 변환 실패");
-        }
+        file.transferTo(new File(savePath));
+        log.info("[4] file transfer");
 
         log.info("project save end");
-        return Header.OK(response(skill, fileUrl));
+        return Header.OK(response(skill));
     }
 
     @Override
@@ -87,56 +83,26 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         Optional<Skill> optional = baseRepository.findById(id);
 
         return optional.map(skill -> {
-            String saveName;
-
-            // 순서값이 변경 된 경우
-            if(skill.getLevel() != requestDto.getLevel()){
-                int originLevel = skill.getLevel();
-                int changedLevel = requestDto.getLevel();
-
-                // 원래 순서 값이 변경할 순서 값보다 큰 경우
-                if (originLevel > changedLevel) {
-                    // 원래 값부터 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 증가
-                    List<Skill> rangeRows = baseRepository.findByLevelBetween(changedLevel, originLevel-1);
-                    for(Skill row : rangeRows){
-                        row.levelUp();
-                    }
-                }
-                // 원래 순서 값이 변경할 순서 값보다 작은 경우
-                else {
-                    // 원래 값보다 크고 변경할 순서 값보다 작은 순서의 칼럼의 순서값을 1 감소
-                    List<Skill> rangeRows = baseRepository.findByLevelBetween(originLevel+1, changedLevel);
-                    for(Skill row : rangeRows){
-                        row.levelDown();
-                    }
-                }
-            }
-            log.info("[1] 순서 변경");
-
             // 첨부된 파일이 없는 경우
             if(file == null || file.isEmpty()) {
                 log.info("첨부된 파일 없음");
 
-                // [2] 기존 정보 셋팅
-                requestDto.settingFileInfo(skill.getFilePath(), skill.getFileOriginName());
-                saveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
-                log.info("[2] 기존 정보 셋팅");
-
-                // [3] skill info DB update
-                skill.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
-                log.info("[3] skill info DB update");
+                // [2] skill info DB update
+                skill.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId()),
+                        skill.getFilePath(), skill.getFileOriginName(), skill.getFileUrl()));
+                log.info("[2] skill info DB update");
             }
             // 첨부된 파일이 있는 경우
             else {
                 log.info("첨부된 파일 있음");
 
                 // [2] file parameter setting
-                String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
-                saveName = FileUtil.getRandomFileName(originalName);
+                String originalName = FileUtil.cutFileName(Objects.requireNonNull(file.getOriginalFilename()), 100);
+                String saveName = FileUtil.getRandomFileName(originalName);
+                String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
                 String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath =  saveDir +"/"+ saveName;
                 String preExistingFilePath = skill.getFilePath();
-                requestDto.settingFileInfo(savePath, originalName);
                 log.info("[2] file parameter setting");
 
                 // [3] file 디렉토리 생성
@@ -144,29 +110,29 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
                 log.info("[3] file 디렉토리 생성");
 
                 // [4] skill info DB update
-                skill.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
+                skill.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId()),
+                        savePath, originalName, fileUrl));
                 log.info("[4] skill info DB update");
 
                 // [5] file transfer
                 try {
                     file.transferTo(new File(savePath));
-                    log.info("[5] file transfer");
 
                 } catch (IOException e) {
                     log.info("[5] file transfer fail");
                     e.printStackTrace();
-                    return Header.ERROR("파일 변환 실패");
                 }
+                log.info("[5] file transfer");
 
                 // [6] pre-existing file delete
                 FileUtil.deleteFile(preExistingFilePath);
                 log.info("[6] pre-existing file delete");
             }
-            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
 
             log.info("skill update end");
-            return Header.OK(response(skill, fileUrl));
-        }).orElseGet(() -> Header.ERROR("데이터 없음"));
+
+            return Header.OK(response(skill));
+        }).orElseThrow(SkillNotFoundException::new);
     }
 
     @Override
@@ -176,19 +142,17 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         Optional<Skill> optional = baseRepository.findById(id);
 
         return optional.map(skill -> {
-            String preExistingFilePath = skill.getFilePath();
-
             // [1] skill info DB delete
             baseRepository.delete(skill);
             log.info("[1] skill info DB delete");
 
             // [2] pre-existing file delete
-            FileUtil.deleteFile(preExistingFilePath);
+            FileUtil.deleteFile(skill.getFilePath());
             log.info("[2] pre-existing file delete");
 
             log.info("member delete end");
             return Header.OK();
-        }).orElseGet(() -> Header.ERROR("데이터 없음"));
+        }).orElseThrow(SkillNotFoundException::new);
     }
 
     @Override
@@ -196,13 +160,9 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         log.info("skill findById start");
         log.info("member findById end");
         return baseRepository.findById(id)
-                .map(skill -> {
-                    String saveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
-                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
-                    return response(skill, fileUrl);
-                })
+                .map(this::response)
                 .map(Header::OK)
-                .orElseGet(() -> Header.ERROR("데이터 없음"));
+                .orElseThrow(SkillNotFoundException::new);
     }
 
     @Transactional
@@ -212,7 +172,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         // 특정 멤버 id 값이 들어온 경우
         if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
             log.info("exist memberId");
-            Member member = memberRepository.findById(requestDto.getMemberId()).get();
+            Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(MemberNotFoundException::new);
             skills = baseRepository.findAllByMember(member, pageable);
         }
         else {
@@ -221,11 +181,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         }
 
         List<SkillResponseDto> skillResponseDtoList = skills.stream()
-                .map(skill -> {
-                    String saveName = skill.getFilePath().substring(skill.getFilePath().lastIndexOf("/")+1);
-                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
-                    return response(skill, fileUrl);
-                })
+                .map(this::response)
                 .collect(Collectors.toList());
 
         Pagination pagination = Pagination.builder()
@@ -240,21 +196,18 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
     }
 
     public Skill getSkill(Long id) {
-        Skill skill = baseRepository.findById(id).get();
-        return skill;
+        return baseRepository.findById(id).orElseThrow(SkillNotFoundException::new);
     }
 
-    public SkillResponseDto response(Skill skill, String fileUrl) {
-        SkillResponseDto responseDto = SkillResponseDto.builder()
+    public SkillResponseDto response(Skill skill) {
+        return SkillResponseDto.builder()
                 .skillId(skill.getSkillId())
                 .skillName(skill.getSkillName())
-                .fileUrl(fileUrl)
+                .fileUrl(skill.getFileUrl())
                 .fileOriginName(skill.getFileOriginName())
                 .skillLevel(skill.getSkillLevel())
                 .level(skill.getLevel())
                 .memberId(skill.getMember().getMemberId())
                 .build();
-
-        return responseDto;
     }
 }

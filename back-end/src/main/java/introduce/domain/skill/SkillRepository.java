@@ -5,12 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-
 public interface SkillRepository extends JpaRepository<Skill, Long> {
-
-    // 프로젝트 순서 값 범위 조회
-    List<Skill> findByLevelBetween(int preLevel, int lastLevel);
     
     // 특정 멤버의 스킬 목록 조회
     Page<Skill> findAllByMember(Member member, Pageable pageable);
