@@ -319,10 +319,11 @@ public class MemberApiControllerTest {
                 .param("page", "1")
                 .param("size", "2"))
                 .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.[0].comment").value("코멘트"))
                 .andExpect(jsonPath("$.data.[1].comment").value("코멘트"))
                 .andExpect(jsonPath("$.pagination.total_pages").value(3))
-                .andExpect(jsonPath("$.pagination.total_elements").value(6))
+                .andExpect(jsonPath("$.pagination.total_elements").value(size))
                 .andExpect(jsonPath("$.pagination.current_elements").value(2));
     }
 
