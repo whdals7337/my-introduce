@@ -28,8 +28,8 @@ matrix:
 
       deploy:
         - provider: s3
-          access_key_id: AKIAS7WNIOHOIAPUVJ42
-          secret_access_key: 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
+          access_key_id: $ACCESS
+          secret_access_key: $SECRET
           bucket: myintroduce-springboot-build
           region: ap-northeast-2
           skip_cleanup: true
@@ -38,8 +38,8 @@ matrix:
           wait-until-deployed: true
 
         - provider: codedeploy
-          access_key_id: AKIAS7WNIOHOIAPUVJ42
-          secret_access_key: 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
+          access_key_id: $ACCESS
+          secret_access_key: $SECRET
           bucket: myintroduce-springboot-build
           key: back-end.zip
           bundle_type: zip
@@ -70,8 +70,8 @@ matrix:
 
       deploy:
         - provider: s3
-          access_key_id: AKIAS7WNIOHOIAPUVJ42
-          secret_access_key: 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
+          access_key_id: $ACCESS
+          secret_access_key: $SECRET
           bucket: myintroduce-springboot-build
           region: ap-northeast-2
           skip_cleanup: true
@@ -80,8 +80,8 @@ matrix:
           wait-until-deployed: true
 
         - provider: codedeploy
-          access_key_id: AKIAS7WNIOHOIAPUVJ42
-          secret_access_key: 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
+          access_key_id: $ACCESS
+          secret_access_key: $SECRET
           bucket: myintroduce-springboot-build
           key: front-end.zip
           bundle_type: zip
