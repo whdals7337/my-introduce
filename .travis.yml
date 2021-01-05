@@ -15,13 +15,13 @@ matrix:
         - cd back-end/
         - chmod +x gradlew
 
+      before_script:
+        - echo $AWS_ACCESS_KEY
+        - echo $AWS_SECRET_KEY
+
       script: "./gradlew clean build"
 
       before_deploy:
-        - echo $AWS_ACCESS_KEY
-        - echo AWS_ACCESS_KEY
-        - echo '$AWS_ACCESS_KEY'
-        - echo 'AWS_ACCESS_KEY'
         - mkdir -p before-backend-deploy
         - cp scripts/*.sh before-backend-deploy/
         - cp appspec.yml before-backend-deploy/
