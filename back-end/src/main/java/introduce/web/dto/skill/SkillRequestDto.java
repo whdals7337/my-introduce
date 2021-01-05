@@ -10,25 +10,19 @@ import lombok.*;
 @Builder
 public class SkillRequestDto {
     private String skillName;
-    private String filePath;
-    private String fileOriginName;
     private Integer skillLevel;
     private Integer level;
     private Long memberId;
 
-    public Skill toEntity(Member member) {
+    public Skill toEntity(Member member, String filePath, String fileOriginName, String fileUrl) {
         return Skill.builder()
                 .skillName(skillName)
                 .filePath(filePath)
                 .fileOriginName(fileOriginName)
+                .fileUrl(fileUrl)
                 .skillLevel(skillLevel)
                 .level(level)
                 .member(member)
                 .build();
-    }
-
-    public void settingFileInfo(String filePath, String fileOriginName) {
-        this.filePath = filePath;
-        this.fileOriginName = fileOriginName;
     }
 }

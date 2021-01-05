@@ -27,11 +27,14 @@ public class Skill extends BaseTimeEntity  {
     @Column(length = 100, nullable = false)
     private String fileOriginName;
 
+    @Column(length = 500, nullable = false)
+    private String fileUrl;
+
     @Column(nullable = false)
     private Integer skillLevel;
 
     @Column(nullable = false)
-    private Integer level;
+    private int level;
 
     @ManyToOne
     private Member member;
@@ -41,6 +44,7 @@ public class Skill extends BaseTimeEntity  {
         this.skillName = skill.getSkillName();
         this.filePath = skill.getFilePath();
         this.fileOriginName = skill.getFileOriginName();
+        this.fileUrl = skill.getFileUrl();
         this.skillLevel = skill.getSkillLevel();
         this.level= skill.getLevel();
         this.member= skill.getMember();
