@@ -1,7 +1,7 @@
 env:
   global:
-    - ACCESS_KEY = $AWS_ACCESS_KEY
-    - SECRET_KEY = $AWS_SECRET_KEY
+    - ACCESS_KEY = "$AWS_ACCESS_KEY"
+    - SECRET_KEY = "$AWS_SECRET_KEY"
 matrix:
   include:
     - language: java
