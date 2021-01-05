@@ -1,6 +1,6 @@
 package introduce.domain.network;
 
-import introduce.utill.DateUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,46 +10,31 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class Header<T> {
 
-    private String transactionTime; //api 통신시간
-    private String resultCode; //api 응답코드
-    private String description; //api 부가설명
+    private String status;
     private T data;
     private Pagination pagination;
 
     public static <T> Header<T> OK() {
         return (Header<T>) Header.builder()
-                .transactionTime(DateUtil.getTodayByCustomFormat("YYYY-dd-MM"))
-                .resultCode("200")
-                .description("OK")
+                .status("200")
                 .build();
     }
 
     public static <T> Header<T> OK(T data) {
         return (Header<T>) Header.builder()
-                .transactionTime(DateUtil.getTodayByCustomFormat("YYYY-dd-MM"))
-                .resultCode("200")
-                .description("OK")
+                .status("200")
                 .data(data)
                 .build();
     }
 
     public static <T> Header<T> OK(T data, Pagination pagination) {
         return (Header<T>) Header.builder()
-                .transactionTime(DateUtil.getTodayByCustomFormat("YYYY-dd-MM"))
-                .resultCode("200")
-                .description("OK")
+                .status("200")
                 .data(data)
                 .pagination(pagination)
-                .build();
-    }
-
-    public static <T> Header<T> ERROR(String description) {
-        return (Header<T>) Header.builder()
-                .transactionTime(DateUtil.getTodayByCustomFormat("YYYY-dd-MM"))
-                .resultCode("ERROR")
-                .description(description)
                 .build();
     }
 }
