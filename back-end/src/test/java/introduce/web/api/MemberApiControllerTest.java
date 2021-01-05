@@ -354,25 +354,6 @@ public class MemberApiControllerTest {
     }
 
     @Test
-    public void findBySelectYN() throws Exception {
-        Member member = givenMember("Y");
-
-        String url = "http://localhost:" + port + "/api/member/select";
-
-        mockMvc.perform(get(url)
-                .session(session))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(200))
-                .andExpect(jsonPath("$.data.comment").value(member.getComment()))
-                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(member.getFileUrl()))
-                .andExpect(jsonPath("$.data.sub_introduction").value(member.getSubIntroduction()))
-                .andExpect(jsonPath("$.data.introduction").value(member.getIntroduction()))
-                .andExpect(jsonPath("$.data.phone_number").value(member.getPhoneNumber()))
-                .andExpect(jsonPath("$.data.email").value(member.getEmail()));
-    }
-
-    @Test
     public void member_select() throws Exception {
         Member member = givenMember("N");
         String url = "http://localhost:" + port + "/api/member/select/"+member.getMemberId();
