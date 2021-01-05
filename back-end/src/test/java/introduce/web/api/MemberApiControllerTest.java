@@ -396,8 +396,7 @@ public class MemberApiControllerTest {
                 .param("size", "2"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
-                .andExpect(jsonPath("$.data.[0].comment").value("코멘트"))
-                .andExpect(jsonPath("$.data.[1].comment").value("코멘트"));
+                .andExpect(jsonPath("$.data.[0].comment").value("코멘트"));
     }
 
 
