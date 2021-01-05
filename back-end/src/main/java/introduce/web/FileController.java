@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -37,7 +38,7 @@ public class FileController {
     private final SkillService skillService;
 
     @GetMapping("/api/download/{type}/{id}")
-    public ResponseEntity<Resource> fileDownload(@PathVariable String type, @PathVariable("id") Long id, HttpServletRequest request) throws Exception {
+    public ResponseEntity<Resource> fileDownload(@PathVariable String type, @PathVariable("id") Long id, HttpServletRequest request) throws IOException {
         String filePath;
         String filename;
 
@@ -72,11 +73,11 @@ public class FileController {
                     .body(resource);
         }
         else {
-            throw new IOException("존재하지않는 파일입니다.");
+            throw new FileNotFoundException("존재하지않는 파일입니다.");
         }
     }
 
-    protected String getFileNameByBrowser(String fileName, HttpServletRequest request) throws Exception {
+    protected String getFileNameByBrowser(String fileName, HttpServletRequest request) throws UnsupportedEncodingException {
         String browser= "";
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
