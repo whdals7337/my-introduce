@@ -14,8 +14,13 @@ var clickSubmit = function () {
         cache: false,
         timeout: 600000,
         success: function (data) {
-            alert('등록완료')
-            window.location.href="/skill/skillList";
+            if(data.status === "200"){
+                alert('등록완료')
+                window.location.href="/skill/skillList";
+            }
+            else {
+                alert(data.msg)
+            }
         },
         error: function (e) {
             alert('실패')
@@ -39,8 +44,13 @@ var clickUpdate = function (id) {
         cache: false,
         timeout: 600000,
         success: function (data) {
-            alert('수정')
-            window.location.href="/skill/skillList";
+            if(data.status === "200"){
+                alert('수정완료')
+                window.location.href="/skill/skillList";
+            }
+            else {
+                alert(data.msg)
+            }
         },
         error: function (e) {
             alert('실패')
@@ -61,8 +71,13 @@ var clickDelete = function(id) {
         cache: false,
         timeout: 600000,
         success: function (data) {
-            alert('삭제완료')
-            window.location.href = "/skill/skillList"
+            if(data.status === "200"){
+                alert('삭제완료')
+                window.location.href="/skill/skillList";
+            }
+            else {
+                alert(data.msg)
+            }
         },
         error: function (e) {
             alert('실패')
