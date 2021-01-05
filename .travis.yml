@@ -34,8 +34,8 @@ matrix:
 
       deploy:
         - provider: s3
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: echo $AWS_ACCESS_KEY
+          secret_access_key: echo $AWS_SECRET_KEY
           bucket: myintroduce-springboot-build
           region: ap-northeast-2
           skip_cleanup: true
@@ -44,8 +44,8 @@ matrix:
           wait-until-deployed: true
 
         - provider: codedeploy
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: echo $AWS_ACCESS_KEY
+          secret_access_key: echo $AWS_SECRET_KEY
           bucket: myintroduce-springboot-build
           key: back-end.zip
           bundle_type: zip
@@ -78,8 +78,8 @@ matrix:
 
       deploy:
         - provider: s3
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: echo $AWS_ACCESS_KEY
+          secret_access_key: echo $AWS_SECRET_KEY
           bucket: myintroduce-springboot-build
           region: ap-northeast-2
           skip_cleanup: true
@@ -88,8 +88,8 @@ matrix:
           wait-until-deployed: true
 
         - provider: codedeploy
-          access_key_id: $AWS_ACCESS_KEY
-          secret_access_key: $AWS_SECRET_KEY
+          access_key_id: echo $AWS_ACCESS_KEY
+          secret_access_key: echo $AWS_SECRET_KEY
           bucket: myintroduce-springboot-build
           key: front-end.zip
           bundle_type: zip
