@@ -33,11 +33,14 @@ public class Project extends BaseTimeEntity {
     @Column(length = 100, nullable = false)
     private String fileOriginName;
 
+    @Column(length = 500, nullable = false)
+    private String fileUrl;
+
     @Column(length = 100)
     private String projectLink;
 
     @Column(nullable = false)
-    private Integer level;
+    private int level;
 
     @ManyToOne
     private Member member;
@@ -48,6 +51,7 @@ public class Project extends BaseTimeEntity {
         this.projectPostScript = project.getProjectPostScript();
         this.filePath = project.getFilePath();
         this.fileOriginName = project.getFileOriginName();
+        this.fileUrl = project.getFileUrl();
         this.projectLink = project.getProjectLink();
         this.level = project.getLevel();
         this.member = project.getMember();
