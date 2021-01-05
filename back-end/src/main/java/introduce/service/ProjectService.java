@@ -6,6 +6,7 @@ import introduce.domain.network.Header;
 import introduce.domain.network.Pagination;
 import introduce.domain.project.Project;
 import introduce.domain.project.ProjectRepository;
+import introduce.error.exception.project.ProjectNotFoundException;
 import introduce.utill.FileUtil;
 import introduce.web.dto.project.ProjectRequestDto;
 import introduce.web.dto.project.ProjectResponseDto;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -45,11 +47,11 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
 
     @Override
     @Transactional
-    public Header<ProjectResponseDto> save(ProjectRequestDto requestDto, MultipartFile file) {
+    public Header<ProjectResponseDto> save(ProjectRequestDto requestDto, MultipartFile file) throws IOException {
         log.info("project save start");
 
         // [1] file parameter setting
-        String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
+        String originalName = FileUtil.cutFileName(Objects.requireNonNull(file.getOriginalFilename()), 100);
         String saveName = FileUtil.getRandomFileName(originalName);
         String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
         String saveDir = fileUploadPath + subFileUploadPath;
@@ -61,23 +63,16 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         log.info("[2] file 디렉토리 생성");
 
         // [3] project info DB 등록
-        requestDto.settingFileInfo(savePath, originalName);
-        Project project = baseRepository.save(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
+        Project project = baseRepository.save(requestDto.toEntity(memberRepository
+                .getOne(requestDto.getMemberId()), savePath, originalName, fileUrl));
         log.info("[3] project info DB 등록");
 
         // [4] file transfer
-        try {
-            file.transferTo(new File(savePath));
-            log.info("[4] file transfer");
-
-        } catch (IOException e) {
-            log.info("[4] file transfer fail");
-            e.printStackTrace();
-            return Header.ERROR("파일 변환 실패");
-        }
+        file.transferTo(new File(savePath));
+        log.info("[4] file transfer");
 
         log.info("project save end");
-        return Header.OK(response(project, fileUrl));
+        return Header.OK(response(project));
     }
 
     @Override
@@ -87,8 +82,6 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         Optional<Project> optional = baseRepository.findById(id);
 
         return optional.map(project -> {
-            String saveName;
-
             // 순서값이 변경 된 경우
             if(project.getLevel() != requestDto.getLevel()){
                 int originLevel = project.getLevel();
@@ -117,26 +110,22 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
             if(file == null || file.isEmpty()) {
                 log.info("첨부된 파일 없음");
 
-                // [2] 기존 정보 셋팅
-                requestDto.settingFileInfo(project.getFilePath(), project.getFileOriginName());
-                saveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
-                log.info("[2] 기존 정보 셋팅");
-
-                // [3] project info DB update
-                project.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
-                log.info("[3] project info DB update");
+                // [2] project info DB update
+                project.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId()),
+                        project.getFilePath(), project.getFileOriginName(), project.getFileUrl()));
+                log.info("[2] project info DB update");
             }
             // 첨부된 파일이 있는 경우
             else {
                 log.info("첨부된 파일 있음");
 
                 // [2] file parameter setting
-                String originalName = FileUtil.cutFileName(file.getOriginalFilename(), 100);
-                saveName = FileUtil.getRandomFileName(originalName);
+                String originalName = FileUtil.cutFileName(Objects.requireNonNull(file.getOriginalFilename()), 100);
+                String saveName = FileUtil.getRandomFileName(originalName);
+                String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
                 String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath =  saveDir +"/"+ saveName;
                 String preExistingFilePath = project.getFilePath();
-                requestDto.settingFileInfo(savePath, originalName);
                 log.info("[2] file parameter setting");
 
                 // [3] file 디렉토리 생성
@@ -144,30 +133,27 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
                 log.info("[3] file 디렉토리 생성");
 
                 // [4] project info DB update
-                project.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId())));
+                project.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId()),
+                        savePath, originalName, fileUrl));
                 log.info("[4] project info DB update");
 
                 // [5] file transfer
                 try {
                     file.transferTo(new File(savePath));
-                    log.info("[5] file transfer");
-
                 } catch (IOException e) {
                     log.info("[5] file transfer fail");
                     e.printStackTrace();
-                    return Header.ERROR("파일 변환 실패");
                 }
+                log.info("[5] file transfer");
 
                 // [6] pre-existing file delete
                 FileUtil.deleteFile(preExistingFilePath);
                 log.info("[6] pre-existing file delete");
             }
-            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
-
 
             log.info("project update end");
-            return Header.OK(response(project, fileUrl));
-        }).orElseGet(() -> Header.ERROR("데이터 없음"));
+            return Header.OK(response(project));
+        }).orElseThrow(ProjectNotFoundException::new);
     }
 
     @Override
@@ -177,19 +163,17 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         Optional<Project> optional = baseRepository.findById(id);
 
         return optional.map(project -> {
-            String preExistingFilePath = project.getFilePath();
-
             // [1] project info DB delete
             baseRepository.delete(project);
             log.info("[1] project info DB delete");
 
             // [2] pre-existing file delete
-            FileUtil.deleteFile(preExistingFilePath);
+            FileUtil.deleteFile(project.getFilePath());
             log.info("[2] pre-existing file delete");
 
             log.info("project delete end");
             return Header.OK();
-        }).orElseGet(() -> Header.ERROR("데이터 없음"));
+        }).orElseThrow(ProjectNotFoundException::new);
     }
 
     @Override
@@ -197,13 +181,9 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         log.info("project findById start");
         log.info("project findById end");
         return baseRepository.findById(id)
-                .map(project -> {
-                    String saveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
-                    String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
-                    return response(project, fileUrl);
-                })
+                .map(this::response)
                 .map(Header::OK)
-                .orElseGet(() -> Header.ERROR("데이터 없음"));
+                .orElseThrow(ProjectNotFoundException::new);
     }
 
     @Override
@@ -214,7 +194,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         // 특정 멤버 id 값이 들어온 경우
         if(requestDto.getMemberId() != null && requestDto.getMemberId() > 0) {
             log.info("exist memberId");
-            Member member = memberRepository.findById(requestDto.getMemberId()).get();
+            Member member = memberRepository.findById(requestDto.getMemberId()).orElseThrow(ProjectNotFoundException::new);
             projects = baseRepository.findAllByMember(member, pageable);
         }
         else {
@@ -223,11 +203,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
         }
 
         List<ProjectResponseDto> projectResponseDtoList = projects.stream()
-                        .map(project -> {
-                            String saveName = project.getFilePath().substring(project.getFilePath().lastIndexOf("/")+1);
-                            String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
-                            return response(project, fileUrl);
-                        })
+                        .map(this::response)
                         .collect(Collectors.toList());
 
         Pagination pagination = Pagination.builder()
@@ -242,23 +218,20 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
     }
 
     public Project getProject(Long id) {
-        Project project = baseRepository.findById(id).get();
-        return project;
+        return baseRepository.findById(id).orElseThrow(ProjectNotFoundException::new);
     }
 
-    public ProjectResponseDto response(Project project, String fileUrl) {
-        ProjectResponseDto responseDto = ProjectResponseDto.builder()
+    public ProjectResponseDto response(Project project) {
+        return ProjectResponseDto.builder()
                 .projectId(project.getProjectId())
                 .projectTitle(project.getProjectTitle())
                 .projectContent(project.getProjectContent())
                 .projectPostScript(project.getProjectPostScript())
-                .fileUrl(fileUrl)
                 .fileOriginName(project.getFileOriginName())
+                .fileUrl(project.getFileUrl())
                 .projectLink(project.getProjectLink())
                 .level(project.getLevel())
                 .memberId(project.getMember().getMemberId())
                 .build();
-
-        return responseDto;
     }
 }
