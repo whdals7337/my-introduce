@@ -305,25 +305,6 @@ public class MemberApiControllerTest {
                 .andExpect(jsonPath("$.msg").value("Member Entity가 존재하지 않습니다."));
     }
 
-/*    @Test
-    public void find_all_member() throws Exception {
-        int size = 6;
-        for(int i = 0; i < size; i++){
-            givenMember();
-        }
-
-        String url = "http://localhost:" + port + "/api/member";
-
-        mockMvc.perform(get(url)
-                .session(session)
-                .param("page", "1")
-                .param("size", "2"))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status").value(200))
-                .andExpect(jsonPath("$.data.[0].comment").value("코멘트"))
-                .andExpect(jsonPath("$.data.[1].comment").value("코멘트"));
-    }*/
-
     @Test
     public void totalInfo() throws Exception {
         Member member = givenMember("N");
