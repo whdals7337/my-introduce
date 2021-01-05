@@ -43,10 +43,6 @@ public class CertificationInterceptor implements HandlerInterceptor {
 
     private boolean isAjaxRequest(HttpServletRequest req) {
         String header = req.getHeader("X-Requested-With");
-        if ("XMLHttpRequest".equals(header)) {
-            return true;
-        } else {
-            return false;
-        }
+        return "XMLHttpRequest".equals(header);
     }
 }

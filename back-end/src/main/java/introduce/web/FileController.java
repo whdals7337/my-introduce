@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -81,7 +82,7 @@ public class FileController {
         String browser= "";
         Enumeration<String> headerNames = request.getHeaderNames();
         while (headerNames.hasMoreElements()) {
-            String headerName = (String) headerNames.nextElement();
+            String headerName = headerNames.nextElement();
             if(headerName.equals("user-agent")) {
                 browser = request.getHeader(headerName);
             }
@@ -92,16 +93,16 @@ public class FileController {
             docName = mappingSpecialCharacter(URLEncoder.encode(fileName, "UTF-8"));
 
         } else if (browser.contains("Firefox")) {
-            docName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+            docName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
 
         } else if (browser.contains("Opera")) {
-            docName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+            docName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
 
         } else if (browser.contains("Chrome")) {
-            docName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+            docName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
 
         } else if (browser.contains("Safari")) {
-            docName = new String(fileName.getBytes("UTF-8"), "ISO-8859-1");
+            docName = new String(fileName.getBytes(StandardCharsets.UTF_8), StandardCharsets.ISO_8859_1);
 
         }
         return docName;
