@@ -8,10 +8,7 @@ import introduce.web.dto.member.MemberRequestDto;
 import introduce.web.dto.member.MemberResponseDto;
 import introduce.web.dto.membertotalinfo.MemberTotalInfoResponseDto;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RequiredArgsConstructor
 @RestController
@@ -27,4 +24,9 @@ public class MemberApiController extends CrudController<MemberRequestDto, Member
 
     @GetMapping("/select")
     public Header<MemberResponseDto> findBySelectYN() {return memberService.findBySelectYN(); }
+
+    @PatchMapping("/select/{id}")
+    public Header<MemberResponseDto> updateSelect(@PathVariable Long id) {
+        return memberService.updateSelect(id);
+    }
 }

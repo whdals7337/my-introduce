@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     // 선택된 멤버 조회
-    Optional<Member> findBySelectYN(char selectYN);
+    Optional<Member> findBySelectYN(String selectYN);
 }
