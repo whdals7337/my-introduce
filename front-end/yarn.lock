@@ -1818,6 +1818,13 @@
     "@types/history" "*"
     "@types/react" "*"
 
+"@types/react-typist@^2.0.1":
+  version "2.0.1"
+  resolved "https://registry.yarnpkg.com/@types/react-typist/-/react-typist-2.0.1.tgz#c3d8d9dc29598737a6b53b087404c0e10485b119"
+  integrity sha512-SxKLwnX8feAB565481AuwezqJ+DWjtri6pgGLzw3SzX/o/UT9kadp1A6fBrRNqJiGOsxh59NE+7KOOVeTkVV0Q==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*":
   version "17.0.0"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-17.0.0.tgz#5af3eb7fad2807092f0046a1302b7823e27919b8"
@@ -2536,7 +2543,7 @@ axe-core@^4.0.2:
   resolved "https://registry.yarnpkg.com/axe-core/-/axe-core-4.1.1.tgz#70a7855888e287f7add66002211a423937063eaf"
   integrity sha512-5Kgy8Cz6LPC9DJcNb3yjAXTu3XihQgEdnIg50c//zOC/MyLP0Clg+Y8Sh9ZjjnvBrDZU4DgXS9C3T9r4/scGZQ==
 
-axios@^0.21.0:
+axios@^0.21.1:
   version "0.21.1"
   resolved "https://registry.yarnpkg.com/axios/-/axios-0.21.1.tgz#22563481962f4d6bde9a76d516ef0e5d3c09b2b8"
   integrity sha512-dKQiRHxGD9PPRIUNIWvZhPTPpl1rf/OxTYKsqKUDjBwYylTvV7SjSHJb9ratfyzM6wCdLCOYLzs73qpg5c4iGA==
@@ -8857,7 +8864,7 @@ prompts@2.4.0, prompts@^2.0.1:
     kleur "^3.0.3"
     sisteransi "^1.0.5"
 
-prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@^15.5.10, prop-types@^15.6.2, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -9194,6 +9201,13 @@ react-scripts@4.0.1:
     workbox-webpack-plugin "5.1.4"
   optionalDependencies:
     fsevents "^2.1.3"
+
+react-typist@^2.0.5:
+  version "2.0.5"
+  resolved "https://registry.yarnpkg.com/react-typist/-/react-typist-2.0.5.tgz#9830395a73a03e6368e1392ecb98edaa3a648e44"
+  integrity sha512-iZCkeqeegO0TlkTMiH2JD1tvMtY9RrXkRylnAI6m8aCVAUUwNzoWTVF7CKLij6THeOMcUDCznLDDvNp55s+YZA==
+  dependencies:
+    prop-types "^15.5.10"
 
 react@^17.0.1:
   version "17.0.1"
