@@ -21,8 +21,8 @@ function SkillItem({ skill }: SkillItemProps) {
       >
         <div className="skill_image_label">{labelText} Level</div>
       </div>
-      <div>
-        <span>{skill.skill_name}</span>
+      <div className="skill_info">
+        <span className="skill_name">{skill.skill_name}</span>
       </div>
     </li>
   );

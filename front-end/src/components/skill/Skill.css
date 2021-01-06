@@ -15,6 +15,7 @@
 #skill_wrap .skill_list .skill_category_title {
   font-size: 1.5rem;
   font-weight: bold;
+  text-shadow: 4px 4px lightblue;
   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
 }
 
@@ -30,12 +31,21 @@
   display: inline-block;
 }
 
+#skill_wrap .skill_list li .skill_info {
+  margin-top: 10px;
+}
+
+#skill_wrap .skill_list li div .skill_name {
+  font-size: 1.2rem;
+  font-family: fantasy;
+}
+
 #skill_wrap .skill_list li .skill_image {
   width: 140px;
   height: 140px;
   border-radius: 30px;
   display: inline-block;
-  background-size: cover;
+  background-size: 140px 140px;
   background-repeat: no-repeat;
   margin-top: 20px;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
@@ -74,6 +84,7 @@
   #skill_wrap .skill_list li .skill_image {
     width: 120px;
     height: 120px;
+    background-size: 120px 120px;
   }
 
   #skill_wrap .skill_list li .skill_image:hover .skill_image_label {
@@ -90,6 +101,7 @@
   #skill_wrap .skill_list li .skill_image {
     width: 80px;
     height: 80px;
+    background-size: 80px 80px;
   }
 
   #skill_wrap .skill_list li .skill_image:hover .skill_image_label {

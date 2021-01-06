@@ -23,6 +23,7 @@
   padding-top: 50px;
   text-align: center;
   font-size: 1rem;
+  white-space: pre-wrap;
 }
 
 @media (max-width: 930px) {

@@ -39,7 +39,7 @@
 .menu_container .menu_bar_grid #menu_bar + ul li a {
   font-family: Roboto, sans-serif;
   cursor: pointer;
-  color: grey;
+  color: floralwhite;
   opacity: 0.6;
   text-decoration: unset;
 }
