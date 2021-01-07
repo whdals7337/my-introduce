@@ -16,7 +16,7 @@ Back-end: Spring boot(Gradle, Jpa) + Travis CI + AWS(EC2, RDS, S3, Codedeploy) +
 ![메인](https://user-images.githubusercontent.com/55545105/103889366-a5141d80-5129-11eb-967c-a39713632c1e.PNG)
 
 
-2 - 2관리자 페이지
+2 - 2관리자 페이지(http://ec2-13-125-104-210.ap-northeast-2.compute.amazonaws.com:8080/)
 
 - 로그인
 
