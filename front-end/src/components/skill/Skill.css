@@ -6,7 +6,7 @@
 
 #skill_wrap .skill_list {
   padding-top: 50px;
-  width: 830px;
+  width: 930px;
   margin: auto;
   align-items: center;
   text-align: center;
@@ -26,9 +26,10 @@
 }
 
 #skill_wrap .skill_list ul li {
-  width: 150px;
+  width: 185px;
   height: 200px;
   display: inline-block;
+  margin: auto;
 }
 
 #skill_wrap .skill_list li .skill_info {
