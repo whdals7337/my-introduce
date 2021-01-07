@@ -162,6 +162,7 @@
     display: block;
     margin: auto;
     text-align: center;
+    font-size: 1rem;
   }
 
   #project_wrap .project_list .project_item .project_info .project_post_script {

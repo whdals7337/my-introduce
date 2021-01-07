@@ -38,8 +38,9 @@
 
 .menu_container .menu_bar_grid #menu_bar + ul li a {
   font-family: Roboto, sans-serif;
+  font-weight: bold;
   cursor: pointer;
-  color: floralwhite;
+  color: grey;
   opacity: 0.6;
   text-decoration: unset;
 }
