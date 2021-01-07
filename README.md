@@ -9,7 +9,7 @@ Back-end: Spring boot(Gradle, Jpa) + Travis CI + AWS(EC2, RDS, S3, Codedeploy) +
 
 2. 화면
 
-2 - 1 대민 페이지
+2 - 1 대민 페이지 (http://ec2-13-125-104-210.ap-northeast-2.compute.amazonaws.com/)
 
 -메인
 
