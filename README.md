@@ -7,7 +7,7 @@ Front-end: TypeScript + React(redux-thunk, Axios)
 Back-end: Spring boot(Gradle, Jpa) + Travis CI + AWS(EC2, RDS, S3, Codedeploy) + Nginx
 
 1. 전체 구조
-![setting](https://user-images.githubusercontent.com/55545105/103889374-a80f0e00-5129-11eb-891e-48dddd65ae25.PNG)
+![전체구성](https://user-images.githubusercontent.com/55545105/103891768-c4ad4500-512d-11eb-83a2-071f314a2d6a.PNG)
 
 
 
