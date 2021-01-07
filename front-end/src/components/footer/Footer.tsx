@@ -12,7 +12,6 @@ function Footer({ phoneNumber, email }: FooterProps) {
     <div id="footer_wrap">
       <Title title="Contact" />
       <div className="footer_content">
-        <div className="footer_item">연락처: {phoneNumber}</div>
         <div className="footer_item">E-MAIL: {email}</div>
       </div>
     </div>

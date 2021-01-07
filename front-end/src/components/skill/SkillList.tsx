@@ -26,7 +26,7 @@ function SkillList({ skills }: SkillListProps) {
 
   return (
     <div id="skill_wrap">
-      <Title title="Skill" />
+      <Title title="Skills" />
       {frontEndList && frontEndList.length > 0 && (
         <div className="skill_list">
           <div className="skill_category_title">FrontEnd</div>

@@ -11,7 +11,7 @@ type ProjectListProps = {
 function ProjectList({ projects }: ProjectListProps) {
   return (
     <div id="project_wrap">
-      <Title title="Project" />
+      <Title title="Projects" />
       <div className="project_list">
         <ul>
           {projects &&
