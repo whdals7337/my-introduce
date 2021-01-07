@@ -50,7 +50,7 @@ public abstract class CrudController<Req, Res, Repository> implements CrudWithFi
 
     @Override
     @GetMapping("")
-    public Header<List<Res>> findAll(Req requestDto, @PageableDefault(sort="rgDate", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Header<List<Res>> findAll(Req requestDto, @PageableDefault(sort="rgDate", direction = Sort.Direction.ASC) Pageable pageable) {
         return baseService.findAll(requestDto, pageable);
     }
 }
