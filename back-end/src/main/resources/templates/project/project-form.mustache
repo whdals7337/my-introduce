@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/common.css">
     <title>Document</title>
 </head>
 <body>
-    <a href="/">Home</a>
+    <a href="/" class="homeLink">Home</a>
     {{^result.data}}
-        <h3>project 등록</h3>
+        <h3 class="text_center">project 등록</h3>
         <div class="col-md-12">
-            <div class="col-md-4">
+            <div class="col-md-4 form_template">
                 <form id="myForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="projectTitle">프로젝트 명</label>
@@ -48,9 +49,9 @@
     {{/result.data}}
 
     {{#result.data}}
-        <h3>project 수정</h3>
+        <h3 class="text_center">project 수정</h3>
         <div class="col-md-12">
-            <div class="col-md-4">
+            <div class="col-md-4 form_template">
                 <form id="myForm" enctype="multipart/form-data">
                     <div class="form-group">
                         <label for="projectTitle">프로젝트 명</label>
@@ -69,7 +70,7 @@
                         <input type="text" class="form-control" id="projectLink" name="projectLink" value="{{projectLink}}" />
                     </div>
                     <div class="form-group">
-                        <label for="level">프로젝트 링크</label>
+                        <label for="level">프로젝트 level</label>
                         <input type="text" class="form-control" id="level" name="level" value="{{level}}" />
                     </div>
                     <div class="form-group">
