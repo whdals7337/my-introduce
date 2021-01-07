@@ -1,4 +1,6 @@
-my introduce
+MY INTRODUCE
+
+[![Build Status](https://www.travis-ci.com/whdals7337/my-introduce.svg?branch=master)](https://www.travis-ci.com/whdals7337/my-introduce)
 
 Front-end: TypeScript + React(redux-thunk, Axios)
 
