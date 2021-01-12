@@ -1,6 +1,5 @@
 package introduce.web.api;
 
-import introduce.domain.SessionDto;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.skill.Skill;
@@ -10,52 +9,51 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WithMockUser(roles = "ADMIN")
 public class SkillApiControllerTest {
 
     @LocalServerPort
     private int port;
     @Autowired
-    MockMvc mockMvc;
+    private WebApplicationContext context;
     @Autowired
     private SkillRepository skillRepository;
     @Autowired
     private MemberRepository memberRepository;
 
-    protected MockHttpSession session;
+    private MockMvc mockMvc;
 
     @Before
     public void memberSetting() {
-        session = new MockHttpSession();
-        SessionDto sessionDto = SessionDto.builder().isAccess("access").build();
-        session.setAttribute("accessObject", sessionDto);
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
 
     @After
     public void tearDown() throws Exception {
         skillRepository.deleteAll();
         memberRepository.deleteAll();
-        session.clearAttributes();
     }
 
     @Test
@@ -76,7 +74,6 @@ public class SkillApiControllerTest {
 
         this.mockMvc.perform(multipart(url)
                 .file(testFile)
-                .session(session)
                 .param("skillName", skillName)
                 .param("skillLevel", String.valueOf(skillLevel))
                 .param("level", String.valueOf(level))
@@ -107,7 +104,6 @@ public class SkillApiControllerTest {
         String url = "http://localhost:" + port + "/api/skill";
 
         this.mockMvc.perform(multipart(url)
-                .session(session)
                 .param("skillName", skillName)
                 .param("skillLevel", String.valueOf(skillLevel))
                 .param("level", String.valueOf(level))
@@ -163,7 +159,6 @@ public class SkillApiControllerTest {
 
         this.mockMvc.perform(builder
                 .file(testFile)
-                .session(session)
                 .param("skillName", expectedSkillName)
                 .param("skillLevel", String.valueOf(expectedSkillLevel))
                 .param("level", String.valueOf(expectedLevel))
@@ -227,7 +222,6 @@ public class SkillApiControllerTest {
         });
 
         this.mockMvc.perform(builder
-                .session(session)
                 .param("skillName", expectedSkillName)
                 .param("skillLevel", String.valueOf(expectedSkillLevel))
                 .param("level", String.valueOf(expectedLevel))
@@ -265,8 +259,7 @@ public class SkillApiControllerTest {
             return request;
         });
 
-        mockMvc.perform(builder
-                .session(session))
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Skill Entity가 존재하지 않습니다."));
@@ -279,8 +272,7 @@ public class SkillApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/skill/" + skill.getSkillId();
 
-        mockMvc.perform(delete(url)
-                .session(session))
+        mockMvc.perform(delete(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200));
 
@@ -291,8 +283,7 @@ public class SkillApiControllerTest {
     public void delete_skill_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/skill/" + 404;
 
-        mockMvc.perform(delete(url)
-                .session(session))
+        mockMvc.perform(delete(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Skill Entity가 존재하지 않습니다."));
@@ -305,8 +296,7 @@ public class SkillApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/skill/" + skill.getSkillId();
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.skill_name").value(skill.getSkillName()))
@@ -321,8 +311,7 @@ public class SkillApiControllerTest {
     public void find_skill_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/skill/" + 404;
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Skill Entity가 존재하지 않습니다."));
@@ -339,7 +328,6 @@ public class SkillApiControllerTest {
         String url = "http://localhost:" + port + "/api/skill/";
 
         mockMvc.perform(get(url)
-                .session(session)
                 .param("page", "1")
                 .param("size", "2"))
                 .andExpect(status().isOk())

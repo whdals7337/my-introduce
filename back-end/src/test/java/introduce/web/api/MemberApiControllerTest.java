@@ -1,6 +1,5 @@
 package introduce.web.api;
 
-import introduce.domain.SessionDto;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
@@ -12,37 +11,35 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WithMockUser(roles = "ADMIN")
 public class MemberApiControllerTest {
 
     @LocalServerPort
     private int port;
-
     @Autowired
-    MockMvc mockMvc;
-
-    protected MockHttpSession session;
-
+    private WebApplicationContext context;
     @Autowired
     private MemberRepository memberRepository;
     @Autowired
@@ -50,16 +47,15 @@ public class MemberApiControllerTest {
     @Autowired
     private SkillRepository skillRepository;
 
+    private MockMvc mockMvc;
+
     @Before
     public void before() {
-        session = new MockHttpSession();
-        SessionDto sessionDto = SessionDto.builder().isAccess("access").build();
-        session.setAttribute("accessObject", sessionDto);
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
     @After
     public void tearDown() throws Exception {
         memberRepository.deleteAll();
-        session.clearAttributes();
     }
 
     @Test
@@ -81,7 +77,6 @@ public class MemberApiControllerTest {
 
         this.mockMvc.perform(multipart(url)
                 .file(testFile)
-                .session(session)
                 .param("comment",comment)
                 .param("subIntroduction", sub_introduction)
                 .param("introduction",introduction)
@@ -108,6 +103,7 @@ public class MemberApiControllerTest {
     }
 
     @Test
+
     public void save_member_with_out_file() throws Exception {
         String comment = "코멘트 영역 입니다.";
         String sub_introduction = "서브 자기소개 영역입니다.";
@@ -119,7 +115,6 @@ public class MemberApiControllerTest {
 
 
         this.mockMvc.perform(multipart(url)
-                .session(session)
                 .param("comment",comment)
                 .param("subIntroduction", sub_introduction)
                 .param("introduction",introduction)
@@ -158,7 +153,6 @@ public class MemberApiControllerTest {
 
         mockMvc.perform(builder
                 .file(testFile)
-                .session(session)
                 .param("comment", expectedComment)
                 .param("subIntroduction", expectedSubIntroduction)
                 .param("introduction", expectedIntroduction)
@@ -204,7 +198,6 @@ public class MemberApiControllerTest {
         });
 
         mockMvc.perform(builder
-                .session(session)
                 .param("comment", expectedComment)
                 .param("subIntroduction", expectedSubIntroduction)
                 .param("introduction", expectedIntroduction)
@@ -243,8 +236,7 @@ public class MemberApiControllerTest {
             return request;
         });
 
-        mockMvc.perform(builder
-                .session(session))
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Member Entity가 존재하지 않습니다."));
@@ -256,8 +248,7 @@ public class MemberApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/member/" + member.getMemberId();
 
-        mockMvc.perform(delete(url)
-                .session(session))
+        mockMvc.perform(delete(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200));
 
@@ -268,8 +259,7 @@ public class MemberApiControllerTest {
     public void delete_member_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/member/" + 404;
 
-        mockMvc.perform(delete(url)
-                .session(session))
+        mockMvc.perform(delete(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Member Entity가 존재하지 않습니다."));
@@ -281,8 +271,7 @@ public class MemberApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/member/" + member.getMemberId();
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(member.getComment()))
@@ -298,8 +287,7 @@ public class MemberApiControllerTest {
     public void find_member_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/member/" + 404;
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Member Entity가 존재하지 않습니다."));
@@ -354,12 +342,12 @@ public class MemberApiControllerTest {
     }
 
     @Test
+    @WithMockUser(roles = "ADMIN")
     public void member_select() throws Exception {
         Member member = givenMember("N");
         String url = "http://localhost:" + port + "/api/member/select/"+member.getMemberId();
 
-        mockMvc.perform(patch(url)
-                .session(session))
+        mockMvc.perform(patch(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(member.getComment()))
@@ -391,7 +379,6 @@ public class MemberApiControllerTest {
         String url = "http://localhost:" + port + "/api/member";
 
         mockMvc.perform(get(url)
-                .session(session)
                 .param("page", "1")
                 .param("size", "2"))
                 .andExpect(status().isOk())
@@ -406,8 +393,7 @@ public class MemberApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/member/select";
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(member.getComment()))
@@ -422,8 +408,7 @@ public class MemberApiControllerTest {
     @Test
     public void member_select_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/member/select/"+ 400;
-        mockMvc.perform(patch(url)
-                .session(session))
+        mockMvc.perform(patch(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Member Entity가 존재하지 않습니다."));

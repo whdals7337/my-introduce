@@ -1,6 +1,5 @@
 package introduce.web.api;
 
-import introduce.domain.SessionDto;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
@@ -10,52 +9,51 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.mock.web.MockHttpSession;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
 
 import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@AutoConfigureMockMvc
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@WithMockUser(roles = "ADMIN")
 public class ProjectApiControllerTest {
 
     @LocalServerPort
     private int port;
     @Autowired
-    MockMvc mockMvc;
+    private WebApplicationContext context;
     @Autowired
     private ProjectRepository projectRepository;
     @Autowired
     private MemberRepository memberRepository;
 
-    protected MockHttpSession session;
+    private MockMvc mockMvc;
 
     @Before
-    public void memberSetting() {
-        session = new MockHttpSession();
-        SessionDto sessionDto = SessionDto.builder().isAccess("access").build();
-        session.setAttribute("accessObject", sessionDto);
+    public void before() {
+        mockMvc = MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
     }
 
     @After
     public void tearDown() {
         projectRepository.deleteAll();
         memberRepository.deleteAll();
-        session.clearAttributes();
     }
 
     @Test
@@ -78,7 +76,6 @@ public class ProjectApiControllerTest {
 
         mockMvc.perform(multipart(url)
                 .file(testFile)
-                .session(session)
                 .param("projectTitle", projectTitle)
                 .param("projectContent", projectContent)
                 .param("projectPostScript", projectPostScript)
@@ -117,7 +114,6 @@ public class ProjectApiControllerTest {
         String url = "http://localhost:" + port + "/api/project";
 
         mockMvc.perform(multipart(url)
-                .session(session)
                 .param("projectTitle", projectTitle)
                 .param("projectContent", projectContent)
                 .param("projectPostScript", projectPostScript)
@@ -181,7 +177,6 @@ public class ProjectApiControllerTest {
 
         mockMvc.perform(builder
                 .file(testFile)
-                .session(session)
                 .param("projectTitle", expectedProjectTitle)
                 .param("projectContent", expectedProjectContent)
                 .param("projectPostScript", expectedProjectPostScript)
@@ -262,7 +257,6 @@ public class ProjectApiControllerTest {
         });
 
         mockMvc.perform(builder
-                .session(session)
                 .param("projectTitle", expectedProjectTitle)
                 .param("projectContent", expectedProjectContent)
                 .param("projectPostScript", expectedProjectPostScript)
@@ -311,8 +305,7 @@ public class ProjectApiControllerTest {
             return request;
         });
 
-        mockMvc.perform(builder
-                .session(session))
+        mockMvc.perform(builder)
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Project Entity가 존재하지 않습니다."));
@@ -325,8 +318,7 @@ public class ProjectApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/project/" + project.getProjectId();
 
-        mockMvc.perform(delete(url)
-                .session(session))
+        mockMvc.perform(delete(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200));
 
@@ -337,8 +329,7 @@ public class ProjectApiControllerTest {
     public void delete_project_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/project/" + 404;
 
-        mockMvc.perform(delete(url)
-                .session(session))
+        mockMvc.perform(delete(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Project Entity가 존재하지 않습니다."));
@@ -351,8 +342,7 @@ public class ProjectApiControllerTest {
 
         String url = "http://localhost:" + port + "/api/project/" + project.getProjectId();
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.project_title").value(project.getProjectTitle()))
@@ -369,8 +359,7 @@ public class ProjectApiControllerTest {
     public void find_project_with_wrong_id() throws Exception {
         String url = "http://localhost:" + port + "/api/project/" + 404;
 
-        mockMvc.perform(get(url)
-                .session(session))
+        mockMvc.perform(get(url))
                 .andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.status").value(400))
                 .andExpect(jsonPath("$.msg").value("Project Entity가 존재하지 않습니다."));
@@ -387,7 +376,6 @@ public class ProjectApiControllerTest {
         String url = "http://localhost:" + port + "/api/project/";
 
         mockMvc.perform(get(url)
-                .session(session)
                 .param("page", "1")
                 .param("size", "2"))
                 .andExpect(status().isOk())
