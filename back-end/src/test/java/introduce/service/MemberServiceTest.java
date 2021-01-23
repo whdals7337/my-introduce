@@ -195,7 +195,7 @@ public class MemberServiceTest {
 
     @Test
     public void totalInfo() {
-        given(memberRepository.findById(1L)).willReturn(Optional.of(TestUtil.mockMember(1L, "N")));
+        given(memberRepository.findTotalInfo(1L)).willReturn(Optional.of(TestUtil.mockMember(1L, "N")));
 
         Header<MemberTotalInfoResponseDto> target = memberService.totalInfo(1L);
 
