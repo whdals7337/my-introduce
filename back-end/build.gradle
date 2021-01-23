@@ -30,11 +30,15 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-data-jpa')
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-mustache')
+
+    implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
+
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile('org.mariadb.jdbc:mariadb-java-client')
     compile('com.h2database:h2')
     compile('org.projectlombok:lombok')
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
 }
