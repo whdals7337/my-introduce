@@ -222,14 +222,14 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
             log.info("[2] skillResponseDtoList 조회");
         }
 
-        // [3] skillResponseDtoList 조회
+        // [3] projectResponseDtoList 조회
         List<Project> projectList = member.getProjectList();
         List<ProjectResponseDto> projectResponseDtoList = null;
         if(projectList != null) {
             projectResponseDtoList = projectList.stream()
                     .map(projectService::response)
                     .collect(Collectors.toList());
-            log.info("[3] skillResponseDtoList 조회");
+            log.info("[3] projectResponseDtoList 조회");
         }
 
         // [4] MemberTotalInfoResponseDto SET
