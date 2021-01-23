@@ -2,13 +2,16 @@ buildscript {
     // build.gradle 에서 사용할 전역 변수 설정
     ext {
         springBootVersion = '2.1.7.RELEASE'
+        querydslPluginVersion = '1.0.10' // 플러그인 버전
     }
     repositories {
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" } // 플러그인 저장소
         jcenter()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+        classpath("gradle.plugin.com.ewerk.gradle.plugins:querydsl-plugin:${querydslPluginVersion}") // querydsl 플러그인 의존성 등록
     }
 }
 
@@ -31,6 +34,11 @@ dependencies {
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.boot:spring-boot-starter-mustache')
 
+    // querydsl
+    compile("com.querydsl:querydsl-jpa")
+    compile("com.querydsl:querydsl-apt")
+
+    // p6spy
     implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.5.7'
 
     compile group: 'commons-io', name: 'commons-io', version: '2.6'
@@ -41,4 +49,22 @@ dependencies {
 
     testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile('org.springframework.security:spring-security-test')
+}
+
+// querydsl 적용
+apply plugin: "com.ewerk.gradle.plugins.querydsl" // Plugin 적용
+def querydslSrcDir = "$buildDir/generated/querydsl" // QClass 생성 위치
+
+querydsl {
+    library = "com.querydsl:querydsl-apt"
+    jpa = true
+    querydslSourcesDir = querydslSrcDir
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/main/java', querydslSrcDir]
+        }
+    }
 }
