@@ -113,7 +113,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
 
                 // [2] project info DB update
                 project.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId()),
-                        project.getFilePath(), project.getFileOriginName(), project.getFileUrl()));
+                        project.getFileInfo().getFilePath(), project.getFileInfo().getFileOriginName(), project.getFileInfo().getFileUrl()));
                 log.info("[2] project info DB update");
             }
             // 첨부된 파일이 있는 경우
@@ -126,7 +126,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
                 String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
                 String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath =  saveDir +"/"+ saveName;
-                String preExistingFilePath = project.getFilePath();
+                String preExistingFilePath = project.getFileInfo().getFilePath();
                 log.info("[2] file parameter setting");
 
                 // [3] file 디렉토리 생성
@@ -169,7 +169,7 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
             log.info("[1] project info DB delete");
 
             // [2] pre-existing file delete
-            FileUtil.deleteFile(project.getFilePath());
+            FileUtil.deleteFile(project.getFileInfo().getFilePath());
             log.info("[2] pre-existing file delete");
 
             log.info("project delete end");
@@ -230,8 +230,8 @@ public class ProjectService extends BaseService<ProjectRequestDto, ProjectRespon
                 .projectTitle(project.getProjectTitle())
                 .projectContent(project.getProjectContent())
                 .projectPostScript(project.getProjectPostScript())
-                .fileOriginName(project.getFileOriginName())
-                .fileUrl(project.getFileUrl())
+                .fileOriginName(project.getFileInfo().getFileOriginName())
+                .fileUrl(project.getFileInfo().getFileUrl())
                 .projectLink(project.getProjectLink())
                 .level(project.getLevel())
                 .memberId(project.getMember().getMemberId())

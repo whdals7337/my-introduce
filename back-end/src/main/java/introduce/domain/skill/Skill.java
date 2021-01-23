@@ -1,6 +1,7 @@
 package introduce.domain.skill;
 
 import introduce.domain.BaseTimeEntity;
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import lombok.*;
 
@@ -8,7 +9,7 @@ import javax.persistence.*;
 
 @Getter
 @AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Builder
 @ToString(exclude = {"member"})
@@ -21,14 +22,8 @@ public class Skill extends BaseTimeEntity  {
     @Column(length = 100, nullable = false)
     private String skillName;
 
-    @Column(length = 500, nullable = false)
-    private String filePath;
-
-    @Column(length = 100, nullable = false)
-    private String fileOriginName;
-
-    @Column(length = 500, nullable = false)
-    private String fileUrl;
+    @Embedded
+    private FileInfo fileInfo;
 
     @Column(nullable = false)
     private Integer skillLevel;
@@ -36,15 +31,13 @@ public class Skill extends BaseTimeEntity  {
     @Column(nullable = false)
     private int level;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Member member;
 
 
     public void update(Skill skill) {
         this.skillName = skill.getSkillName();
-        this.filePath = skill.getFilePath();
-        this.fileOriginName = skill.getFileOriginName();
-        this.fileUrl = skill.getFileUrl();
+        this.fileInfo = skill.getFileInfo();
         this.skillLevel = skill.getSkillLevel();
         this.level= skill.getLevel();
         this.member= skill.getMember();

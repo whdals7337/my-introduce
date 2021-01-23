@@ -1,5 +1,6 @@
 package introduce.web;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import org.junit.After;
@@ -124,9 +125,7 @@ public class FileControllerTest {
     public Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
-                .filePath("헤어 이미지 경로")
-                .fileOriginName("헤더 이미지 원본 이름")
-                .fileUrl("파일 주소")
+                .fileInfo(new FileInfo("헤어 이미지 경로","헤더 이미지 원본 이름","파일 주소"))
                 .subIntroduction("서브 자기소개")
                 .introduction("자기소개")
                 .phoneNumber("연락처")

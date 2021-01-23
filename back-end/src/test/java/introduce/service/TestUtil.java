@@ -1,5 +1,6 @@
 package introduce.service;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockMultipartFile;
@@ -10,9 +11,7 @@ public class TestUtil {
         return Member.builder()
                 .memberId(id)
                 .comment("comment")
-                .fileOriginName("hello.txt")
-                .filePath("filePath")
-                .fileUrl("fileUrl")
+                .fileInfo(new FileInfo("filePath", "hello.txt", "fileUrl"))
                 .subIntroduction("subIntroduction")
                 .introduction("introduction")
                 .phoneNumber("phoneNumber")

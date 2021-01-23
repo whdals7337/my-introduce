@@ -1,5 +1,6 @@
 package introduce.web.dto.project;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.project.Project;
 import lombok.*;
@@ -21,9 +22,7 @@ public class ProjectRequestDto {
                 .projectTitle(projectTitle)
                 .projectContent(projectContent)
                 .projectPostScript(projectPostScript)
-                .filePath(filePath)
-                .fileOriginName(fileOriginName)
-                .fileUrl(fileUrl)
+                .fileInfo(new FileInfo(filePath, fileOriginName, fileUrl))
                 .projectLink(projectLink)
                 .level(level)
                 .member(member)

@@ -1,5 +1,6 @@
 package introduce.web;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
@@ -72,9 +73,7 @@ public class ProjectControllerTest {
     public Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("페이지 탑 영역 내용 부분입니다.")
-                .filePath("헤더 이미지 경로")
-                .fileOriginName("헤더 이미지 원본 이름")
-                .fileUrl("파일 주소")
+                .fileInfo(new FileInfo("헤어 이미지 경로","헤더 이미지 원본 이름","파일 주소"))
                 .subIntroduction("자기소개 서브 내용 부분입니다.")
                 .introduction("자기소개 내용 부분입니다.")
                 .phoneNumber("010-1111-1111")
@@ -88,9 +87,7 @@ public class ProjectControllerTest {
                 .projectTitle("프로젝트 이름0")
                 .projectContent("프로젝트 내용0")
                 .projectPostScript("프로젝트 추신0")
-                .filePath("프로젝트 이미지 경로0")
-                .fileOriginName("프로젝트 이미지 원본이름0")
-                .fileUrl("파일주소")
+                .fileInfo(new FileInfo("프로젝트 이미지 경로0","프로젝트 이미지 원본이름0","파일주소"))
                 .projectLink("http://gergerg")
                 .level(1)
                 .member(member)

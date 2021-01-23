@@ -1,5 +1,6 @@
 package introduce.service;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.network.Header;
@@ -244,8 +245,8 @@ public class SkillServiceTest {
 
     private void validAll(SkillResponseDto data, Skill skill) {
         assertThat(data.getSkillId()).isEqualTo(skill.getSkillId());
-        assertThat(data.getFileOriginName()).isEqualTo(skill.getFileOriginName());
-        assertThat(data.getFileUrl()).isEqualTo(skill.getFileUrl());
+        assertThat(data.getFileOriginName()).isEqualTo(skill.getFileInfo().getFileOriginName());
+        assertThat(data.getFileUrl()).isEqualTo(skill.getFileInfo().getFileUrl());
         assertThat(data.getSkillLevel()).isEqualTo(skill.getSkillLevel());
         assertThat(data.getLevel()).isEqualTo(skill.getLevel());
         assertThat(data.getSkillName()).isEqualTo(skill.getSkillName());
@@ -273,9 +274,7 @@ public class SkillServiceTest {
         return Skill.builder()
                 .skillId(id)
                 .skillName("skillName")
-                .fileOriginName("fileOriginName")
-                .fileUrl("fileUrl")
-                .filePath("filePath")
+                .fileInfo(new FileInfo("filePath", "fileOriginName", "fileUrl"))
                 .level(level)
                 .skillLevel(3)
                 .member(member)

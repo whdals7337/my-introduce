@@ -1,5 +1,6 @@
 package introduce.web.api;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.skill.Skill;
@@ -88,7 +89,7 @@ public class SkillApiControllerTest {
 
         List<Skill> all = skillRepository.findAll();
         assertThat(all.get(0).getSkillName()).isEqualTo(skillName);
-        assertThat(all.get(0).getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
+        assertThat(all.get(0).getFileInfo().getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
         assertThat(all.get(0).getSkillLevel()).isEqualTo(skillLevel);
         assertThat(all.get(0).getLevel()).isEqualTo(level);
         assertThat(all.get(0).getMember().getMemberId()).isEqualTo(memberId);
@@ -122,9 +123,7 @@ public class SkillApiControllerTest {
         for(int i = 1; i < 5; i++){
             Skill skill = skillRepository.save(Skill.builder()
                     .skillName("스킬 이름0" + i)
-                    .filePath("스킬 이미지 경로0" + i)
-                    .fileOriginName("스킬 이미지 이름0" + i)
-                    .fileUrl("파일주소")
+                    .fileInfo(new FileInfo("스킬 이미지 경로0" + i, "스킬 이미지 이름0" + i, "파일 주소"))
                     .skillLevel(3)
                     .level(i)
                     .member(member)
@@ -176,7 +175,7 @@ public class SkillApiControllerTest {
         assertThat(updateId).isGreaterThan(0L);
         Skill target = skillRepository.findById(updateId).get();
         assertThat(target.getSkillName()).isEqualTo(expectedSkillName);
-        assertThat(target.getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
+        assertThat(target.getFileInfo().getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
         assertThat(target.getSkillLevel()).isEqualTo(expectedSkillLevel);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMember().getMemberId()).isEqualTo(expectedMemberId);
@@ -192,9 +191,7 @@ public class SkillApiControllerTest {
         for(int i = 1; i < 5; i++){
             Skill skill = skillRepository.save(Skill.builder()
                     .skillName("스킬 이름0" + i)
-                    .filePath("스킬 이미지 경로0" + i)
-                    .fileOriginName("스킬 이미지 이름0" + i)
-                    .fileUrl("파일 주소")
+                    .fileInfo(new FileInfo("스킬 이미지 경로0" + i, "스킬 이미지 이름0" + i, "파일 주소"))
                     .skillLevel(3)
                     .level(i)
                     .member(member)
@@ -229,8 +226,8 @@ public class SkillApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.skill_name").value(expectedSkillName))
-                .andExpect(jsonPath("$.data.file_origin_name").value(expectedSkill.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(expectedSkill.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(expectedSkill.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(expectedSkill.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.skill_level").value(expectedSkillLevel))
                 .andExpect(jsonPath("$.data.level").value(expectedLevel))
                 .andExpect(jsonPath("$.data.member_id").value(expectedMemberId));
@@ -240,9 +237,9 @@ public class SkillApiControllerTest {
         assertThat(updateId).isGreaterThan(0L);
         Skill target = skillRepository.findById(updateId).get();
         assertThat(target.getSkillName()).isEqualTo(expectedSkillName);
-        assertThat(target.getFileOriginName()).isEqualTo(expectedSkill.getFileOriginName());
-        assertThat(target.getFilePath()).isEqualTo(expectedSkill.getFilePath());
-        assertThat(target.getFileUrl()).isEqualTo(expectedSkill.getFileUrl());
+        assertThat(target.getFileInfo().getFileOriginName()).isEqualTo(expectedSkill.getFileInfo().getFileOriginName());
+        assertThat(target.getFileInfo().getFilePath()).isEqualTo(expectedSkill.getFileInfo().getFilePath());
+        assertThat(target.getFileInfo().getFileUrl()).isEqualTo(expectedSkill.getFileInfo().getFileUrl());
         assertThat(target.getSkillLevel()).isEqualTo(expectedSkillLevel);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMember().getMemberId()).isEqualTo(expectedMemberId);
@@ -300,8 +297,8 @@ public class SkillApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.skill_name").value(skill.getSkillName()))
-                .andExpect(jsonPath("$.data.file_origin_name").value(skill.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(skill.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(skill.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(skill.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.skill_level").value(skill.getSkillLevel()))
                 .andExpect(jsonPath("$.data.level").value(skill.getLevel()))
                 .andExpect(jsonPath("$.data.member_id").value(member.getMemberId()));
@@ -341,9 +338,7 @@ public class SkillApiControllerTest {
     private Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
-                .filePath("헤어 이미지 경로")
-                .fileOriginName("헤더 이미지 원본 이름")
-                .fileUrl("파일 경로")
+                .fileInfo(new FileInfo("헤어 이미지 경로", "헤더 이미지 원본 이름", "파일 경로"))
                 .subIntroduction("서브 자기소개")
                 .introduction("자기소개")
                 .phoneNumber("연락처")
@@ -355,9 +350,7 @@ public class SkillApiControllerTest {
     private Skill givenSkill(Member member) {
         return skillRepository.save(Skill.builder()
                 .skillName("스킬 이름0")
-                .filePath("스킬 이미지 경로0")
-                .fileOriginName("스킬 이미지 이름0")
-                .fileUrl(member.getFileUrl())
+                .fileInfo(new FileInfo("스킬 이미지 경로0", "스킬 이미지 이름0", member.getFileInfo().getFileUrl()))
                 .skillLevel(3)
                 .level(1)
                 .member(member)

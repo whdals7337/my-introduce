@@ -89,7 +89,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
 
                 // [2] skill info DB update
                 skill.update(requestDto.toEntity(memberRepository.getOne(requestDto.getMemberId()),
-                        skill.getFilePath(), skill.getFileOriginName(), skill.getFileUrl()));
+                        skill.getFileInfo().getFilePath(), skill.getFileInfo().getFileOriginName(), skill.getFileInfo().getFileUrl()));
                 log.info("[2] skill info DB update");
             }
             // 첨부된 파일이 있는 경우
@@ -102,7 +102,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
                 String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
                 String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath =  saveDir +"/"+ saveName;
-                String preExistingFilePath = skill.getFilePath();
+                String preExistingFilePath = skill.getFileInfo().getFilePath();
                 log.info("[2] file parameter setting");
 
                 // [3] file 디렉토리 생성
@@ -147,7 +147,7 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
             log.info("[1] skill info DB delete");
 
             // [2] pre-existing file delete
-            FileUtil.deleteFile(skill.getFilePath());
+            FileUtil.deleteFile(skill.getFileInfo().getFilePath());
             log.info("[2] pre-existing file delete");
 
             log.info("member delete end");
@@ -205,8 +205,8 @@ public class SkillService extends BaseService<SkillRequestDto, SkillResponseDto,
         return SkillResponseDto.builder()
                 .skillId(skill.getSkillId())
                 .skillName(skill.getSkillName())
-                .fileUrl(skill.getFileUrl())
-                .fileOriginName(skill.getFileOriginName())
+                .fileUrl(skill.getFileInfo().getFileUrl())
+                .fileOriginName(skill.getFileInfo().getFileOriginName())
                 .skillLevel(skill.getSkillLevel())
                 .level(skill.getLevel())
                 .memberId(skill.getMember().getMemberId())

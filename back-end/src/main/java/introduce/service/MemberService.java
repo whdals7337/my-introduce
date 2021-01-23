@@ -95,8 +95,8 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
                 log.info("첨부된 파일 없음");
 
                 // [1] member info DB update
-                member.update(requestDto.toEntity(member.getFilePath(), member.getFileOriginName(),
-                        member.getFileUrl(), member.getSelectYN()));
+                member.update(requestDto.toEntity(member.getFileInfo().getFilePath(), member.getFileInfo().getFileOriginName(),
+                        member.getFileInfo().getFileUrl(), member.getSelectYN()));
                 log.info("[1] member info DB update");
             }
             // 첨부된 파일이 있는 경우
@@ -109,7 +109,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
                 String fileUrl = domain + "/" + dirType + "/" + subFileUploadPath + "/" + saveName;
                 String saveDir = fileUploadPath + subFileUploadPath;
                 String savePath = saveDir + "/" + saveName;
-                String preExistingFilePath = member.getFilePath();
+                String preExistingFilePath = member.getFileInfo().getFilePath();
                 log.info("[1] file parameter setting");
 
                 // [2] file 디렉토리 생성
@@ -152,7 +152,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
             log.info("[1] member info DB delete");
 
             // [2] pre-existing file delete
-            FileUtil.deleteFile(member.getFilePath());
+            FileUtil.deleteFile(member.getFileInfo().getFilePath());
             log.info("[2] pre-existing file delete");
 
             log.info("member delete end");
@@ -264,8 +264,8 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         return MemberResponseDto.builder()
                 .memberId(member.getMemberId())
                 .comment(member.getComment())
-                .fileUrl(member.getFileUrl())
-                .fileOriginName(member.getFileOriginName())
+                .fileUrl(member.getFileInfo().getFileUrl())
+                .fileOriginName(member.getFileInfo().getFileOriginName())
                 .subIntroduction(member.getSubIntroduction())
                 .introduction(member.getIntroduction())
                 .phoneNumber(member.getPhoneNumber())

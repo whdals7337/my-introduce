@@ -46,18 +46,18 @@ public class FileController {
         switch (type) {
             case "member" :
                 Member member = memberService.getMember(id);
-                filePath = member.getFilePath();
-                filename = member.getFileOriginName();
+                filePath =  member.getFileInfo().getFilePath();
+                filename =  member.getFileInfo().getFileOriginName();
                 break;
             case "project" :
                 Project project = projectService.getProject(id);
-                filePath = project.getFilePath();
-                filename = project.getFileOriginName();
+                filePath = project.getFileInfo().getFilePath();
+                filename = project.getFileInfo().getFileOriginName();
                 break;
             case "skill" :
                 Skill skill = skillService.getSkill(id);
-                filePath = skill.getFilePath();
-                filename = skill.getFileOriginName();
+                filePath = skill.getFileInfo().getFilePath();
+                filename = skill.getFileInfo().getFileOriginName();
                 break;
             default:
                 filePath = null;

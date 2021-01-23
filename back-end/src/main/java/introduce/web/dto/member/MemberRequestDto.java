@@ -1,5 +1,6 @@
 package introduce.web.dto.member;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import lombok.*;
 
@@ -14,12 +15,10 @@ public class MemberRequestDto {
     private String phoneNumber;
     private String email;
 
-    public Member toEntity(String savePath, String originalName, String fileUrl, String selectYN) {
+    public Member toEntity(String filePath, String originalName, String fileUrl, String selectYN) {
         return  Member.builder()
                 .comment(comment)
-                .filePath(savePath)
-                .fileOriginName(originalName)
-                .fileUrl(fileUrl)
+                .fileInfo(new FileInfo(filePath, originalName, fileUrl))
                 .subIntroduction(subIntroduction)
                 .introduction(introduction)
                 .phoneNumber(phoneNumber)

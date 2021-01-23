@@ -1,5 +1,6 @@
 package introduce.web.api;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
@@ -94,7 +95,7 @@ public class ProjectApiControllerTest {
 
         List<Project> all = projectRepository.findAll();
         assertThat(all.get(0).getProjectTitle()).isEqualTo(projectTitle);
-        assertThat(all.get(0).getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
+        assertThat(all.get(0).getFileInfo().getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
         assertThat(all.get(0).getProjectContent()).isEqualTo(projectContent);
         assertThat(all.get(0).getProjectPostScript()).isEqualTo(projectPostScript);
         assertThat(all.get(0).getProjectLink()).isEqualTo(projectLink);
@@ -138,9 +139,7 @@ public class ProjectApiControllerTest {
                     .projectTitle("프로젝트 이름0" + i)
                     .projectContent("프로젝트 내용0" + i)
                     .projectPostScript("프로젝트 추신0" + i)
-                    .filePath("프로젝트 이미지 경로0" + i)
-                    .fileOriginName("프로젝트 이미지 원본이름0" + i)
-                    .fileUrl("파일 주소")
+                    .fileInfo(new FileInfo("프로젝트 이미지 경로0" + i, "프로젝트 이미지 원본이름0" + i, "파일 주소" ))
                     .projectLink("http://gergerg" + i)
                     .level(i)
                     .member(member)
@@ -199,7 +198,7 @@ public class ProjectApiControllerTest {
         assertThat(target.getProjectTitle()).isEqualTo(expectedProjectTitle);
         assertThat(target.getProjectContent()).isEqualTo(expectedProjectContent);
         assertThat(target.getProjectPostScript()).isEqualTo(expectedProjectPostScript);
-        assertThat(target.getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
+        assertThat(target.getFileInfo().getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
         assertThat(target.getProjectLink()).isEqualTo(expectedProjectLink);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMember().getMemberId()).isEqualTo(expectedMemberId);
@@ -225,9 +224,7 @@ public class ProjectApiControllerTest {
                     .projectTitle("프로젝트 이름0" + i)
                     .projectContent("프로젝트 내용0" + i)
                     .projectPostScript("프로젝트 추신0" + i)
-                    .filePath("프로젝트 이미지 경로0" + i)
-                    .fileOriginName("프로젝트 이미지 원본이름0" + i)
-                    .fileUrl("파일 주소")
+                    .fileInfo(new FileInfo("프로젝트 이미지 경로0" + i, "프로젝트 이미지 원본이름0" + i, "파일 주소" ))
                     .projectLink("http://gergerg" + i)
                     .level(i)
                     .member(member)
@@ -266,8 +263,8 @@ public class ProjectApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.project_title").value(expectedProjectTitle))
-                .andExpect(jsonPath("$.data.file_origin_name").value(expectedProject.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(expectedProject.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(expectedProject.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(expectedProject.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.project_content").value(expectedProjectContent))
                 .andExpect(jsonPath("$.data.project_post_script").value(expectedProjectPostScript))
                 .andExpect(jsonPath("$.data.project_link").value(expectedProjectLink))
@@ -280,9 +277,9 @@ public class ProjectApiControllerTest {
         assertThat(target.getProjectTitle()).isEqualTo(expectedProjectTitle);
         assertThat(target.getProjectContent()).isEqualTo(expectedProjectContent);
         assertThat(target.getProjectPostScript()).isEqualTo(expectedProjectPostScript);
-        assertThat(target.getFileOriginName()).isEqualTo(expectedProject.getFileOriginName());
-        assertThat(target.getFilePath()).isEqualTo(expectedProject.getFilePath());
-        assertThat(target.getFileUrl()).isEqualTo(expectedProject.getFileUrl());
+        assertThat(target.getFileInfo().getFileOriginName()).isEqualTo(expectedProject.getFileInfo().getFileOriginName());
+        assertThat(target.getFileInfo().getFilePath()).isEqualTo(expectedProject.getFileInfo().getFilePath());
+        assertThat(target.getFileInfo().getFileUrl()).isEqualTo(expectedProject.getFileInfo().getFileUrl());
         assertThat(target.getProjectLink()).isEqualTo(expectedProjectLink);
         assertThat(target.getLevel()).isEqualTo(expectedLevel);
         assertThat(target.getMember().getMemberId()).isEqualTo(expectedMemberId);
@@ -346,8 +343,8 @@ public class ProjectApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.project_title").value(project.getProjectTitle()))
-                .andExpect(jsonPath("$.data.file_origin_name").value(project.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(project.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(project.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(project.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.project_content").value(project.getProjectContent()))
                 .andExpect(jsonPath("$.data.project_post_script").value(project.getProjectPostScript()))
                 .andExpect(jsonPath("$.data.project_link").value(project.getProjectLink()))
@@ -389,9 +386,7 @@ public class ProjectApiControllerTest {
     private Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
-                .filePath("헤어 이미지 경로")
-                .fileOriginName("헤더 이미지 원본 이름")
-                .fileUrl("파일 경로")
+                .fileInfo(new FileInfo("헤어 이미지 경로", "헤더 이미지 원본 이름", "파일 경로"))
                 .subIntroduction("서브 자기소개")
                 .introduction("자기소개")
                 .phoneNumber("연락처")
@@ -404,10 +399,8 @@ public class ProjectApiControllerTest {
         return projectRepository.save(Project.builder()
                 .projectTitle("프로젝트 이름0")
                 .projectContent("프로젝트 내용0")
+                .fileInfo(new FileInfo("프로젝트 이미지 경로0", "프로젝트 이미지 원본이름0", "파일주소"))
                 .projectPostScript("프로젝트 추신0")
-                .filePath("프로젝트 이미지 경로0")
-                .fileOriginName("프로젝트 이미지 원본이름0")
-                .fileUrl("파일주소")
                 .projectLink("http://gergerg")
                 .level(1)
                 .member(member)

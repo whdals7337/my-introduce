@@ -1,6 +1,7 @@
 package introduce.domain.member;
 
 import introduce.domain.BaseTimeEntity;
+import introduce.domain.FileInfo;
 import introduce.domain.project.Project;
 import introduce.domain.skill.Skill;
 import lombok.*;
@@ -23,14 +24,8 @@ public class Member extends BaseTimeEntity {
     @Column(length = 50, nullable = false)
     private String comment;
 
-    @Column(length = 500, nullable = false)
-    private String filePath;
-
-    @Column(length = 100, nullable = false)
-    private String fileOriginName;
-
-    @Column(length = 500, nullable = false)
-    private String fileUrl;
+    @Embedded
+    private FileInfo fileInfo;
 
     @Column(length = 50, nullable = false)
     private String subIntroduction;
@@ -47,17 +42,15 @@ public class Member extends BaseTimeEntity {
     @Column(length = 1, nullable = false)
     private String selectYN;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Project> projectList;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "member")
+    @OneToMany(mappedBy = "member", orphanRemoval = true)
     private List<Skill> skillList;
 
     public void update(Member member){
         this.comment = member.getComment();
-        this.filePath = member.getFilePath();
-        this.fileOriginName = member.getFileOriginName();
-        this.fileUrl = member.getFileUrl();
+        this.fileInfo = member.getFileInfo();
         this.subIntroduction = member.getSubIntroduction();
         this.introduction =member.getIntroduction();
         this.phoneNumber = member.getPhoneNumber();

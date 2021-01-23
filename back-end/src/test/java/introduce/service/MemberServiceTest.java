@@ -277,8 +277,8 @@ public class MemberServiceTest {
     private void validAll(MemberResponseDto data, Member member) {
         assertThat(data.getMemberId()).isEqualTo(member.getMemberId());
         assertThat(data.getComment()).isEqualTo(member.getComment());
-        assertThat(data.getFileOriginName()).isEqualTo(member.getFileOriginName());
-        assertThat(data.getFileUrl()).isEqualTo(member.getFileUrl());
+        assertThat(data.getFileOriginName()).isEqualTo(member.getFileInfo().getFileOriginName());
+        assertThat(data.getFileUrl()).isEqualTo(member.getFileInfo().getFileUrl());
         assertThat(data.getSubIntroduction()).isEqualTo(member.getSubIntroduction());
         assertThat(data.getIntroduction()).isEqualTo(member.getIntroduction());
         assertThat(data.getPhoneNumber()).isEqualTo(member.getPhoneNumber());

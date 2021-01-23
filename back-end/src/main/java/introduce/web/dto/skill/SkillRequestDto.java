@@ -1,5 +1,6 @@
 package introduce.web.dto.skill;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.skill.Skill;
 import lombok.*;
@@ -17,9 +18,7 @@ public class SkillRequestDto {
     public Skill toEntity(Member member, String filePath, String fileOriginName, String fileUrl) {
         return Skill.builder()
                 .skillName(skillName)
-                .filePath(filePath)
-                .fileOriginName(fileOriginName)
-                .fileUrl(fileUrl)
+                .fileInfo(new FileInfo(filePath, fileOriginName, fileUrl))
                 .skillLevel(skillLevel)
                 .level(level)
                 .member(member)

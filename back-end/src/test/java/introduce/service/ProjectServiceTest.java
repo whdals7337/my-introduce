@@ -1,5 +1,6 @@
 package introduce.service;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.network.Header;
@@ -268,8 +269,8 @@ public class ProjectServiceTest {
         assertThat(data.getProjectContent()).isEqualTo(project.getProjectContent());
         assertThat(data.getProjectPostScript()).isEqualTo(project.getProjectPostScript());
         assertThat(data.getProjectLink()).isEqualTo(project.getProjectLink());
-        assertThat(data.getFileOriginName()).isEqualTo(project.getFileOriginName());
-        assertThat(data.getFileUrl()).isEqualTo(project.getFileUrl());
+        assertThat(data.getFileOriginName()).isEqualTo(project.getFileInfo().getFileOriginName());
+        assertThat(data.getFileUrl()).isEqualTo(project.getFileInfo().getFileUrl());
         assertThat(data.getLevel()).isEqualTo(project.getLevel());
     }
 
@@ -299,9 +300,7 @@ public class ProjectServiceTest {
                 .projectTitle("projectTitle")
                 .projectContent("projectContent")
                 .projectPostScript("projectPostScript")
-                .filePath("filePath")
-                .fileOriginName("fileOriginName")
-                .fileUrl("fileUrl")
+                .fileInfo(new FileInfo("filePath", "fileOriginName", "fileUrl"))
                 .projectLink("projectLink")
                 .level(level)
                 .member(member)

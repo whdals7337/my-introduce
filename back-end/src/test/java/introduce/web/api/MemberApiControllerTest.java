@@ -1,5 +1,6 @@
 package introduce.web.api;
 
+import introduce.domain.FileInfo;
 import introduce.domain.member.Member;
 import introduce.domain.member.MemberRepository;
 import introduce.domain.project.Project;
@@ -94,7 +95,7 @@ public class MemberApiControllerTest {
 
         List<Member> all = memberRepository.findAll();
         assertThat(all.get(0).getComment()).isEqualTo(comment);
-        assertThat(all.get(0).getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
+        assertThat(all.get(0).getFileInfo().getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
         assertThat(all.get(0).getSubIntroduction()).isEqualTo(sub_introduction);
         assertThat(all.get(0).getIntroduction()).isEqualTo(introduction);
         assertThat(all.get(0).getPhoneNumber()).isEqualTo(phone_number);
@@ -170,7 +171,7 @@ public class MemberApiControllerTest {
         assertThat(updateId).isGreaterThan(0L);
         Member target = memberRepository.findById(updateId).get();
         assertThat(target.getComment()).isEqualTo(expectedComment);
-        assertThat(target.getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
+        assertThat(target.getFileInfo().getFileOriginName()).isEqualTo(testFile.getOriginalFilename());
         assertThat(target.getSubIntroduction()).isEqualTo(expectedSubIntroduction);
         assertThat(target.getIntroduction()).isEqualTo(expectedIntroduction);
         assertThat(target.getPhoneNumber()).isEqualTo(expectedPhoneNumber);
@@ -206,8 +207,8 @@ public class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(expectedComment))
-                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(member.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(member.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.sub_introduction").value(expectedSubIntroduction))
                 .andExpect(jsonPath("$.data.introduction").value(expectedIntroduction))
                 .andExpect(jsonPath("$.data.phone_number").value(expectedPhoneNumber))
@@ -216,9 +217,9 @@ public class MemberApiControllerTest {
         assertThat(updateId).isGreaterThan(0L);
         Member target = memberRepository.findById(updateId).get();
         assertThat(target.getComment()).isEqualTo(expectedComment);
-        assertThat(target.getFileOriginName()).isEqualTo(member.getFileOriginName());
-        assertThat(target.getFilePath()).isEqualTo(member.getFilePath());
-        assertThat(target.getFileUrl()).isEqualTo(member.getFileUrl());
+        assertThat(target.getFileInfo().getFileOriginName()).isEqualTo(member.getFileInfo().getFileOriginName());
+        assertThat(target.getFileInfo().getFilePath()).isEqualTo(member.getFileInfo().getFilePath());
+        assertThat(target.getFileInfo().getFileUrl()).isEqualTo(member.getFileInfo().getFileUrl());
         assertThat(target.getSubIntroduction()).isEqualTo(expectedSubIntroduction);
         assertThat(target.getIntroduction()).isEqualTo(expectedIntroduction);
         assertThat(target.getPhoneNumber()).isEqualTo(expectedPhoneNumber);
@@ -275,8 +276,8 @@ public class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(member.getComment()))
-                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(member.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(member.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.sub_introduction").value(member.getSubIntroduction()))
                 .andExpect(jsonPath("$.data.introduction").value(member.getIntroduction()))
                 .andExpect(jsonPath("$.data.phone_number").value(member.getPhoneNumber()))
@@ -306,8 +307,8 @@ public class MemberApiControllerTest {
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.member_response_dto.member_id").value(member.getMemberId()))
                 .andExpect(jsonPath("$.data.member_response_dto.comment").value(member.getComment()))
-                .andExpect(jsonPath("$.data.member_response_dto.file_url").value(member.getFileUrl()))
-                .andExpect(jsonPath("$.data.member_response_dto.file_origin_name").value(member.getFileOriginName()))
+                .andExpect(jsonPath("$.data.member_response_dto.file_url").value(member.getFileInfo().getFileUrl()))
+                .andExpect(jsonPath("$.data.member_response_dto.file_origin_name").value(member.getFileInfo().getFileOriginName()))
                 .andExpect(jsonPath("$.data.member_response_dto.sub_introduction").value(member.getSubIntroduction()))
                 .andExpect(jsonPath("$.data.member_response_dto.introduction").value(member.getIntroduction()))
                 .andExpect(jsonPath("$.data.member_response_dto.phone_number").value(member.getPhoneNumber()))
@@ -315,8 +316,8 @@ public class MemberApiControllerTest {
                 .andExpect(jsonPath("$.data.member_response_dto.select_yn").value(member.getSelectYN()))
                 .andExpect(jsonPath("$.data.skill_response_dto_list.[0].skill_id").value(skill.getSkillId()))
                 .andExpect(jsonPath("$.data.skill_response_dto_list.[0].skill_name").value(skill.getSkillName()))
-                .andExpect(jsonPath("$.data.skill_response_dto_list.[0].file_url").value(skill.getFileUrl()))
-                .andExpect(jsonPath("$.data.skill_response_dto_list.[0].file_origin_name").value(skill.getFileOriginName()))
+                .andExpect(jsonPath("$.data.skill_response_dto_list.[0].file_url").value(skill.getFileInfo().getFileUrl()))
+                .andExpect(jsonPath("$.data.skill_response_dto_list.[0].file_origin_name").value(skill.getFileInfo().getFileOriginName()))
                 .andExpect(jsonPath("$.data.skill_response_dto_list.[0].skill_level").value(skill.getSkillLevel()))
                 .andExpect(jsonPath("$.data.skill_response_dto_list.[0].level").value(skill.getLevel()))
                 .andExpect(jsonPath("$.data.skill_response_dto_list.[0].member_id").value(skill.getMember().getMemberId()))
@@ -324,8 +325,8 @@ public class MemberApiControllerTest {
                 .andExpect(jsonPath("$.data.project_response_dto_list.[0].project_title").value(project.getProjectTitle()))
                 .andExpect(jsonPath("$.data.project_response_dto_list.[0].project_content").value(project.getProjectContent()))
                 .andExpect(jsonPath("$.data.project_response_dto_list.[0].project_post_script").value(project.getProjectPostScript()))
-                .andExpect(jsonPath("$.data.project_response_dto_list.[0].file_url").value(project.getFileUrl()))
-                .andExpect(jsonPath("$.data.project_response_dto_list.[0].file_origin_name").value(project.getFileOriginName()))
+                .andExpect(jsonPath("$.data.project_response_dto_list.[0].file_url").value(project.getFileInfo().getFileUrl()))
+                .andExpect(jsonPath("$.data.project_response_dto_list.[0].file_origin_name").value(project.getFileInfo().getFileOriginName()))
                 .andExpect(jsonPath("$.data.project_response_dto_list.[0].project_link").value(project.getProjectLink()))
                 .andExpect(jsonPath("$.data.project_response_dto_list.[0].level").value(project.getLevel()))
                 .andExpect(jsonPath("$.data.project_response_dto_list.[0].member_id").value(project.getMember().getMemberId()));
@@ -351,8 +352,8 @@ public class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(member.getComment()))
-                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(member.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(member.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.sub_introduction").value(member.getSubIntroduction()))
                 .andExpect(jsonPath("$.data.introduction").value(member.getIntroduction()))
                 .andExpect(jsonPath("$.data.phone_number").value(member.getPhoneNumber()))
@@ -397,8 +398,8 @@ public class MemberApiControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status").value(200))
                 .andExpect(jsonPath("$.data.comment").value(member.getComment()))
-                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileOriginName()))
-                .andExpect(jsonPath("$.data.file_url").value(member.getFileUrl()))
+                .andExpect(jsonPath("$.data.file_origin_name").value(member.getFileInfo().getFileOriginName()))
+                .andExpect(jsonPath("$.data.file_url").value(member.getFileInfo().getFileUrl()))
                 .andExpect(jsonPath("$.data.sub_introduction").value(member.getSubIntroduction()))
                 .andExpect(jsonPath("$.data.introduction").value(member.getIntroduction()))
                 .andExpect(jsonPath("$.data.phone_number").value(member.getPhoneNumber()))
@@ -417,9 +418,7 @@ public class MemberApiControllerTest {
     private Member givenMember(String selectYN) {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
-                .filePath("헤어 이미지 경로")
-                .fileOriginName("헤더 이미지 원본 이름")
-                .fileUrl("파일 주소")
+                .fileInfo(new FileInfo("헤어 이미지 경로", "헤더 이미지 원본 이름", "파일 경로"))
                 .subIntroduction("서브 자기소개")
                 .introduction("자기소개")
                 .phoneNumber("연락처")
@@ -431,9 +430,7 @@ public class MemberApiControllerTest {
     private Member givenMember() {
         return memberRepository.save(Member.builder()
                 .comment("코멘트")
-                .filePath("헤어 이미지 경로")
-                .fileOriginName("헤더 이미지 원본 이름")
-                .fileUrl("파일 경로")
+                .fileInfo(new FileInfo("헤어 이미지 경로", "헤더 이미지 원본 이름", "파일 경로"))
                 .subIntroduction("서브 자기소개")
                 .introduction("자기소개")
                 .phoneNumber("연락처")
@@ -447,9 +444,7 @@ public class MemberApiControllerTest {
                 .projectTitle("프로젝트 이름0")
                 .projectContent("프로젝트 내용0")
                 .projectPostScript("프로젝트 추신0")
-                .filePath("프로젝트 이미지 경로0")
-                .fileOriginName("프로젝트 이미지 원본이름0")
-                .fileUrl("파일주소")
+                .fileInfo(new FileInfo("프로젝트 이미지 경로0", "프로젝트 이미지 원본이름0", "파일주소"))
                 .projectLink("http://gergerg")
                 .level(1)
                 .member(member)
@@ -459,9 +454,7 @@ public class MemberApiControllerTest {
     private Skill givenSkill(Member member) {
         return skillRepository.save(Skill.builder()
                 .skillName("스킬 이름0")
-                .filePath("스킬 이미지 경로0")
-                .fileOriginName("스킬 이미지 이름0")
-                .fileUrl(member.getFileUrl())
+                .fileInfo(new FileInfo("스킬 이미지 경로0", "스킬 이미지 이름0", member.getFileInfo().getFileUrl()))
                 .skillLevel(3)
                 .level(1)
                 .member(member)
