@@ -207,7 +207,7 @@ public class MemberService extends BaseService<MemberRequestDto, MemberResponseD
         log.info("member totalInfo start");
 
         // [1] MemberResponseDto 조회
-        Member member = baseRepository.findById(id).orElseThrow(MemberNotFoundException::new);
+        Member member = baseRepository.findTotalInfo(id).orElseThrow(MemberNotFoundException::new);
         MemberResponseDto memberResponseDto = response(member);
         log.info("[1] MemberResponseDto 조회");
 
