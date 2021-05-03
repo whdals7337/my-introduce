@@ -13,7 +13,7 @@ Back-end: Spring boot(Gradle, Jpa) + Travis CI + AWS(EC2, RDS, S3, Codedeploy) +
 
 2. 화면
 
-2 - 1 대민 페이지 (http://wellbell.co.kr/)
+2 - 1 대민 페이지 (AWS Educate의 EC2 기간 만료로 인해 Frontend 서비스가 종료 되었습니다)
 
 -메인
 
